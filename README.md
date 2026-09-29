@@ -1,6 +1,6 @@
 # SenticRAG — Retrieval-Augmented Aspect Sentiment & Feedback Intelligence Engine
 
-[![CI](https://github.com/khuonglaptri3/SenticRAG/actions/workflows/ci.yml/badge.svg)](https://github.com/khuonglaptri3/SenticRAG/actions/workflows/ci.yml)
+[![CI](https://github.com/khuonglaptri3/SenticRAG-Retrieval-Augmented-Aspect-Sentiment-Feedback-Intelligence-Engine/actions/workflows/ci.yml/badge.svg)](https://github.com/khuonglaptri3/SenticRAG-Retrieval-Augmented-Aspect-Sentiment-Feedback-Intelligence-Engine/actions/workflows/ci.yml)
 [![Python Version](<https://img.shields.io/badge/python-3.11%20%7C%203.12-blue.svg>)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Docker](https://img.shields.io/badge/docker-ready-blue.svg)](infra/docker/)
@@ -18,11 +18,11 @@
 
 ---
 
-## 🏗️ 7-Layer Architecture Overview
+## 7-Layer Architecture Overview
 
 ![SenticRAG 7-Layer Architecture](docs/architecture/7_layer_architecture.svg)
 
-> 💡 **Interactive Architecture Viewer**: Mở [`docs/architecture/7_layer_architecture.html`](docs/architecture/7_layer_architecture.html) trên trình duyệt để tương tác trực tiếp với sơ đồ động, xem guided tours (Complete flow, RAG & Knowledge Core, Safety & Observability), phóng to thu nhỏ và tra cứu chi tiết từng node.
+> **Interactive Architecture Viewer**: Mở [`docs/architecture/7_layer_architecture.html`](docs/architecture/7_layer_architecture.html) trên trình duyệt để tương tác trực tiếp với sơ đồ động, xem guided tours (Complete flow, RAG & Knowledge Core, Safety & Observability), phóng to thu nhỏ và tra cứu chi tiết từng node.
 
 ### Chi tiết các tầng kiến trúc (7 Layers Breakdown)
 
