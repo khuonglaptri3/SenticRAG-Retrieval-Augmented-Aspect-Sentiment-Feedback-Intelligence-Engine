@@ -1,0 +1,25 @@
+# Containerized Training Image for SenticRAG
+ARG TRAINING_BASE_IMAGE=pytorch/pytorch:2.2.0-cuda12.1-cudnn8-runtime
+FROM ${TRAINING_BASE_IMAGE}
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1
+
+WORKDIR /workspace
+
+COPY pyproject.toml ./
+RUN pip install --upgrade pip && \
+    pip install -e ".[dev]"
+
+COPY packages/ ./packages/
+COPY pipelines/ ./pipelines/
+COPY configs/ ./configs/
+
+RUN useradd --create-home --uid 10001 trainer && \
+    mkdir -p /workspace/artifacts /workspace/data && \
+    chown -R trainer:trainer /workspace
+
+USER trainer
+
+ENTRYPOINT ["python", "-m"]

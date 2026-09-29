@@ -1,0 +1,32 @@
+# Multi-stage Dockerfile for SenticRAG Serving API
+FROM python:3.11-slim AS builder
+
+WORKDIR /build
+COPY pyproject.toml .
+RUN pip install --upgrade pip && \
+    pip wheel --no-cache-dir --wheel-dir=/wheels .
+
+FROM python:3.11-slim
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1
+
+RUN useradd --create-home --uid 10001 app
+
+WORKDIR /app
+
+COPY --from=builder /wheels /wheels
+RUN pip install --no-cache-dir --no-index --find-links=/wheels /wheels/* && \
+    rm -rf /wheels
+
+COPY packages/ ./packages/
+COPY apps/ ./apps/
+COPY pyproject.toml ./
+
+RUN pip install --no-deps -e .
+
+USER app
+
+EXPOSE 8000
+
+CMD ["uvicorn", "apps.api.app.main:app", "--host", "0.0.0.0", "--port", "8000"]
