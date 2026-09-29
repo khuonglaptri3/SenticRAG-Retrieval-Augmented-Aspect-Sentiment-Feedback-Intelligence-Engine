@@ -1,0 +1,19 @@
+name: train
+
+on:
+  workflow_dispatch:
+    inputs:
+      config_path:
+        description: "Path to training configuration"
+        required: true
+        default: "configs/training/sentiment.yaml"
+
+jobs:
+  train-job:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build training image
+        run: |
+          docker build -f infra/docker/Dockerfile.train -t senticrag-train:${{ github.sha }} .

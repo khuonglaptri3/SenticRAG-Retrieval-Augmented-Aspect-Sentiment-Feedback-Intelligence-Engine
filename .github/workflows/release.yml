@@ -1,0 +1,29 @@
+name: release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  AWS_REGION: ap-southeast-1
+  ECR_REPOSITORY: project-a-api
+  EKS_CLUSTER: ai-production
+  HELM_RELEASE: project-a
+  HELM_CHART: infra/helm/project-a
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      image: ${{ steps.meta.outputs.image }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: |
+          docker build -f infra/docker/Dockerfile.api -t ${{ env.ECR_REPOSITORY }}:${{ github.sha }} .
