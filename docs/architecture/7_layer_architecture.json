@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "SenticRAG 7-Layer Architecture Overview",
+    "output": "docs/architecture/7_layer_architecture.html",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "full-pipeline",
+        "label": "Complete 7-layer flow",
+        "focus": ["clients", "gateway", "planner", "qdrant", "reranker", "guardrails", "dashboard"],
+        "note": "Follow customer feedback from raw ingestion to verified, grounded responses."
+      },
+      {
+        "id": "rag-core",
+        "label": "RAG and Knowledge Core",
+        "focus": ["planner", "memory", "qdrant", "reranker"],
+        "note": "Isolate the hybrid retrieval, Cross-Encoder reranker, and hierarchical memory."
+      },
+      {
+        "id": "safety-and-ops",
+        "label": "Safety and Observability",
+        "focus": ["gateway", "guardrails", "tools", "observability"],
+        "note": "Inspect PII protection, schema guardrails, and telemetry monitoring."
+      }
+    ]
+  },
+  "components": [
+    { "id": "clients", "type": "external", "label": "Review Sources", "sublabel": "CSV / JSON / Streams", "pos": [40, 300], "size": [130, 60] },
+    { "id": "gateway", "type": "security", "label": "Input & Gateway", "sublabel": "PII Mask + Rate Limit", "pos": [240, 300], "size": [140, 60], "tag": "Layer 1" },
+    { "id": "planner", "type": "backend", "label": "Reasoning Core", "sublabel": "LLM / SLM Planner", "pos": [480, 300], "size": [140, 60], "tag": "Layer 2" },
+    { "id": "memory", "type": "database", "label": "Hierarchical Memory", "sublabel": "Context + Prompt Cache", "pos": [480, 130], "size": [140, 60], "tag": "Layer 3" },
+    { "id": "qdrant", "type": "database", "label": "Vector Store", "sublabel": "Qdrant + BM25 Sparse", "pos": [240, 470], "size": [140, 60], "tag": "Layer 4" },
+    { "id": "reranker", "type": "backend", "label": "Knowledge & RAG", "sublabel": "RRF + BGE Reranker", "pos": [480, 470], "size": [140, 60], "tag": "Layer 4" },
+    { "id": "tools", "type": "backend", "label": "Action & Worker", "sublabel": "ABSA + Alert Jobs", "pos": [720, 470], "size": [140, 60], "tag": "Layer 5" },
+    { "id": "guardrails", "type": "security", "label": "Output Guardrails", "sublabel": "Pydantic + Citations", "pos": [720, 300], "size": [140, 60], "tag": "Layer 6" },
+    { "id": "observability", "type": "cloud", "label": "Observability Plane", "sublabel": "OTel + Prometheus + Drift", "pos": [720, 130], "size": [140, 60], "tag": "Layer 7" },
+    { "id": "dashboard", "type": "frontend", "label": "SenticRAG Serving", "sublabel": "FastAPI /predict /ask", "pos": [940, 300], "size": [140, 60], "tag": "Consumers" }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "SenticRAG Platform Runtime (7 Layers)", "wraps": ["gateway", "planner", "memory", "qdrant", "reranker", "tools", "guardrails"], "pad": 20 },
+    { "kind": "security-group", "label": "Observability & Ops", "wraps": ["observability"], "pad": 14 }
+  ],
+  "connections": [
+    { "from": "clients", "to": "gateway", "label": "raw reviews", "variant": "emphasis" },
+    { "from": "gateway", "to": "planner", "label": "sanitized data", "variant": "security" },
+    { "from": "planner", "to": "memory", "label": "prompt context", "variant": "default" },
+    { "from": "planner", "to": "qdrant", "label": "hybrid query", "variant": "default" },
+    { "from": "qdrant", "to": "reranker", "label": "candidates", "variant": "default", "labelDy": 16 },
+    { "from": "reranker", "to": "planner", "label": "grounded passages", "variant": "default" },
+    { "from": "planner", "to": "tools", "label": "async actions", "variant": "dashed" },
+    { "from": "planner", "to": "guardrails", "label": "draft response", "variant": "emphasis" },
+    { "from": "guardrails", "to": "dashboard", "label": "verified output", "variant": "emphasis" },
+    { "from": "guardrails", "to": "observability", "label": "telemetry", "variant": "dashed" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "Ingestion & Gateway (Layer 1)", "items": ["Sanitizes customer reviews, masks PII (phones, names, emails)", "Applies rate limiting and normalization for emojis and text"] },
+    { "dot": "emerald", "title": "Reasoning & Knowledge RAG (Layers 2-4)", "items": ["Query decomposition with prompt-cached foundation models", "Hybrid search over Qdrant (dense) + BM25 (sparse) with RRF fusion", "Cross-Encoder reranking and citation grounding mapping"] },
+    { "dot": "rose", "title": "Guardrails & Operations (Layers 5-7)", "items": ["Pydantic schema validation and hallucination verification", "Background worker for trend alerts and negative spikes", "Full distributed tracing (OTel) and concept drift monitoring"] }
+  ]
+}
