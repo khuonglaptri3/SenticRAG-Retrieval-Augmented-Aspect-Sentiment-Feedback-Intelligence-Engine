@@ -1,16 +1,14 @@
 # SenticRAG — Retrieval-Augmented Aspect Sentiment & Feedback Intelligence Engine
 
 [![CI](https://github.com/khuonglaptri3/SenticRAG/actions/workflows/ci.yml/badge.svg)](https://github.com/khuonglaptri3/SenticRAG/actions/workflows/ci.yml)
-[![Python Version](https://img.shields.io/badge/python-3.11%20%7C%203.12-blue.svg)](https://www.python.org/)
+[![Python Version](<https://img.shields.io/badge/python-3.11%20%7C%203.12-blue.svg>)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Docker](https://img.shields.io/badge/docker-ready-blue.svg)](infra/docker/)
-[![Architecture](https://img.shields.io/badge/architecture-7--layer%20agent-orange.svg)](docs/architecture/)
+[![Architecture](<https://img.shields.io/badge/architecture-7--layer%20agent-orange.svg>)](docs/architecture/)
 
 **SenticRAG** is an enterprise-grade AI engine designed for large-scale customer review analysis, aspect-based sentiment extraction, and grounded conversational intelligence with verified citations.
 
----
-
-## 🌟 Key Capabilities
+## Key Capabilities
 
 - **Aspect-Based Sentiment Analysis (ABSA):** Bóc tách cảm xúc đa khía cạnh (Chất lượng, Giá cả, Giao hàng, CSKH) với kiến trúc lai (TF-IDF Baseline và Transformer PhoBERT / viBERT fine-tuned).
 - **Advanced RAG Engine:** Tìm kiếm lai (Hybrid Search: Dense Vector qua Qdrant + Sparse BM25Okapi) hợp nhất qua giải thuật **Reciprocal Rank Fusion (RRF)** và Cross-Encoder Reranker.
@@ -22,74 +20,26 @@
 
 ## 🏗️ 7-Layer Architecture Overview
 
-```mermaid
-flowchart TD
-    subgraph L1["1. Input & Gateway Layer"]
-        direction TB
-        INGEST["Review Ingestors (CSV/JSON/Streams)"]
-        NORM["Text & Emoji Normalizer"]
-        PII["PII Anonymizer (Mask Phone/Name/Email)"]
-        RL["Rate Limiter (Token Bucket)"]
-    end
+![SenticRAG 7-Layer Architecture](docs/architecture/7_layer_architecture.svg)
 
-    subgraph L2["2. Core Reasoning & Orchestration"]
-        direction TB
-        FM["Foundation Models (Cloud LLM / Self-hosted SLM)"]
-        QP["Query Planner & Multi-step Decomposition"]
-        REFLECT["Self-RAG Reflection & Grounding Verifier"]
-    end
+> 💡 **Interactive Architecture Viewer**: Mở [`docs/architecture/7_layer_architecture.html`](docs/architecture/7_layer_architecture.html) trên trình duyệt để tương tác trực tiếp với sơ đồ động, xem guided tours (Complete flow, RAG & Knowledge Core, Safety & Observability), phóng to thu nhỏ và tra cứu chi tiết từng node.
 
-    subgraph L3["3. Hierarchical Memory Module"]
-        direction TB
-        CTX["Working Context & Prompt Cache (24h)"]
-        BUF["Message Buffer (Rolling 10-msg Window)"]
-        VEC["Archival Vector Memory (Qdrant)"]
-        STORE["Recall Store (Postgres / Redis)"]
-    end
+### Chi tiết các tầng kiến trúc (7 Layers Breakdown)
 
-    subgraph L4["4. Knowledge & Retrieval Layer"]
-        direction TB
-        HYBRID["Hybrid Search (Qdrant Dense + BM25 Sparse)"]
-        RRF["Reciprocal Rank Fusion (RRF)"]
-        RERANK["Cross-Encoder Reranker (BGE)"]
-        CITE["Citation Mapping Engine"]
-    end
+| Tầng (Layer) | Thành phần chính | Trách nhiệm cốt lõi |
+| :--- | :--- | :--- |
+| **Layer 1: Input & Gateway** | `Review Ingestion`, `PII Masker`, `Rate Limiter`, `Normalizer` | Tiếp nhận reviews đa kênh (CSV/Streams), ẩn danh hóa thông tin cá nhân (PII), làm sạch text & emoji, kiểm soát lưu lượng đầu vào qua Token Bucket. |
+| **Layer 2: Core Reasoning** | `LLM / SLM Planner`, `Query Decomposition`, `Self-RAG Reflection` | Phân rã câu hỏi phức tạp thành multi-step subqueries, điều phối kế hoạch truy vấn RAG, tự phản tư (reflection) và kiểm tra tính xác thực trước khi tổng hợp. |
+| **Layer 3: Hierarchical Memory** | `Working Context`, `Prompt Cache (24h)`, `Archival Vector Memory` | Lưu trữ ngữ cảnh hội thoại đa tầng, tái sử dụng KV cache / prompt cache giảm chi phí & độ trễ, lưu trữ bộ nhớ dài hạn. |
+| **Layer 4: Knowledge & Retrieval** | `Hybrid Search (Dense + BM25)`, `RRF Fusion`, `BGE Reranker`, `Citation Engine` | Truy vấn lai kết hợp ngữ nghĩa và từ khóa trên Qdrant, xếp hạng lại kết quả bằng Cross-Encoder (BGE) và gắn định danh nguồn trích dẫn (grounding citations). |
+| **Layer 5: Tools & Action Protocols** | `ABSA Tool Calling`, `Structured Outputs`, `Async Alert Worker` | Định dạng kết quả qua Pydantic schema, gọi công cụ phân tích khía cạnh cảm xúc, đẩy tác vụ cảnh báo tiêu cực đột biến qua background workers. |
+| **Layer 6: Output & Guardrails** | `Pydantic Validator`, `Hallucination Verifier`, `Strictness Filter` | Thẩm định đầu ra nghiêm ngặt chống ảo giác (hallucination), kiểm soát định dạng, đảm bảo phản hồi an toàn và chính xác 100%. |
+| **Layer 7: Observability & Operations** | `OpenTelemetry`, `Prometheus / Grafana`, `Concept Drift Monitor` | Giám sát phân tán end-to-end trace, đo lường độ trễ P95/P99, phát hiện trôi dạt dữ liệu (data & concept drift) và đánh giá chất lượng tự động. |
 
-    subgraph L5["5. Tools & Action Protocols"]
-        direction TB
-        FC["Pydantic Structured Outputs"]
-        ANALYTICS["Feedback Analytics Tool Calling"]
-        WORKER["Async Worker (Negative Spike Alert)"]
-    end
-
-    subgraph L6["6. Output & Guardrails Layer"]
-        direction TB
-        SCHEMA["Pydantic Schema Validator"]
-        HALLUC["Hallucination Verifier"]
-        FILTER["Unicode & Strictness Output Filter"]
-    end
-
-    subgraph L7["7. Observability & Operations"]
-        direction TB
-        OTEL["OpenTelemetry Distributed Tracing"]
-        METRICS["Prometheus Metrics & Grafana Dashboards"]
-        DRIFT["Concept & Data Drift Monitoring"]
-        TESTS["Automated Evaluation (Recall@K, Macro-F1)"]
-    end
-
-    L1 --> L2
-    L2 <--> L3
-    L2 <--> L4
-    L2 --> L5
-    L2 --> L6
-    L1 -.-> L7
-    L2 -.-> L7
-    L6 -.-> L7
-```
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```text
 SenticRAG — Retrieval-Augmented Aspect Sentiment & Feedback Intelligence Engine/
@@ -125,38 +75,44 @@ SenticRAG — Retrieval-Augmented Aspect Sentiment & Feedback Intelligence Engin
 
 ---
 
-## 🚀 Quickstart
+## Quickstart
 
 ### Prerequisites
+
 - Python >= 3.11
 - Docker & Docker Compose
 - Qdrant Vector DB & Redis
 
 ### 1. Installation
+
 ```bash
-git clone git@github.com:khuonglaptri3/SenticRAG.git
-cd "SenticRAG"
+git clone git@github.com:khuonglaptri3/SenticRAG-Retrieval-Augmented-Aspect-Sentiment-Feedback-Intelligence-Engine.git
+cd "SenticRAG-Retrieval-Augmented-Aspect-Sentiment-Feedback-Intelligence-Engine"
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"
 ```
 
 ### 2. Run Test Suite
+
 ```bash
 make test-unit
 ```
 
 ### 3. Local Development Server
+
 ```bash
 make run-api
 ```
+
 Truy cập tài liệu API tự động tại: `http://localhost:8000/docs`
 
 ---
 
-## 🌿 Gitflow Branching Strategy
+## Gitflow Branching Strategy
 
 Dự án tuân thủ nghiêm ngặt mô hình **Gitflow**:
+
 - `main`: Nhánh ổn định cao nhất, chứa các bản phát hành Production được gắn tag phiên bản (`v0.1.0`, `v1.0.0`).
 - `develop`: Nhánh tích hợp chính cho toàn bộ tính năng mới.
 - `feature/*`: Nhánh phát triển tính năng riêng lẻ (tách từ `develop`, merge về `develop`).
@@ -164,6 +120,7 @@ Dự án tuân thủ nghiêm ngặt mô hình **Gitflow**:
 - `hotfix/*`: Nhánh xử lý sự cố khẩn cấp trên Production (tách từ `main`, merge về cả `main` và `develop`).
 
 Tất cả commit tuân theo quy chuẩn **Conventional Commits**:
+
 - `feat(scope): ...` — Tính năng mới
 - `fix(scope): ...` — Sửa lỗi
 - `docs(scope): ...` — Thêm hoặc cập nhật tài liệu
@@ -173,5 +130,6 @@ Tất cả commit tuân theo quy chuẩn **Conventional Commits**:
 
 ---
 
-## 📄 License
+## License
+
 Phát hành theo giấy phép [MIT License](LICENSE).
