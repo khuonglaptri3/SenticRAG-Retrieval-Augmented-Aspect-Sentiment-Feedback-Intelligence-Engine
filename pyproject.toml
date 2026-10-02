@@ -49,7 +49,8 @@ dependencies = [
     "opentelemetry-api>=1.24.0",
     "opentelemetry-sdk>=1.24.0",
     "opentelemetry-exporter-otlp>=1.24.0",
-    "prometheus-client>=0.20.0"
+    "prometheus-client>=0.20.0",
+    "neo4j>=5.20.0"
 ]
 
 [project.optional-dependencies]
@@ -80,6 +81,7 @@ minversion = "7.0"
 addopts = "-ra -q --strict-markers"
 testpaths = ["tests"]
 python_files = ["test_*.py"]
+pythonpath = ["."]
 
 [tool.mypy]
 python_version = "3.11"
