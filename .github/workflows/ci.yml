@@ -16,18 +16,22 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          cache: "pip"
+
+      - name: Install Poetry
+        run: python -m pip install "poetry==2.2.1"
+
+      - name: Validate project and lock file
+        run: poetry check --lock --strict
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install -e ".[dev]"
+          poetry install --extras dev --no-interaction
 
       - name: Lint with ruff
-        run: ruff check .
+        run: poetry run ruff check .
 
       - name: Type check with mypy
-        run: mypy packages apps pipelines --ignore-missing-imports || true
+        run: poetry run mypy packages apps pipelines --ignore-missing-imports || true
 
       - name: Run unit tests
-        run: pytest tests/unit -v --ignore-glob="*load*" || true
+        run: poetry run pytest tests/unit -v --ignore-glob="*load*" || true

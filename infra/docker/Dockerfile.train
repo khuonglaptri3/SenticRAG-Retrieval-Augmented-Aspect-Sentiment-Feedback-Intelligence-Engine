@@ -1,20 +1,31 @@
 # Containerized Training Image for SenticRAG
-ARG TRAINING_BASE_IMAGE=pytorch/pytorch:2.2.0-cuda12.1-cudnn8-runtime
+# Install the locked PyTorch distribution rather than inheriting an unpinned environment.
+# A custom base must provide Python 3.11 or 3.12.
+ARG TRAINING_BASE_IMAGE=python:3.11-slim
 FROM ${TRAINING_BASE_IMAGE}
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
-    PIP_NO_CACHE_DIR=1
+    PIP_NO_CACHE_DIR=1 \
+    VIRTUAL_ENV=/opt/venv \
+    PATH="/opt/venv/bin:$PATH"
 
 WORKDIR /workspace
 
-COPY pyproject.toml ./
-RUN pip install --upgrade pip && \
-    pip install -e ".[dev]"
+RUN python -m pip install "poetry==2.2.1" && \
+    python -m venv /opt/venv
+
+COPY pyproject.toml poetry.lock poetry.toml README.md ./
+RUN poetry check --lock --strict && \
+    poetry install --extras dev --no-root --no-interaction
 
 COPY packages/ ./packages/
+COPY apps/ ./apps/
 COPY pipelines/ ./pipelines/
 COPY configs/ ./configs/
+
+RUN poetry build --format wheel && \
+    pip install --no-deps dist/*.whl
 
 RUN useradd --create-home --uid 10001 trainer && \
     mkdir -p /workspace/artifacts /workspace/data && \

@@ -2,28 +2,34 @@
 FROM python:3.11-slim AS builder
 
 WORKDIR /build
-COPY pyproject.toml .
-RUN pip install --upgrade pip && \
-    pip wheel --no-cache-dir --wheel-dir=/wheels .
+RUN pip install --no-cache-dir "poetry==2.2.1" && \
+    python -m venv /opt/venv
+
+ENV VIRTUAL_ENV=/opt/venv \
+    PATH="/opt/venv/bin:$PATH"
+
+COPY pyproject.toml poetry.lock poetry.toml README.md ./
+RUN poetry check --lock --strict && \
+    poetry install --only main --no-root --no-interaction
+
+COPY packages/ ./packages/
+COPY apps/ ./apps/
+COPY pipelines/ ./pipelines/
+RUN poetry build --format wheel && \
+    pip install --no-deps dist/*.whl
 
 FROM python:3.11-slim
 
 ENV PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1
+    PYTHONDONTWRITEBYTECODE=1 \
+    VIRTUAL_ENV=/opt/venv \
+    PATH="/opt/venv/bin:$PATH"
 
 RUN useradd --create-home --uid 10001 app
 
 WORKDIR /app
 
-COPY --from=builder /wheels /wheels
-RUN pip install --no-cache-dir --no-index --find-links=/wheels /wheels/* && \
-    rm -rf /wheels
-
-COPY packages/ ./packages/
-COPY apps/ ./apps/
-COPY pyproject.toml ./
-
-RUN pip install --no-deps -e .
+COPY --from=builder /opt/venv /opt/venv
 
 USER app
 
