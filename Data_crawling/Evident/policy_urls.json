@@ -1,0 +1,309 @@
+{
+  "source_sitemap": "https://cellphones.com.vn/sitemap/page-sitemap.xml",
+  "source_page": "https://cellphones.com.vn/",
+  "fields": [
+    {
+      "section": "Thông tin và chính sách",
+      "label": "Mua hàng và thanh toán Online",
+      "footer_url": "https://cellphones.com.vn/chinh-sach-giao-hang",
+      "in_page_sitemap": true,
+      "sitemap_urls": [
+        "https://cellphones.com.vn/chinh-sach-giao-hang",
+        "https://cellphones.com.vn/huong-dan-mua-hang-online",
+        "https://cellphones.com.vn/mua-hang-online",
+        "https://cellphones.com.vn/ho-tro-thanh-toan-online"
+      ]
+    },
+    {
+      "section": "Thông tin và chính sách",
+      "label": "Mua hàng trả góp",
+      "footer_url": "https://cellphones.com.vn/tra-gop",
+      "in_page_sitemap": true,
+      "sitemap_urls": [
+        "https://cellphones.com.vn/tra-gop",
+        "https://cellphones.com.vn/tra-gop-online-cong-ty-tai-chinh"
+      ]
+    },
+    {
+      "section": "Thông tin và chính sách",
+      "label": "Mua hàng trả góp bằng thẻ tín dụng",
+      "footer_url": "https://cellphones.com.vn/huong-dan-mua-hang-tra-gop-bang-the-tin-dung-tai-cellphones",
+      "in_page_sitemap": true,
+      "sitemap_urls": [
+        "https://cellphones.com.vn/huong-dan-mua-hang-tra-gop-bang-the-tin-dung-tai-cellphones",
+        "https://cellphones.com.vn/tra-gop-online-the-tin-dung"
+      ]
+    },
+    {
+      "section": "Thông tin và chính sách",
+      "label": "Chính sách giao hàng",
+      "footer_url": "https://cellphones.com.vn/chinh-sach-giao-hang",
+      "in_page_sitemap": true,
+      "sitemap_urls": [
+        "https://cellphones.com.vn/chinh-sach-giao-hang",
+        "https://cellphones.com.vn/chinh-sach-giao-hang-lap-dat-dien-may",
+        "https://cellphones.com.vn/quy-che-hoat-dong-ung-dung-cellphones/quy-trinh-giao-nhan-van-chuyen"
+      ]
+    },
+    {
+      "section": "Thông tin và chính sách",
+      "label": "Chính sách đổi trả",
+      "footer_url": "https://cellphones.com.vn/tos?part=refund-policy",
+      "in_page_sitemap": true,
+      "sitemap_urls": [
+        "https://cellphones.com.vn/tos",
+        "https://cellphones.com.vn/huong-dan-huy-giao-dich-doi-tra",
+        "https://cellphones.com.vn/quy-che-hoat-dong-ung-dung-cellphones/chinh-sach-doi-tra",
+        "https://cellphones.com.vn/chinh-sach-san-pham"
+      ]
+    },
+    {
+      "section": "Thông tin và chính sách",
+      "label": "Tra điểm Smember",
+      "footer_url": "https://smember.com.vn?company_id=cellphones",
+      "in_page_sitemap": false,
+      "sitemap_urls": [
+        "https://cellphones.com.vn/smember"
+      ]
+    },
+    {
+      "section": "Thông tin và chính sách",
+      "label": "Xem ưu đãi Smember",
+      "footer_url": "https://cellphones.com.vn/uu-dai-smember",
+      "in_page_sitemap": true,
+      "sitemap_urls": [
+        "https://cellphones.com.vn/uu-dai-smember",
+        "https://cellphones.com.vn/smember"
+      ]
+    },
+    {
+      "section": "Thông tin và chính sách",
+      "label": "Tra thông tin bảo hành",
+      "footer_url": "https://smember.com.vn/warranty?company_id=cellphones",
+      "in_page_sitemap": false,
+      "sitemap_urls": [
+        "https://cellphones.com.vn/quy-dinh-ve-tiep-nhan-bao-hanh"
+      ]
+    },
+    {
+      "section": "Thông tin và chính sách",
+      "label": "Tra cứu hoá đơn điện tử",
+      "footer_url": "https://hddt.cellphones.com.vn",
+      "in_page_sitemap": false,
+      "sitemap_urls": [
+        "https://cellphones.com.vn/dich-vu-thanh-toan-hoa-don"
+      ]
+    },
+    {
+      "section": "Thông tin và chính sách",
+      "label": "Thông tin hoá đơn mua hàng",
+      "footer_url": "https://cellphones.com.vn/quy-dinh-ve-hoa-don-khi-mua-hang-cellphones",
+      "in_page_sitemap": true,
+      "sitemap_urls": [
+        "https://cellphones.com.vn/quy-dinh-ve-hoa-don-khi-mua-hang-cellphones",
+        "https://cellphones.com.vn/quy-dinh-ve-hoa-don-mua-hang"
+      ]
+    },
+    {
+      "section": "Thông tin và chính sách",
+      "label": "Trung tâm bảo hành chính hãng",
+      "footer_url": "https://cellphones.com.vn/bao-hanh/apple",
+      "in_page_sitemap": false,
+      "sitemap_urls": [
+        "https://cellphones.com.vn/trung-tam-dich-vu"
+      ]
+    },
+    {
+      "section": "Thông tin và chính sách",
+      "label": "Quy định về việc sao lưu dữ liệu",
+      "footer_url": "https://cellphones.com.vn/quy-dinh-ve-viec-sao-luu-du-lieu",
+      "in_page_sitemap": true,
+      "sitemap_urls": [
+        "https://cellphones.com.vn/quy-dinh-ve-viec-sao-luu-du-lieu"
+      ]
+    },
+    {
+      "section": "Thông tin và chính sách",
+      "label": "Chính sách khui hộp sản phẩm Apple",
+      "footer_url": "https://cellphones.com.vn/chinh-sach-khui-hop-apple",
+      "in_page_sitemap": true,
+      "sitemap_urls": [
+        "https://cellphones.com.vn/chinh-sach-khui-hop-apple"
+      ]
+    },
+    {
+      "section": "Thông tin và chính sách",
+      "label": "VAT Refund",
+      "footer_url": "https://cellphones.com.vn/vat-refund",
+      "in_page_sitemap": true,
+      "sitemap_urls": [
+        "https://cellphones.com.vn/vat-refund"
+      ]
+    },
+    {
+      "section": "Dịch vụ và thông tin khác",
+      "label": "Khách hàng doanh nghiệp (B2B)",
+      "footer_url": "https://cellphones.com.vn/dich-vu-khach-hang-doanh-nghiep",
+      "in_page_sitemap": true,
+      "sitemap_urls": [
+        "https://cellphones.com.vn/dich-vu-khach-hang-doanh-nghiep"
+      ]
+    },
+    {
+      "section": "Dịch vụ và thông tin khác",
+      "label": "Ưu đãi thanh toán",
+      "footer_url": "https://cellphones.com.vn/danh-sach-khuyen-mai",
+      "in_page_sitemap": true,
+      "sitemap_urls": [
+        "https://cellphones.com.vn/danh-sach-khuyen-mai",
+        "https://cellphones.com.vn/uu-dai-doi-tac"
+      ]
+    },
+    {
+      "section": "Dịch vụ và thông tin khác",
+      "label": "Quy chế hoạt động",
+      "footer_url": "https://cellphones.com.vn/tos",
+      "in_page_sitemap": true,
+      "sitemap_urls": [
+        "https://cellphones.com.vn/tos",
+        "https://cellphones.com.vn/quy-che-hoat-dong-ung-dung-cellphones"
+      ]
+    },
+    {
+      "section": "Dịch vụ và thông tin khác",
+      "label": "Chính sách bảo mật thông tin cá nhân",
+      "footer_url": "https://cellphones.com.vn/tos?part=privacy-policy",
+      "in_page_sitemap": true,
+      "sitemap_urls": [
+        "https://cellphones.com.vn/tos",
+        "https://cellphones.com.vn/dieu-khoan-su-dung-chinh-sach-bao-mat",
+        "https://cellphones.com.vn/quy-che-hoat-dong-ung-dung-cellphones/chinh-sach-bao-mat"
+      ]
+    },
+    {
+      "section": "Dịch vụ và thông tin khác",
+      "label": "Chính sách bảo mật dữ liệu đánh giá trên Zalo mini app",
+      "footer_url": "https://cellphones.com.vn/quy-dinh-dang-tai-danh-gia-tren-zalo-mini-app",
+      "in_page_sitemap": true,
+      "sitemap_urls": [
+        "https://cellphones.com.vn/quy-dinh-dang-tai-danh-gia-tren-zalo-mini-app"
+      ]
+    },
+    {
+      "section": "Dịch vụ và thông tin khác",
+      "label": "Chính sách Bảo hành",
+      "footer_url": "https://cellphones.com.vn/chinh-sach-bao-hanh",
+      "in_page_sitemap": true,
+      "sitemap_urls": [
+        "https://cellphones.com.vn/chinh-sach-bao-hanh",
+        "https://cellphones.com.vn/chinh-sach-bao-hanh-hang-cu",
+        "https://cellphones.com.vn/quy-che-hoat-dong-ung-dung-cellphones/chinh-sach-bao-hanh"
+      ]
+    },
+    {
+      "section": "Dịch vụ và thông tin khác",
+      "label": "Liên hệ hợp tác kinh doanh",
+      "footer_url": "https://cellphones.com.vn/lien-he-hop-tac",
+      "in_page_sitemap": true,
+      "sitemap_urls": [
+        "https://cellphones.com.vn/lien-he-hop-tac"
+      ]
+    },
+    {
+      "section": "Dịch vụ và thông tin khác",
+      "label": "Tuyển dụng",
+      "footer_url": "https://tuyendung.cellphones.com.vn",
+      "in_page_sitemap": false,
+      "sitemap_urls": []
+    },
+    {
+      "section": "Dịch vụ và thông tin khác",
+      "label": "Dịch vụ bảo hành mở rộng",
+      "footer_url": "https://cellphones.com.vn/bieu-phi-bao-hanh-mo-rong",
+      "in_page_sitemap": true,
+      "sitemap_urls": [
+        "https://cellphones.com.vn/bieu-phi-bao-hanh-mo-rong",
+        "https://cellphones.com.vn/uu-dai-bao-hanh-mo-rong"
+      ]
+    },
+    {
+      "section": "Dịch vụ và thông tin khác",
+      "label": "YouTube Shopping Affiliate",
+      "footer_url": "https://cellphones.com.vn/youtube-shopping-affiliate",
+      "in_page_sitemap": true,
+      "sitemap_urls": [
+        "https://cellphones.com.vn/youtube-shopping-affiliate"
+      ]
+    },
+    {
+      "section": "Phương thức thanh toán",
+      "label": "Apple Pay",
+      "footer_url": "https://cellphones.com.vn/sforum/apple-pay-viet-nam",
+      "in_page_sitemap": false,
+      "sitemap_urls": []
+    },
+    {
+      "section": "Phương thức thanh toán",
+      "label": "VNPAY",
+      "footer_url": "https://cellphones.com.vn/sforum/vnpay-la-gi-cach-dang-ky-vnpay-thanh-toan-vnpay-chi-tiet",
+      "in_page_sitemap": false,
+      "sitemap_urls": [
+        "https://cellphones.com.vn/uu-dai-doi-tac/vnpay"
+      ]
+    },
+    {
+      "section": "Phương thức thanh toán",
+      "label": "MoMo",
+      "footer_url": "https://cellphones.com.vn/huong-dan-thanh-toan-qua-vi-momo-cellphones",
+      "in_page_sitemap": true,
+      "sitemap_urls": [
+        "https://cellphones.com.vn/huong-dan-thanh-toan-qua-vi-momo-cellphones"
+      ]
+    },
+    {
+      "section": "Phương thức thanh toán",
+      "label": "OnePAY",
+      "footer_url": "https://cellphones.com.vn/huong-dan-mua-hang-va-thanh-toan-qua-cong-onepay",
+      "in_page_sitemap": true,
+      "sitemap_urls": [
+        "https://cellphones.com.vn/huong-dan-mua-hang-va-thanh-toan-qua-cong-onepay"
+      ]
+    },
+    {
+      "section": "Phương thức thanh toán",
+      "label": "Kredivo",
+      "footer_url": "https://cellphones.com.vn/uu-dai-doi-tac/kredivo",
+      "in_page_sitemap": true,
+      "sitemap_urls": [
+        "https://cellphones.com.vn/uu-dai-doi-tac/kredivo"
+      ]
+    },
+    {
+      "section": "Phương thức thanh toán",
+      "label": "ZaloPay",
+      "footer_url": "https://cellphones.com.vn/sforum/huong-dan-toan-bang-zalopay-khi-mua-hang-tren-website-cellphones",
+      "in_page_sitemap": false,
+      "sitemap_urls": [
+        "https://cellphones.com.vn/uu-dai-doi-tac/zalopay"
+      ]
+    },
+    {
+      "section": "Phương thức thanh toán",
+      "label": "Fundiin",
+      "footer_url": "https://cellphones.com.vn/huong-dan-thanh-toan-qua-cong-fundiin-tren-website-cellphones",
+      "in_page_sitemap": true,
+      "sitemap_urls": [
+        "https://cellphones.com.vn/huong-dan-thanh-toan-qua-cong-fundiin-tren-website-cellphones"
+      ]
+    },
+    {
+      "section": "Khác",
+      "label": "Định giá máy chuyên sâu (Thu cũ đổi mới)",
+      "footer_url": "https://cellphones.com.vn/?action=modal-valuation",
+      "in_page_sitemap": true,
+      "sitemap_urls": [
+        "https://cellphones.com.vn/thu-cu-doi-moi"
+      ]
+    }
+  ]
+}

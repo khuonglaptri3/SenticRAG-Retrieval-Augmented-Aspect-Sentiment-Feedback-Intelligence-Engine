@@ -1,0 +1,13 @@
+.venv/
+.browsers/
+.cache/
+.env
+.env.*
+!.env.example
+outputs/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ruff_cache/
+build/
+dist/

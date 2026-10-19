@@ -1,0 +1,19 @@
+# Exact hosts only. Add verified company subdomains explicitly when needed.
+allowed_hosts = ["cellphones.com.vn"]
+seed_urls = ["https://cellphones.com.vn/"]
+output_dir = "outputs/cellphones"
+
+[firecrawl]
+limit = 100000
+timeout_seconds = 60
+
+[browser]
+# Deliberately browse navigation pages rather than every URL returned by Map.
+seed_urls = ["https://cellphones.com.vn/"]
+max_pages = 100
+delay_seconds = 1.0
+timeout_seconds = 30
+render_wait_ms = 750
+scroll_steps = 2
+# Optional CSS selectors for navigation menus; no arbitrary button clicks.
+hover_selectors = []

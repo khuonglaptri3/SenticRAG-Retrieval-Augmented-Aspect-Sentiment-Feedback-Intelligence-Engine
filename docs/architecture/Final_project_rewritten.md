@@ -634,15 +634,15 @@ User query / ticket
 
 Để đảm bảo tính nhất quán với khung lý thuyết chuẩn của AI Agent Pipeline (theo `Sep_25__AI_ARCHITECTURE.md` và `7_layer_architecture.json`), toàn bộ các thành phần của SenticRAG được định vị vào 7 tầng kiến trúc:
 
-| Tầng (Layer) | Tên tầng kiến trúc | Các thành phần kỹ thuật cốt lõi | Vai trò & Trách nhiệm trong SenticRAG |
-| :--- | :--- | :--- | :--- |
-| **Layer 1** | **Input & Gateway Layer** | Multimodal Parsers, Semantic Router, PII Anonymizer, Rate Limiter | Tiếp nhận review/ticket từ đa kênh; ẩn danh PII (SĐT, tên, email) theo Luật BV dữ liệu cá nhân 2026; phân luồng truy vấn (Semantic Routing); kiểm soát tải và Rate Limiting. |
-| **Layer 2** | **Core Reasoning & Orchestration** | Foundation Models (LLM/SLM), Planning Engine, Cyclic State Machine (FSM), Reflection Loop | Lập kế hoạch phân tích và sinh resolution; điều phối trạng thái xử lý ticket qua FSM tuần hoàn; tự phản biện (reflection loop) đối chiếu kết quả trước khi gửi tiếp. |
-| **Layer 3** | **Hierarchical Memory Module** | Working Context (Core Memory), Message Buffer, Recall Storage, Archival Vector Memory | Quản lý bộ nhớ phân cấp của Agent; duy trì ngữ cảnh phiên hội thoại ticket; truy xuất lịch sử tương tác khách hàng và kinh nghiệm xử lý trước đây. |
-| **Layer 4** | **Knowledge & Retrieval Layer** | Advanced RAG (Hybrid Search Dense + Sparse BM25), Cross-Encoder Reranker (BGE Reranker), GraphRAG (Neo4j) | Thực hiện tìm kiếm hỗn hợp đa phương thức; dung hợp điểm số qua Reciprocal Rank Fusion (RRF); tái xếp hạng độ liên quan; truy vết quan hệ thực thể trên Knowledge Graph. |
-| **Layer 5** | **Tools & Action Protocols** | Function Calling, Model Context Protocol (MCP Host/Client/Server), MicroVM / Task Sandboxes | Cung cấp giao thức chuẩn để LLM gọi công cụ nội bộ (CRM API, ERP query, notification service, ticket escalation); đảm bảo môi trường sandbox an toàn khi thực thi action. |
-| **Layer 6** | **Output & Guardrails Layer** | Hallucination Verifier, Pydantic Schema Validator, Output Filter, Policy Guard | Kiểm tra hallucination dựa trên evidence citations; ép schema Pydantic chặt chẽ; lọc đầu ra và chặn các phản hồi vi phạm chính sách hoặc cam kết hoàn tiền trái thẩm quyền. |
-| **Layer 7** | **Observability & Operations** | Distributed Tracing (OpenTelemetry), Token/Cost Accounting, Drift Monitoring, Automated Evaluation | Thu thập traces/metrics phân tán; hạch toán chi phí token per ticket; theo dõi data drift và concept drift; kích hoạt đánh giá chất lượng tự động. |
+| Tầng (Layer)     | Tên tầng kiến trúc                   | Các thành phần kỹ thuật cốt lõi                                                                    | Vai trò & Trách nhiệm trong SenticRAG                                                                                                                                                            |
+| :---------------- | :--------------------------------------- | :-------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Layer 1** | **Input & Gateway Layer**          | Multimodal Parsers, Semantic Router, PII Anonymizer, Rate Limiter                                         | Tiếp nhận review/ticket từ đa kênh; ẩn danh PII (SĐT, tên, email) theo Luật BV dữ liệu cá nhân 2026; phân luồng truy vấn (Semantic Routing); kiểm soát tải và Rate Limiting.    |
+| **Layer 2** | **Core Reasoning & Orchestration** | Foundation Models (LLM/SLM), Planning Engine, Cyclic State Machine (FSM), Reflection Loop                 | Lập kế hoạch phân tích và sinh resolution; điều phối trạng thái xử lý ticket qua FSM tuần hoàn; tự phản biện (reflection loop) đối chiếu kết quả trước khi gửi tiếp.     |
+| **Layer 3** | **Hierarchical Memory Module**     | Working Context (Core Memory), Message Buffer, Recall Storage, Archival Vector Memory                     | Quản lý bộ nhớ phân cấp của Agent; duy trì ngữ cảnh phiên hội thoại ticket; truy xuất lịch sử tương tác khách hàng và kinh nghiệm xử lý trước đây.                     |
+| **Layer 4** | **Knowledge & Retrieval Layer**    | Advanced RAG (Hybrid Search Dense + Sparse BM25), Cross-Encoder Reranker (BGE Reranker), GraphRAG (Neo4j) | Thực hiện tìm kiếm hỗn hợp đa phương thức; dung hợp điểm số qua Reciprocal Rank Fusion (RRF); tái xếp hạng độ liên quan; truy vết quan hệ thực thể trên Knowledge Graph.   |
+| **Layer 5** | **Tools & Action Protocols**       | Function Calling, Model Context Protocol (MCP Host/Client/Server), MicroVM / Task Sandboxes               | Cung cấp giao thức chuẩn để LLM gọi công cụ nội bộ (CRM API, ERP query, notification service, ticket escalation); đảm bảo môi trường sandbox an toàn khi thực thi action.         |
+| **Layer 6** | **Output & Guardrails Layer**      | Hallucination Verifier, Pydantic Schema Validator, Output Filter, Policy Guard                            | Kiểm tra hallucination dựa trên evidence citations; ép schema Pydantic chặt chẽ; lọc đầu ra và chặn các phản hồi vi phạm chính sách hoặc cam kết hoàn tiền trái thẩm quyền. |
+| **Layer 7** | **Observability & Operations**     | Distributed Tracing (OpenTelemetry), Token/Cost Accounting, Drift Monitoring, Automated Evaluation        | Thu thập traces/metrics phân tán; hạch toán chi phí token per ticket; theo dõi data drift và concept drift; kích hoạt đánh giá chất lượng tự động.                               |
 
 ---
 
@@ -652,12 +652,12 @@ Hệ thống phân cấp bộ nhớ giải quyết bài toán cốt lõi: **LLM 
 
 ### Bảng phân loại vai trò của 4 loại Memory (Technical Memory Roles)
 
-| Loại Memory | Vai trò kỹ thuật (Role) | Cơ chế lưu trữ (Storage) | Triển khai thực tế trong SenticRAG |
-| :--- | :--- | :--- | :--- |
-| **Working Memory** | Ngữ cảnh tức thì cho bước tính toán/suy luận hiện tại của Agent | In-context prompt window, Redis short-term cache | Payload ticket hiện tại, thuộc tính buyer sau khi giải mã, danh sách tool calls đang chờ xử lý, draft đang gen. |
-| **Episodic Memory** | Lưu vết lịch sử tương tác, diễn biến sự vụ và kết quả quá khứ | RDBMS (PostgreSQL), external session store | Lịch sử mua hàng, lịch sử khiếu nại trước đây của khách hàng, chuỗi hội thoại CSKH nhiều lượt, kết quả xử lý ticket cũ. |
-| **Semantic Memory** | Tri thức sự kiện, định nghĩa và quan hệ thực thể để reasoning | Vector Store (Qdrant) + Knowledge Graph (Neo4j) | Toàn bộ corpus review đã index, tài liệu kỹ thuật sản phẩm, ontology lỗi - triệu chứng - linh kiện - phiên bản firmware. |
-| **Procedural Memory** | Quy tắc, quy trình, chỉ dẫn định hình hành vi xử lý | System prompt, versioned policy configs, Python decision trees | Cây quyết định chính sách bảo hành/đổi trả, playbook xử lý khiếu nại theo cấp độ rủi ro, rubric kiểm duyệt của CSKH Agent. |
+| Loại Memory                | Vai trò kỹ thuật (Role)                                                    | Cơ chế lưu trữ (Storage)                                   | Triển khai thực tế trong SenticRAG                                                                                                            |
+| :-------------------------- | :---------------------------------------------------------------------------- | :------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Working Memory**    | Ngữ cảnh tức thì cho bước tính toán/suy luận hiện tại của Agent   | In-context prompt window, Redis short-term cache               | Payload ticket hiện tại, thuộc tính buyer sau khi giải mã, danh sách tool calls đang chờ xử lý, draft đang gen.                      |
+| **Episodic Memory**   | Lưu vết lịch sử tương tác, diễn biến sự vụ và kết quả quá khứ | RDBMS (PostgreSQL), external session store                     | Lịch sử mua hàng, lịch sử khiếu nại trước đây của khách hàng, chuỗi hội thoại CSKH nhiều lượt, kết quả xử lý ticket cũ. |
+| **Semantic Memory**   | Tri thức sự kiện, định nghĩa và quan hệ thực thể để reasoning     | Vector Store (Qdrant) + Knowledge Graph (Neo4j)                | Toàn bộ corpus review đã index, tài liệu kỹ thuật sản phẩm, ontology lỗi - triệu chứng - linh kiện - phiên bản firmware.         |
+| **Procedural Memory** | Quy tắc, quy trình, chỉ dẫn định hình hành vi xử lý                 | System prompt, versioned policy configs, Python decision trees | Cây quyết định chính sách bảo hành/đổi trả, playbook xử lý khiếu nại theo cấp độ rủi ro, rubric kiểm duyệt của CSKH Agent. |
 
 ### Cấu trúc bộ nhớ phân tầng (Hierarchical Memory Architecture)
 
@@ -808,10 +808,12 @@ rating?
 Cổng tiếp nhận (Input & Gateway) đảm nhiệm 3 vai trò kiểm soát an ninh và điều phối luồng dữ liệu trước khi đi vào các tầng xử lý sâu hơn:
 
 ### Rate Limiter & Throttling
+
 - Triển khai thuật toán Sliding Window Counter (Redis) nhằm giới hạn tần suất gửi review/ticket từ các client.
 - Chặn spam review hàng loạt, ngăn chặn tấn công DoS và kiểm soát chi phí gọi AI inference.
 
 ### Semantic Router (Điều phối luồng thông minh)
+
 - Ngay khi nhận payload văn bản, Semantic Router phân loại nhanh intent cấp 1:
   - **Corpus Review / Macro Feedback** $\rightarrow$ Đẩy vào Queue của **Pipeline A (Batch ABSA Worker)** để phục vụ phân tích định lượng.
   - **Urgent Complaint / Support Ticket** $\rightarrow$ Đẩy vào **Pipeline B (Real-time Investigation & Resolution Engine)** để xử lý tức thì cho khách hàng/Agent.
@@ -822,13 +824,16 @@ Cổng tiếp nhận (Input & Gateway) đảm nhiệm 3 vai trò kiểm soát an
 SenticRAG bắt buộc tách hai context xử lý dữ liệu:
 
 #### Analytics context
+
 - Pseudonymized customer key;
 - Masked phone/email/address (regex + NER-based redaction);
 - Role-based access control;
 - Retention control.
 
 #### Resolution context
+
 Chỉ Support Agent / authorized service được phép truy cập thông tin định danh cần thiết để:
+
 - Xác minh order;
 - Xác định thời hạn warranty;
 - Xác định service region / trạm bảo hành gần nhất;
@@ -1978,11 +1983,11 @@ Có retention policy theo data category, và workflow xử lý deletion/correcti
 
 Thay vì lưu trữ lâu dài các cặp Access Key / Secret Key tiềm ẩn rủi ro rò rỉ, quy trình tự động hóa GitHub Actions xác thực với AWS thông qua giao thức OpenID Connect (OIDC) với claim `id-token: write` và đảm nhận (assume) 3 role độc lập:
 
-| IAM Role Name | Role ARN quy ước | Quyền hạn tối thiểu (Least Privilege Policy) | Ràng buộc bảo mật |
-| :--- | :--- | :--- | :--- |
-| **Builder Role** | `arn:aws:iam::<account_id>:role/github-project-a-builder` | `ecr:GetAuthorizationToken`, `ecr:BatchCheckLayerAvailability`, `ecr:PutImage`, `ecr:InitiateLayerUpload` | Chỉ được phép build và đẩy immutable container image digest lên AWS ECR. **Tuyệt đối không có quyền truy cập EKS hay Secrets Manager**. |
-| **Deployer Role** | `arn:aws:iam::<account_id>:role/github-project-a-deployer` | `eks:DescribeCluster`, cập nhật Helm release trên namespace `senticrag-staging` | Chỉ được deploy các image digest đã được ký duyệt qua các AI quality gates lên môi trường Staging. |
-| **Prod Deployer Role** | `arn:aws:iam::<account_id>:role/github-project-a-prod-deployer` | Triển khai Helm release trên namespace `senticrag-prod` | **Bắt buộc khóa chặt qua GitHub Environment `production`**: Yêu cầu phê duyệt thủ công (Required Reviewers), branch protection rule (`main`), và chặn triển khai chồng chéo (concurrency control). |
+| IAM Role Name                | Role ARN quy ước                                                | Quyền hạn tối thiểu (Least Privilege Policy)                                                                  | Ràng buộc bảo mật                                                                                                                                                                                                       |
+| :--------------------------- | :---------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Builder Role**       | `arn:aws:iam::<account_id>:role/github-project-a-builder`       | `ecr:GetAuthorizationToken`, `ecr:BatchCheckLayerAvailability`, `ecr:PutImage`, `ecr:InitiateLayerUpload` | Chỉ được phép build và đẩy immutable container image digest lên AWS ECR.**Tuyệt đối không có quyền truy cập EKS hay Secrets Manager**.                                                                |
+| **Deployer Role**      | `arn:aws:iam::<account_id>:role/github-project-a-deployer`      | `eks:DescribeCluster`, cập nhật Helm release trên namespace `senticrag-staging`                            | Chỉ được deploy các image digest đã được ký duyệt qua các AI quality gates lên môi trường Staging.                                                                                                         |
+| **Prod Deployer Role** | `arn:aws:iam::<account_id>:role/github-project-a-prod-deployer` | Triển khai Helm release trên namespace`senticrag-prod`                                                        | **Bắt buộc khóa chặt qua GitHub Environment `production`**: Yêu cầu phê duyệt thủ công (Required Reviewers), branch protection rule (`main`), và chặn triển khai chồng chéo (concurrency control). |
 
 ### B. EKS Pod Identity / IRSA Roles (One IAM Role per Application Service)
 

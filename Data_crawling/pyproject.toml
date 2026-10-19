@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "senticrag-url-discovery"
+version = "0.1.0"
+description = "Standalone company URL discovery with Firecrawl Map and Playwright"
+requires-python = ">=3.11"
+dependencies = ["protego>=0.3,<1"]
+
+[project.optional-dependencies]
+browser = ["playwright>=1.48,<2"]
+dev = ["ruff>=0.9,<1"]
+
+[tool.setuptools]
+packages = ["url_discovery"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "UP"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["checks"]
+pythonpath = ["."]
