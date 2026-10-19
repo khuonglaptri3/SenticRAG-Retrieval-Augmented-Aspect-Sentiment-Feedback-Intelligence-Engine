@@ -123,7 +123,8 @@ senticrag/
 ## 4. Quickstart
 
 ### Prerequisites
-- Python >= 3.11
+- Python 3.11 or 3.12 for the Poetry-managed environment
+- Poetry >= 2.2, < 3.0 ([installation instructions](https://python-poetry.org/docs/#installation))
 - Docker & Docker Compose
 
 ### 1. Environment Setup
@@ -131,10 +132,26 @@ senticrag/
 git clone git@github.com:khuonglaptri3/SenticRAG-Retrieval-Augmented-Aspect-Sentiment-Feedback-Intelligence-Engine.git
 cd "SenticRAG-Retrieval-Augmented-Aspect-Sentiment-Feedback-Intelligence-Engine"
 
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -e ".[dev]"
+poetry env use python3.11
+poetry install --extras dev
 ```
+
+Project metadata and dependency requirements use the standard PEP 621 `[project]`
+section in `pyproject.toml`. Poetry manages the virtual environment and records exact
+dependency versions in the committed `poetry.lock`. Development tools remain in the
+standard `dev` extra. The published Python requirement stays `>=3.11`, while Poetry
+locks dependencies for the currently targeted Python 3.11–3.12 range.
+
+Use `poetry add <package>` to add a runtime dependency and
+`poetry add --optional dev <package>` to add a development tool.
+Run `poetry lock` after manually changing
+dependency requirements, and commit both `pyproject.toml` and `poetry.lock`.
+
+Both Docker images install dependencies from `poetry.lock`. The training image now
+uses Python 3.11 and installs the locked PyTorch distribution instead of inheriting
+the older preinstalled CUDA/PyTorch stack. GPU runs require a compatible NVIDIA
+driver and container runtime; a custom `TRAINING_BASE_IMAGE` must provide Python
+3.11 or 3.12 and be compatible with the locked PyTorch version.
 
 ### 2. Launch Local Multi-Service Stack (Docker Compose)
 Start the complete infrastructure suite including PostgreSQL, Redis, Qdrant Vector DB, Neo4j Graph DB, and the SenticRAG API:
@@ -145,7 +162,7 @@ docker compose -f infra/compose/docker-compose.yml up -d
 ### 3. Run Automated Tests
 ```bash
 # Execute unit and contract tests
-pytest tests/unit tests/contract -v
+poetry run pytest tests/unit tests/contract -v
 ```
 
 ### 4. Start Development API Server

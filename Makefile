@@ -1,5 +1,7 @@
 .PHONY: help install lint typecheck test test-unit test-integration build-api build-train run-api clean
 
+POETRY ?= poetry
+
 help:
 	@echo "SenticRAG Development Commands:"
 	@echo "  make install           Install dependencies in editable mode"
@@ -14,22 +16,22 @@ help:
 	@echo "  make clean             Clean build and cache artifacts"
 
 install:
-	pip install -e ".[dev]"
+	$(POETRY) install --extras dev
 
 lint:
-	ruff check .
+	$(POETRY) run ruff check .
 
 typecheck:
-	mypy packages apps pipelines
+	$(POETRY) run mypy packages apps pipelines
 
 test:
-	pytest tests/unit tests/integration -v
+	$(POETRY) run pytest tests/unit tests/integration -v
 
 test-unit:
-	pytest tests/unit -v
+	$(POETRY) run pytest tests/unit -v
 
 test-integration:
-	pytest tests/integration -v
+	$(POETRY) run pytest tests/integration -v
 
 build-api:
 	docker build -f infra/docker/Dockerfile.api -t senticrag-api:latest .
@@ -38,7 +40,7 @@ build-train:
 	docker build -f infra/docker/Dockerfile.train -t senticrag-train:latest .
 
 run-api:
-	uvicorn apps.api.app.main:app --host 0.0.0.0 --port 8000 --reload
+	$(POETRY) run uvicorn apps.api.app.main:app --host 0.0.0.0 --port 8000 --reload
 
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +
