@@ -12,8 +12,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install locked dependencies
+        run: |
+          python -m pip install "poetry==2.2.1" pip-audit
+          poetry check --lock --strict
+          poetry install --only main --no-root --no-interaction
+
       - name: Scan dependencies
         run: |
-          pip install --upgrade pip
-          pip install pip-audit || true
-          pip-audit || true
+          pip-audit --path .venv/lib/python3.11/site-packages || true
