@@ -1,0 +1,350 @@
+{
+  "started_at": "2026-10-20T08:09:05.377961+00:00",
+  "status": "partial",
+  "total": 56,
+  "attempted": 56,
+  "succeeded": 52,
+  "failed": 4,
+  "pages": [
+    {
+      "index": 1,
+      "requested_url": "https://cellphones.com.vn/chinh-sach-giao-hang",
+      "status": "succeeded",
+      "record": "0001/page.json"
+    },
+    {
+      "index": 2,
+      "requested_url": "https://cellphones.com.vn/huong-dan-mua-hang-online",
+      "status": "succeeded",
+      "record": "0002/page.json"
+    },
+    {
+      "index": 3,
+      "requested_url": "https://cellphones.com.vn/mua-hang-online",
+      "status": "succeeded",
+      "record": "0003/page.json"
+    },
+    {
+      "index": 4,
+      "requested_url": "https://cellphones.com.vn/ho-tro-thanh-toan-online",
+      "status": "succeeded",
+      "record": "0004/page.json"
+    },
+    {
+      "index": 5,
+      "requested_url": "https://cellphones.com.vn/tra-gop",
+      "status": "succeeded",
+      "record": "0005/page.json"
+    },
+    {
+      "index": 6,
+      "requested_url": "https://cellphones.com.vn/tra-gop-online-cong-ty-tai-chinh",
+      "status": "succeeded",
+      "record": "0006/page.json"
+    },
+    {
+      "index": 7,
+      "requested_url": "https://cellphones.com.vn/huong-dan-mua-hang-tra-gop-bang-the-tin-dung-tai-cellphones",
+      "status": "succeeded",
+      "record": "0007/page.json"
+    },
+    {
+      "index": 8,
+      "requested_url": "https://cellphones.com.vn/tra-gop-online-the-tin-dung",
+      "status": "succeeded",
+      "record": "0008/page.json"
+    },
+    {
+      "index": 9,
+      "requested_url": "https://cellphones.com.vn/chinh-sach-giao-hang-lap-dat-dien-may",
+      "status": "succeeded",
+      "record": "0009/page.json"
+    },
+    {
+      "index": 10,
+      "requested_url": "https://cellphones.com.vn/tos",
+      "status": "succeeded",
+      "record": "0010/page.json"
+    },
+    {
+      "index": 11,
+      "requested_url": "https://cellphones.com.vn/tos?part=refund-policy",
+      "status": "succeeded",
+      "record": "0011/page.json"
+    },
+    {
+      "index": 12,
+      "requested_url": "https://cellphones.com.vn/tos?part=privacy-policy",
+      "status": "succeeded",
+      "record": "0012/page.json"
+    },
+    {
+      "index": 13,
+      "requested_url": "https://cellphones.com.vn/huong-dan-huy-giao-dich-doi-tra",
+      "status": "succeeded",
+      "record": "0013/page.json"
+    },
+    {
+      "index": 14,
+      "requested_url": "https://cellphones.com.vn/chinh-sach-san-pham",
+      "status": "succeeded",
+      "record": "0014/page.json"
+    },
+    {
+      "index": 15,
+      "requested_url": "https://cellphones.com.vn/smember",
+      "status": "failed",
+      "record": "0015/page.json"
+    },
+    {
+      "index": 16,
+      "requested_url": "https://cellphones.com.vn/uu-dai-smember",
+      "status": "succeeded",
+      "record": "0016/page.json"
+    },
+    {
+      "index": 17,
+      "requested_url": "https://cellphones.com.vn/quy-dinh-ve-tiep-nhan-bao-hanh",
+      "status": "succeeded",
+      "record": "0017/page.json"
+    },
+    {
+      "index": 18,
+      "requested_url": "https://cellphones.com.vn/dich-vu-thanh-toan-hoa-don",
+      "status": "succeeded",
+      "record": "0018/page.json"
+    },
+    {
+      "index": 19,
+      "requested_url": "https://cellphones.com.vn/quy-dinh-ve-hoa-don-khi-mua-hang-cellphones",
+      "status": "succeeded",
+      "record": "0019/page.json"
+    },
+    {
+      "index": 20,
+      "requested_url": "https://cellphones.com.vn/quy-dinh-ve-hoa-don-mua-hang",
+      "status": "succeeded",
+      "record": "0020/page.json"
+    },
+    {
+      "index": 21,
+      "requested_url": "https://cellphones.com.vn/bao-hanh/apple",
+      "status": "succeeded",
+      "record": "0021/page.json"
+    },
+    {
+      "index": 22,
+      "requested_url": "https://cellphones.com.vn/trung-tam-dich-vu",
+      "status": "succeeded",
+      "record": "0022/page.json"
+    },
+    {
+      "index": 23,
+      "requested_url": "https://cellphones.com.vn/quy-dinh-ve-viec-sao-luu-du-lieu",
+      "status": "succeeded",
+      "record": "0023/page.json"
+    },
+    {
+      "index": 24,
+      "requested_url": "https://cellphones.com.vn/chinh-sach-khui-hop-apple",
+      "status": "succeeded",
+      "record": "0024/page.json"
+    },
+    {
+      "index": 25,
+      "requested_url": "https://cellphones.com.vn/vat-refund",
+      "status": "succeeded",
+      "record": "0025/page.json"
+    },
+    {
+      "index": 26,
+      "requested_url": "https://cellphones.com.vn/dich-vu-khach-hang-doanh-nghiep",
+      "status": "succeeded",
+      "record": "0026/page.json"
+    },
+    {
+      "index": 27,
+      "requested_url": "https://cellphones.com.vn/danh-sach-khuyen-mai",
+      "status": "succeeded",
+      "record": "0027/page.json"
+    },
+    {
+      "index": 28,
+      "requested_url": "https://cellphones.com.vn/uu-dai-doi-tac",
+      "status": "succeeded",
+      "record": "0028/page.json"
+    },
+    {
+      "index": 29,
+      "requested_url": "https://cellphones.com.vn/dieu-khoan-su-dung-chinh-sach-bao-mat",
+      "status": "succeeded",
+      "record": "0029/page.json"
+    },
+    {
+      "index": 30,
+      "requested_url": "https://cellphones.com.vn/quy-che-hoat-dong-ung-dung-cellphones",
+      "status": "succeeded",
+      "record": "0030/page.json"
+    },
+    {
+      "index": 31,
+      "requested_url": "https://cellphones.com.vn/quy-che-hoat-dong-ung-dung-cellphones/chinh-sach-bao-mat",
+      "status": "succeeded",
+      "record": "0031/page.json"
+    },
+    {
+      "index": 32,
+      "requested_url": "https://cellphones.com.vn/quy-che-hoat-dong-ung-dung-cellphones/chinh-sach-doi-tra",
+      "status": "succeeded",
+      "record": "0032/page.json"
+    },
+    {
+      "index": 33,
+      "requested_url": "https://cellphones.com.vn/quy-che-hoat-dong-ung-dung-cellphones/quy-trinh-giao-nhan-van-chuyen",
+      "status": "succeeded",
+      "record": "0033/page.json"
+    },
+    {
+      "index": 34,
+      "requested_url": "https://cellphones.com.vn/quy-che-hoat-dong-ung-dung-cellphones/chinh-sach-bao-hanh",
+      "status": "succeeded",
+      "record": "0034/page.json"
+    },
+    {
+      "index": 35,
+      "requested_url": "https://cellphones.com.vn/quy-dinh-dang-tai-danh-gia-tren-zalo-mini-app",
+      "status": "succeeded",
+      "record": "0035/page.json"
+    },
+    {
+      "index": 36,
+      "requested_url": "https://cellphones.com.vn/chinh-sach-bao-hanh",
+      "status": "succeeded",
+      "record": "0036/page.json"
+    },
+    {
+      "index": 37,
+      "requested_url": "https://cellphones.com.vn/chinh-sach-bao-hanh-hang-cu",
+      "status": "succeeded",
+      "record": "0037/page.json"
+    },
+    {
+      "index": 38,
+      "requested_url": "https://cellphones.com.vn/lien-he-hop-tac",
+      "status": "succeeded",
+      "record": "0038/page.json"
+    },
+    {
+      "index": 39,
+      "requested_url": "https://cellphones.com.vn/bieu-phi-bao-hanh-mo-rong",
+      "status": "succeeded",
+      "record": "0039/page.json"
+    },
+    {
+      "index": 40,
+      "requested_url": "https://cellphones.com.vn/uu-dai-bao-hanh-mo-rong",
+      "status": "succeeded",
+      "record": "0040/page.json"
+    },
+    {
+      "index": 41,
+      "requested_url": "https://cellphones.com.vn/youtube-shopping-affiliate",
+      "status": "succeeded",
+      "record": "0041/page.json"
+    },
+    {
+      "index": 42,
+      "requested_url": "https://cellphones.com.vn/huong-dan-thanh-toan-qua-vi-momo-cellphones",
+      "status": "succeeded",
+      "record": "0042/page.json"
+    },
+    {
+      "index": 43,
+      "requested_url": "https://cellphones.com.vn/huong-dan-mua-hang-va-thanh-toan-qua-cong-onepay",
+      "status": "succeeded",
+      "record": "0043/page.json"
+    },
+    {
+      "index": 44,
+      "requested_url": "https://cellphones.com.vn/uu-dai-doi-tac/kredivo",
+      "status": "succeeded",
+      "record": "0044/page.json"
+    },
+    {
+      "index": 45,
+      "requested_url": "https://cellphones.com.vn/uu-dai-doi-tac/vnpay",
+      "status": "succeeded",
+      "record": "0045/page.json"
+    },
+    {
+      "index": 46,
+      "requested_url": "https://cellphones.com.vn/uu-dai-doi-tac/zalopay",
+      "status": "succeeded",
+      "record": "0046/page.json"
+    },
+    {
+      "index": 47,
+      "requested_url": "https://cellphones.com.vn/huong-dan-thanh-toan-qua-cong-fundiin-tren-website-cellphones",
+      "status": "succeeded",
+      "record": "0047/page.json"
+    },
+    {
+      "index": 48,
+      "requested_url": "https://cellphones.com.vn/sforum/apple-pay-viet-nam",
+      "status": "succeeded",
+      "record": "0048/page.json"
+    },
+    {
+      "index": 49,
+      "requested_url": "https://cellphones.com.vn/sforum/vnpay-la-gi-cach-dang-ky-vnpay-thanh-toan-vnpay-chi-tiet",
+      "status": "succeeded",
+      "record": "0049/page.json"
+    },
+    {
+      "index": 50,
+      "requested_url": "https://cellphones.com.vn/sforum/huong-dan-toan-bang-zalopay-khi-mua-hang-tren-website-cellphones",
+      "status": "succeeded",
+      "record": "0050/page.json"
+    },
+    {
+      "index": 51,
+      "requested_url": "https://cellphones.com.vn/thu-cu-doi-moi",
+      "status": "succeeded",
+      "record": "0051/page.json"
+    },
+    {
+      "index": 52,
+      "requested_url": "https://cellphones.com.vn/?action=modal-valuation",
+      "status": "succeeded",
+      "record": "0052/page.json"
+    },
+    {
+      "index": 53,
+      "requested_url": "https://smember.com.vn/?company_id=cellphones",
+      "status": "failed",
+      "record": "0053/page.json"
+    },
+    {
+      "index": 54,
+      "requested_url": "https://smember.com.vn/warranty?company_id=cellphones",
+      "status": "failed",
+      "record": "0054/page.json"
+    },
+    {
+      "index": 55,
+      "requested_url": "https://hddt.cellphones.com.vn/",
+      "status": "failed",
+      "record": "0055/page.json"
+    },
+    {
+      "index": 56,
+      "requested_url": "https://tuyendung.cellphones.com.vn/",
+      "status": "succeeded",
+      "record": "0056/page.json"
+    }
+  ],
+  "finished_at": "2026-10-20T08:44:28.677881+00:00",
+  "source_file": "Evident/policy_urls.txt",
+  "available_urls": 56,
+  "limit": null
+}

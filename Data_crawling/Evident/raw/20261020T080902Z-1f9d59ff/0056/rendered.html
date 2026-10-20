@@ -1,0 +1,138 @@
+<!DOCTYPE html><html style="--loading-color: #fe0000; --app-height: 1000px;"><head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge; text/html; charset=utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    
+        <link rel="manifest" href="/manifest.json">
+    
+    <title>Trang chủ tuyển dụng, tìm việc làm mới nhất tại CellphoneS</title>
+    <base href="/">
+    <link id="favicon" rel="icon" href="/">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css" integrity="sha512-oHDEc8Xed4hiW6CxD7qjbnI+B07vDdX7hEPTvn9pSZO1bcRqHp8mj9pyr+8RVC2GmtEfI2Bi9Ke9Ass0as+zpg==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css">
+    <link rel="stylesheet" type="text/css" charset="UTF-8" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css">
+    
+        <link rel="stylesheet" href="/dist/site.css?v=6qwYG_ASna40Yxh2eOpO_Px--IyFczgsAmFCLJ7rIAE">
+    
+    
+<meta name="description" content="Tuyển dụng nhiều việc làm tại CellphoneS trên toàn quốc với mức lương hấp dẫn. Ứng tuyển ngay!">
+<meta name="title" content="Trang chủ tuyển dụng, tìm việc làm mới nhất tại CellphoneS">
+<meta name="keywords" content="việc làm, tìm việc làm, tuyển dụng, việc làm cellphones, tìm việc">
+<meta name="url" content="http://tuyendung.cellphones.com.vn/">
+<meta property="og:title" content="Trang chủ tuyển dụng, tìm việc làm mới nhất tại CellphoneS">
+<meta property="og:description" content="Tuyển dụng nhiều việc làm tại CellphoneS trên toàn quốc với mức lương hấp dẫn. Ứng tuyển ngay!">
+<meta rel="canonical" href="http://tuyendung.cellphones.com.vn/">
+<meta property="og:locale" content="vi_VN">
+<meta property="og:type" content="website">
+
+</head>
+
+<body>
+    
+<h1 style="visibility: hidden;height: 0px;margin: 0px">Trang chủ tuyển dụng, tìm việc làm mới nhất tại CellphoneS</h1>
+
+    <div id="react-app">
+    <div id="loader-wrapper" class="loader-wrapper" style="box-sizing: border-box;">
+        <div classname="load-page__loading" style="box-sizing: border-box;width: 100%;height: 100vh;display: flex;flex-direction: column;justify-content:
+            center;align-items: center;color: #fe0000;">
+    <div classname="loader" style="box-sizing: border-box;display: inline-block;width: 30px; height: 30px;border: 4px solid
+            #fe0000;animation: loader 4s infinite ease;">
+        <span classname="loader-inner" style=" vertical-align: top;display: inline-block;width: 100%;background-color: #fe0000;animation: loader-inner
+            4s infinite ease-in;"></span>
+    </div>
+    <div classname="load-page__loading-title" style="font-family: Lato;-moz-animation: fade 2s infinite;-webkit-animation: fade 2s infinite;color:
+            inherit;text-transform: uppercase;font-size: 14px;letter-spacing: 1.5px;text-align: center;width:
+            155px;margin-top: 20px;font-weight: 700;">
+        Loading...</div>
+</div>
+        </div>
+</div>
+<style>
+    .leaflet-div-icon{
+        background: none !important;
+        border: none !important;
+        width: 100px !important;
+        color: #3a3f47;
+        text-shadow: -1px -1px 0 #e6f4fd, 1px -1px 0 #e6f4fd, -1px 1px 0 #e6f4fd, 1px 1px 0 #e6f4fd;
+        filter: blur(0.25px);
+        cursor: grab;
+    }
+    .leaflet-map-biendong {
+        font-size: 14px;
+        text-shadow: none;
+        color: #075689;
+        font-style: italic;
+        width: 150px !important;
+        display: block;
+        letter-spacing: 5px;
+        cursor: grab;
+    }
+</style>
+
+
+
+
+    <script async="" src="https://www.googletagmanager.com/gtm.js?id=GTM-PJFPGQW"></script><script src="/dist/vendor.js?v=QIilmeLhMzJNOpf5-DK0Gkh5Z_U7Re1YeJ5w_pOOIXM"></script>
+
+    <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <script src="https://cdn.rawgit.com/aparshin/leaflet-boundary-canvas/f00b4d35/src/BoundaryCanvas.js"></script>
+    
+<script type="text/javascript">
+    document.is_production = true;
+    document.hasSession = false;
+</script>
+<script type="text/javascript">
+    document.is_production = true;
+    const setLoadingColor = () => {
+        document.configUI = {"BackgroundColor":"#fe0000","SubBackgroundColor":"#f6f6f6","TextColor":"#ffffff","SubTextColor":"#ffb2b2","ButtonColor":"#DD3333","SubButtonColor":"#ffb2b2","ButtonTextColor":"#FFFFFF","SubButtonTextColor":"#CA7474","LoadingColor":"#fe0000","StoreBGColor":null,"StoreTitle":null,"OfficeTitle":null,"ThirdUnitTitle":null,"FourthUnitTitle":null,"Icon":{"Ext":".png","Name":"Icon_CellphoneS.png","Size":360,"Url":"https://cdn2.cellphones.com.vn/200x/media/favicon/default/logo-cps.png","UploadAt":"2022-02-10T03:14:34.467Z"},"MapIcon":{"Ext":".png","Name":"Location.png","Size":4324,"Url":"https://static.hara.vn/1/24/recruitment/a4175c49bdd74a82955e354ba875a3b0.png","UploadAt":"2022-02-10T03:14:34.467Z"},"Title":"","Menu":["office","store","result","about","map_search"],"TextNotify":null,"BackgroundImg":null,"IsUsageAgreement":true,"LinkUsageAgreement":"https://drive.google.com/file/d/1kbdixgaF1qPKiL-UmGZGysZvpsetp5vZ/view?usp=sharing","TextUsageAgreement":"Bằng việc nộp hồ sơ ứng tuyển tại CellphoneS - Điện Thoại Vui - CareS, tôi xác nhận đã đọc, hiểu và đồng ý với Chính sách bảo mật và xử lý dữ liệu cá nhân của Công ty, đồng thời cho phép Công ty thu thập, lưu trữ và xử lý các thông tin cá nhân được cung cấp nhằm phục vụ cho mục đích tuyển dụng theo quy định pháp luật hiện hành."};
+        var loadingColor = document.configUI?.LoadingColor;
+        const doc = document.documentElement
+        doc.style.setProperty('--loading-color', loadingColor ? loadingColor : "#fe0000");
+        document.querySelector("#loader-wrapper").innerHTML = `
+        <div className='load-page__loading' style="box-sizing: border-box;width: 100%;height: 100vh;display: flex;flex-direction: column;justify-content:
+            center;align-items: center;color: ${loadingColor ? loadingColor : "#fe0000"};">
+    <div className="loader" style="box-sizing: border-box;display: inline-block;width: 30px; height: 30px;border: 4px solid
+            ${loadingColor ? loadingColor : "#fe0000"};animation: loader 4s infinite ease;">
+        <span className="loader-inner" style=" vertical-align: top;display: inline-block;width: 100%;background-color: ${loadingColor ? loadingColor : "#fe0000"};animation: loader-inner
+            4s infinite ease-in;"></span>
+    </div>
+    <div className='load-page__loading-title' style="font-family: Lato;-moz-animation: fade 2s infinite;-webkit-animation: fade 2s infinite;color:
+            inherit;text-transform: uppercase;font-size: 14px;letter-spacing: 1.5px;text-align: center;width:
+            155px;margin-top: 20px;font-weight: 700;">
+        Loading...</div>
+</div>
+        `;
+    }
+    setLoadingColor();
+</script>
+<script>
+    if (document.is_production) {
+        window.ga = window.ga || function () { (ga.q = ga.q || []).push(arguments) }; ga.l = +new Date;
+        ga('create', 'G-1XS18PVP1F', 'auto');
+        ga('send', 'pageview');
+    }
+    /*if(document.location.host == 'tuyendung.thecoffeehouse.com' && document.location.pathname.toLowerCase().indexOf('/ood') < 0 && localStorage.getItem("access_key") == null){
+        document.location.href = "/ood"
+    }*/
+</script>
+<script async="" src="https://www.google-analytics.com/analytics.js"></script>
+<script src="/dist/main.js?v=qdj7mGNAo3oNsWyxGSmKhVZiktqGA_QWDYguxTe1vUI"></script>
+
+    <script>
+        const appHeight = () => {
+            const doc = document.documentElement
+            doc.style.setProperty('--app-height', `${window.innerHeight}px`)
+        }
+        window.addEventListener('resize', appHeight)
+        appHeight()
+
+    </script>
+
+    <!-- Google Tag Manager --><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-PJFPGQW');</script><!-- End Google Tag Manager --><!-- Google Tag Manager (noscript) --><noscript><iframe src='https://www.googletagmanager.com/ns.html?id=GTM-PJFPGQW' height='0' width='0' style='display:none;visibility:hidden'></iframe></noscript><!-- End Google Tag Manager (noscript) -->
+
+
+
+</body></html>

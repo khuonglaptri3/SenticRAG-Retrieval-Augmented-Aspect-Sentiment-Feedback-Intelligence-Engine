@@ -1,0 +1,24 @@
+{
+  "index": 56,
+  "requested_url": "https://tuyendung.cellphones.com.vn/",
+  "started_at": "2026-10-20T08:44:22.416408+00:00",
+  "final_url": "https://tuyendung.cellphones.com.vn/",
+  "http_status": 200,
+  "title": "Trang chủ tuyển dụng, tìm việc làm mới nhất tại CellphoneS",
+  "content_type": "text/html; charset=utf-8",
+  "captured_at": "2026-10-20T08:44:28.639114+00:00",
+  "text": "LOADING...",
+  "text_scope": "body (includes navigation and footer)",
+  "redirect_chain": [
+    "https://tuyendung.cellphones.com.vn/"
+  ],
+  "warnings": [],
+  "files": [
+    "response.html",
+    "rendered.html",
+    "text.txt",
+    "page.json"
+  ],
+  "status": "succeeded",
+  "finished_at": "2026-10-20T08:44:28.676230+00:00"
+}

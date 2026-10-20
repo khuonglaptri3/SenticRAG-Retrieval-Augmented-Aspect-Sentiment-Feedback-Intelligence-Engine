@@ -1,0 +1,20 @@
+{
+  "started_at": "2026-10-20T07:30:39.238388+00:00",
+  "status": "completed",
+  "total": 1,
+  "attempted": 1,
+  "succeeded": 1,
+  "failed": 0,
+  "pages": [
+    {
+      "index": 1,
+      "requested_url": "https://cellphones.com.vn/chinh-sach-giao-hang",
+      "status": "succeeded",
+      "record": "0001/page.json"
+    }
+  ],
+  "finished_at": "2026-10-20T07:30:54.350128+00:00",
+  "source_file": "Evident/policy_urls.txt",
+  "available_urls": 56,
+  "limit": 1
+}

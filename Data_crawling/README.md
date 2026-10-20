@@ -1,9 +1,58 @@
-# Standalone company URL discovery
+# Standalone company URL discovery and scraping
 
 This folder contains an independent URL-discovery tool for CellphoneS. It uses
 **Firecrawl Map** for an initial inventory and **Playwright Firefox** for additional
 rendered links. The exported data contains URLs and discovery metadata, not page
 text, product information, or policy contents.
+
+A separate `scrape.py` command now captures page contents from the saved URL
+inventory. Discovery and content scraping are separate steps.
+
+## Scrape the saved policy URLs
+
+Use the same local Python environment and Firefox installation described below.
+The scraper processes `Evident/policy_urls.txt` **sequentially, in file order**.
+It preserves query parameters such as `?part=refund-policy`, removes duplicate
+URLs while keeping their first position, and continues after individual failures.
+It does not follow discovered links to expand the inventory.
+
+```bash
+# Test the first URL only (deterministic).
+.venv/bin/python scrape.py --limit 1
+
+# Run the complete saved inventory sequentially.
+.venv/bin/python scrape.py
+
+# Optional input and timing settings; paths remain inside this workspace.
+.venv/bin/python scrape.py --input Evident/policy_urls.txt --delay-seconds 2 --timeout-seconds 45
+```
+
+Each invocation creates a fresh folder under `Evident/raw/`:
+
+```text
+Evident/raw/<UTC timestamp>-<run id>/
+  report.json          # source, counts, status, ordered page records
+  0001/
+    response.html      # original HTTP response body bytes, before JavaScript
+    rendered.html      # DOM serialized after JavaScript and bounded scrolling
+    text.txt           # full visible body text, including navigation and footer
+    page.json          # requested/final URL, title, HTTP status, times, text, errors
+  0002/                # next URL, and so on
+```
+
+These are raw captures: no summarization, content cleaning, or RAG chunking.
+Vietnamese text and JSON are saved as UTF-8. Response bytes are saved in their
+original encoding. HTTP error pages retain captured data but count as failures.
+Navigation failures have a `page.json` error record. The report is saved after
+each page; Ctrl+C preserves completed pages and marks the run interrupted.
+Exit codes are `0` for success, `1` for scraping errors, `2` for invalid input,
+and `130` for interruption. Generated captures are ignored by Git.
+
+The scraper reuses the discovery robots policy and request guard. Redirects are
+checked one hop at a time against robots and the exact hosts and ports in the input inventory.
+It blocks non-GET/HEAD requests, embedded-frame navigation, service workers,
+images, media, and fonts. Pages that rely on blocked requests may be incomplete.
+Rendering waits are bounded; increase `--render-wait-ms` for slower pages.
 
 Everything needed to run it lives here. You can copy this folder outside the
 SenticRAG repository and use the same commands.
@@ -156,10 +205,14 @@ be run separately after installing the browser:
 
 ```bash
 .venv/bin/python -m checks.browser_smoke
+.venv/bin/python -m checks.scraper_browser_smoke
 ```
 
 This launches real Firefox against synthetic HTML and verifies static,
 JavaScript-generated, and scroll-triggered links without calling any website.
+The scraper smoke check uses a local HTTP server to verify original versus
+rendered HTML, redirect order, robots and scope restrictions, and continuation
+after failures. Neither smoke check calls an external website.
 
 ## References
 

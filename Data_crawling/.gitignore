@@ -5,6 +5,7 @@
 .env.*
 !.env.example
 outputs/
+Evident/raw/
 __pycache__/
 *.py[cod]
 *.egg-info/
