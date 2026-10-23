@@ -1,0 +1,226 @@
+{
+  "schema_version": "m0.1-audit-v1",
+  "task_id": "M0.1",
+  "status": "COMPLETE",
+  "completion_scope": "Repository audit, source register, baseline inventory, requirement traceability and findings only",
+  "phase_m0_status": "IN_PROGRESS",
+  "gate_g0_status": "NOT_RUN",
+  "generated_at_utc": "2026-10-23T17:06:18.181156+00:00",
+  "generated_at_local": "2026-10-24T00:06:18.181156+07:00",
+  "git_sha": "256c0b47155f0e6876e3f3d6d050177c44c11b36",
+  "git_branch": "develop",
+  "historical_git_sha": "90831354250a7c79f4d3d5bc54dd7b3b9a55b429",
+  "historical_source_acquisition": {
+    "command": "git fetch --no-tags origin feature/Data_preparing",
+    "result": "Fetched missing historical objects; no merge or checkout"
+  },
+  "source_register": "source-register.csv",
+  "baseline_inventory": "inventory.csv",
+  "traceability": {
+    "baseline_requirements": 90,
+    "all_have_source_and_valid_tasks": true,
+    "supplemental_untracked_intake_items": 34,
+    "validated_product_requirements": 0
+  },
+  "environment": {
+    "python": "3.11.16 (main, Aug 25 2026, 13:59:19) [MSC v.1944 64 bit (AMD64)]",
+    "platform": "Windows-10-10.0.26300-SP0",
+    "packages": {
+      "annotated-doc": "0.0.5",
+      "annotated-types": "0.8.0",
+      "anyio": "4.15.1",
+      "ast_serialize": "0.12.1",
+      "certifi": "2026.7.22",
+      "colorama": "0.4.6",
+      "fastapi": "0.143.0",
+      "h11": "0.16.0",
+      "httpcore": "1.0.9",
+      "httpx": "0.28.1",
+      "idna": "3.20",
+      "iniconfig": "2.3.1",
+      "librt": "0.16.0",
+      "mypy": "2.4.0",
+      "mypy_extensions": "1.1.0",
+      "opentelemetry-api": "1.45.1",
+      "packaging": "26.3",
+      "pathspec": "1.1.1",
+      "pluggy": "1.6.0",
+      "pydantic": "2.14.1",
+      "pydantic_core": "2.50.1",
+      "Pygments": "2.21.0",
+      "pytest": "9.1.1",
+      "ruff": "0.17.0",
+      "starlette": "1.7.0",
+      "typing_extensions": "4.16.0",
+      "typing-inspection": "0.4.4"
+    },
+    "isolation": "Temporary uv venv. API/test/lint/typecheck subset pinned through poetry.lock constraints; full ML dependency installation and Python 3.12 matrix NOT_RUN.",
+    "external_dataset_directory": "C:/Users/lanph/Downloads/data",
+    "external_dataset_directory_exists": false
+  },
+  "checks": [
+    {
+      "id": "pytest",
+      "command": "<audit-python> -m pytest tests -q -p no:cacheprovider",
+      "exit_code": 0,
+      "status": "PASS",
+      "passed": 7,
+      "warning_count": 1,
+      "evidence": "checks.txt"
+    },
+    {
+      "id": "ruff",
+      "command": "<audit-python> -m ruff check . --output-format concise",
+      "exit_code": 1,
+      "status": "FAIL",
+      "findings": 34,
+      "evidence": "checks.txt",
+      "scope": "Preexisting source issues; recorded for M0.4"
+    },
+    {
+      "id": "mypy",
+      "command": "<audit-python> -m mypy packages apps pipelines --ignore-missing-imports --cache-dir <temporary-audit-cache>",
+      "exit_code": 0,
+      "status": "PASS",
+      "files": 56,
+      "evidence": "checks.txt"
+    },
+    {
+      "id": "poetry",
+      "command": "uv tool run --python 3.11 --from poetry==2.2.1 poetry check --lock --strict",
+      "exit_code": 0,
+      "status": "PASS",
+      "evidence": "checks.txt"
+    },
+    {
+      "id": "compose-config",
+      "exit_code": 0,
+      "status": "PASS",
+      "evidence": "infrastructure-checks.json"
+    },
+    {
+      "id": "docker-engine",
+      "exit_code": 1,
+      "status": "BLOCKED",
+      "evidence": "infrastructure-checks.json",
+      "reason": "Local Docker Desktop Linux engine pipe unavailable"
+    },
+    {
+      "id": "api-probes",
+      "observations": 16,
+      "status": "OBSERVED",
+      "evidence": "api-probes.json",
+      "interpretation": "Documents gaps; not 16 acceptance tests passing"
+    },
+    {
+      "id": "artifact-integrity",
+      "status": "PASS",
+      "evidence": "artifact-verification.json"
+    }
+  ],
+  "not_run": [
+    "full_poetry_install",
+    "Python_3.12_matrix",
+    "Docker_image_build",
+    "Compose_stack_start",
+    "database_smoke",
+    "crawler_runtime_tests",
+    "new_crawl",
+    "policy_content_approval",
+    "model_quality_eval",
+    "retrieval_eval",
+    "end_to_end_persona_flows",
+    "cloud_deploy",
+    "business_pilot",
+    "external_pricing_or_legal_verification"
+  ],
+  "artifact_revisions": {
+    "config_lock_sha256": "bb4b11f26b12fd81a20ab358c8f7519190d8cc05797f202a3af21be576de28d1",
+    "dataset": "HISTORICAL_RAW_ONLY_NOT_APPROVED",
+    "model": null,
+    "index": null,
+    "graph": null,
+    "policy": null,
+    "prompt": null,
+    "image_digest": null
+  },
+  "metrics": {
+    "absa_f1": null,
+    "retrieval_recall": null,
+    "latency": null,
+    "business_impact": null,
+    "cost": null
+  },
+  "timing": {
+    "planned_effort_days": 0.5,
+    "actual_effort_hours": null,
+    "note": "No timesheet measurement; task was executed before planned 2026-10-26 date"
+  },
+  "reviewer_action": {
+    "actor": "Codex",
+    "action": "Local evidence audit and integrity review",
+    "external_business_approval": "NOT_REQUESTED_NOT_GRANTED"
+  },
+  "change_boundary": {
+    "tracked_inputs_unchanged": true,
+    "original_untracked_document_unchanged": true,
+    "new_files_scope": "docs/reports/milestones/M0.1/",
+    "baseline_schedule_unchanged": true,
+    "commit_or_push": "NOT_PERFORMED"
+  },
+  "rollback": {
+    "application_change": null,
+    "audit_artifacts": "Only newly created report/evidence files; manifest hashes identify this audit bundle"
+  },
+  "artifact_hashes": {
+    "docs/reports/deep-research-report.md": "cb443f6253e1e475bef114d40460623ccd107c90ac1f38b33dd831ac91c95fcb",
+    "docs/reports/milestones/M0.1/README.md": "48d6ee2c810940aaa12ec97ec47000287037df6278034affb92c9c50f4081582",
+    "docs/reports/milestones/M0.1/evidence/api-probes.json": "b3b437db780d1ba9ae395be359c5cd8e85df062a1bea29567b06663e827d7d02",
+    "docs/reports/milestones/M0.1/evidence/artifact-verification.json": "36c72cc0b309cd29ea71f212877cf9e7ae89a941a6453a4a29a26d2355fde86c",
+    "docs/reports/milestones/M0.1/evidence/baseline-summary.json": "b44731a98c330a5c21a7b18b13a206e9e58877c15df5537ee2fd48afbd552336",
+    "docs/reports/milestones/M0.1/evidence/checks.txt": "c2133ae0c7ede9ad0136192b19e0d4862de797f9f571abd36b7d93a643b78637",
+    "docs/reports/milestones/M0.1/evidence/crawler-snapshot.json": "1a39aa54c8d82132f4867bcce42e62e627b858dfe7e0eaaa48c0c7034ac0d989",
+    "docs/reports/milestones/M0.1/evidence/document-links.json": "31c781812c9fda65a783674ea3faad4b06f48a318e76fb3e6094bc189183faa7",
+    "docs/reports/milestones/M0.1/evidence/infrastructure-checks.json": "436a811923966e9e5030eafeb9deed13a8bc8d3418fc3d2d45ce243a9e17e402",
+    "docs/reports/milestones/M0.1/evidence/inventory.csv": "e3542eeae7323ad1cbdef83f4a58dcbf31421653413bea33bf3ae0a88d0e0605",
+    "docs/reports/milestones/M0.1/evidence/local-data-intake.csv": "94f594aa422ec29ac1fab264790decfcfc9b0f11b0435c43e912ad7a6e23a5c1",
+    "docs/reports/milestones/M0.1/evidence/requirements.csv": "001842877199cc55118337c27838b6a0e6c76f62bcfabd1f3a2ede81d7209052",
+    "docs/reports/milestones/M0.1/evidence/source-register.csv": "317b219c793421243db68c9ef82070c75aef296474a807d7bdd132ad160b8798",
+    "docs/reports/milestones/M0.1/evidence/translation-verification.json": "69b3d38f010fe197870014004d6c65b3d721883e9f95e8b7ff1640f3057bdecc",
+    "docs/reports/milestones/README.md": "abacefc9e6a7826d2746dde639a63d3e24096c1c0bcb9bfff5bb1403902c59d1",
+    "docs/reports/planning-architecture-audit-2026-10-23.md": "ede68a72eca60dab8df44e01137b6c98e368d0ddbc431a72595a1d6544775f06"
+  },
+  "report": "../README.md",
+  "organization": {
+    "updated_at_utc": "2026-10-23T17:15:28.941015+00:00",
+    "layout": "<task-id>/README.md and <task-id>/evidence/",
+    "previous_manifest_sha256": "d1837fb4e16dfafe43ef2ff1a88a3840cf094a874589e59fa0524068131d79ad",
+    "change": "Moved report and evidence; updated relative links and artifact paths. Audit findings and recorded check results retained."
+  },
+  "translation": {
+    "updated_at_utc": "2026-10-23T18:05:08.860913+00:00",
+    "language": "en",
+    "branch": "docs/english-reports",
+    "original_manifest_sha256": "c48b916221bfaf963d71787dafc62ae1625cd945ae54f02aa1ec11dd42ce3254",
+    "verification": "translation-verification.json",
+    "changed_audit_artifacts": [
+      {
+        "path": "docs/reports/milestones/M0.1/evidence/local-data-intake.csv",
+        "original_sha256": "49919dbaf33aa054316f8e89cc5b7edafecdcd58ad7be29598694bda4c8b80ab",
+        "english_edition_sha256": "94f594aa422ec29ac1fab264790decfcfc9b0f11b0435c43e912ad7a6e23a5c1"
+      },
+      {
+        "path": "docs/reports/milestones/M0.1/evidence/requirements.csv",
+        "original_sha256": "0144f12411f454cdc7f99dc01f33b5677ea64e984d56694292c51dc891b8028a",
+        "english_edition_sha256": "001842877199cc55118337c27838b6a0e6c76f62bcfabd1f3a2ede81d7209052"
+      },
+      {
+        "path": "docs/reports/milestones/M0.1/README.md",
+        "original_sha256": "465062ec1333a359e3175242136fdff9743ca81ef92066b666de9ddc8b0ac9b7",
+        "english_edition_sha256": "48d6ee2c810940aaa12ec97ec47000287037df6278034affb92c9c50f4081582"
+      }
+    ],
+    "historical_scope": "Original audit dates, checks, change_boundary, source-register/inventory hashes, and NOT_PERFORMED commit/push status describe the original audit. This English edition and subsequent PR publication are separate documentation work.",
+    "raw_evidence_policy": "Recorded request/response data, raw logs, and original source material retained byte-for-byte. .gitattributes disables newline conversion for hashed evidence and DATA_REQUIREMENTS.md."
+  }
+}

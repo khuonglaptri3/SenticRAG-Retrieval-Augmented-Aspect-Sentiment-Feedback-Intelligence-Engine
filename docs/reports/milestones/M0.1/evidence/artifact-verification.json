@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "requirements": 90,
+  "unique_requirement_ids": 90,
+  "requirements_with_sources_and_valid_tasks": 90,
+  "local_data_intake_items": 34,
+  "inventory_inputs_hashed_and_unchanged": 134,
+  "registered_sources_rehashed": 34,
+  "tracked_file_content_changes": 0,
+  "original_untracked_document_unchanged": true,
+  "report_local_links_resolve": true,
+  "source_and_task_references_resolve": true,
+  "scope": "Audit documentation integrity; does not change failing Ruff or unvalidated product gates."
+}

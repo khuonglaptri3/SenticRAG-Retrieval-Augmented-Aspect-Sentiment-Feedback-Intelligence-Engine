@@ -1,0 +1,445 @@
+{
+  "scope": "In-process TestClient; synthetic requests; no service start, external LLM or database calls. Observations are not safety acceptance passes.",
+  "probes": [
+    {
+      "probe": "health_live",
+      "method": "GET",
+      "path": "/health/live",
+      "input": null,
+      "status_code": 200,
+      "output": {
+        "status": "alive",
+        "version": "0.2.0"
+      }
+    },
+    {
+      "probe": "health_ready_without_starting_dependencies",
+      "method": "GET",
+      "path": "/health/ready",
+      "input": null,
+      "status_code": 200,
+      "output": {
+        "status": "ready",
+        "version": "0.2.0"
+      }
+    },
+    {
+      "probe": "health_startup_without_loading_models",
+      "method": "GET",
+      "path": "/health/startup",
+      "input": null,
+      "status_code": 200,
+      "output": {
+        "status": "started",
+        "version": "0.2.0"
+      }
+    },
+    {
+      "probe": "fixed_stats",
+      "method": "GET",
+      "path": "/stats",
+      "input": null,
+      "status_code": 200,
+      "output": {
+        "total_reviews_indexed": 100000,
+        "sentiment_distribution": {
+          "positive": 65000,
+          "neutral": 15000,
+          "negative": 20000
+        },
+        "top_aspects": [
+          "battery",
+          "display",
+          "delivery",
+          "pricing"
+        ]
+      }
+    },
+    {
+      "probe": "negative_review",
+      "method": "POST",
+      "path": "/predict",
+      "input": {
+        "text": "Sản phẩm hỏng, pin rất tệ",
+        "aspects": [
+          "battery"
+        ]
+      },
+      "status_code": 200,
+      "output": {
+        "text": "Sản phẩm hỏng, pin rất tệ",
+        "aspect_sentiments": [
+          {
+            "aspect": "general",
+            "sentiment": "positive",
+            "confidence": 0.95,
+            "category": "product"
+          }
+        ]
+      }
+    },
+    {
+      "probe": "positive_review",
+      "method": "POST",
+      "path": "/predict",
+      "input": {
+        "text": "Sản phẩm rất tốt",
+        "aspects": [
+          "display"
+        ]
+      },
+      "status_code": 200,
+      "output": {
+        "text": "Sản phẩm rất tốt",
+        "aspect_sentiments": [
+          {
+            "aspect": "general",
+            "sentiment": "positive",
+            "confidence": 0.95,
+            "category": "product"
+          }
+        ]
+      }
+    },
+    {
+      "probe": "policy_query",
+      "method": "POST",
+      "path": "/ask",
+      "input": {
+        "query": "Chính sách đổi trả là gì?",
+        "top_k": 1
+      },
+      "status_code": 200,
+      "output": {
+        "query": "Chính sách đổi trả là gì?",
+        "answer": "SenticRAG feedback intelligence engine initialized with grounded 7-layer architecture.",
+        "citations": []
+      }
+    },
+    {
+      "probe": "empty_ingest",
+      "method": "POST",
+      "path": "/api/v1/ingest/feedback",
+      "input": {
+        "records": []
+      },
+      "status_code": 202,
+      "output": {
+        "accepted": 0,
+        "rejected": 0,
+        "batch_id": "batch_d5c5dfb9",
+        "status": "queued"
+      }
+    },
+    {
+      "probe": "rating_outside_domain",
+      "method": "POST",
+      "path": "/api/v1/ingest/feedback",
+      "input": {
+        "records": [
+          {
+            "source": "audit_fixture",
+            "source_record_id": "audit-001",
+            "text": "Synthetic audit fixture",
+            "product_id": "synthetic-kettle",
+            "rating": 999
+          }
+        ]
+      },
+      "status_code": 202,
+      "output": {
+        "accepted": 1,
+        "rejected": 0,
+        "batch_id": "batch_f8679f95",
+        "status": "queued"
+      }
+    },
+    {
+      "probe": "missing_required_product",
+      "method": "POST",
+      "path": "/api/v1/ingest/feedback",
+      "input": {
+        "records": [
+          {
+            "source": "audit_fixture",
+            "source_record_id": "audit-002",
+            "text": "Synthetic audit fixture"
+          }
+        ]
+      },
+      "status_code": 422,
+      "output": {
+        "detail": [
+          {
+            "type": "missing",
+            "loc": [
+              "body",
+              "records",
+              0,
+              "product_id"
+            ],
+            "msg": "Field required",
+            "input": {
+              "source": "audit_fixture",
+              "source_record_id": "audit-002",
+              "text": "Synthetic audit fixture"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "probe": "zero_top_k",
+      "method": "POST",
+      "path": "/api/v1/investigation/drilldown",
+      "input": {
+        "product_id": "synthetic-kettle",
+        "aspect": "leak",
+        "top_k": 0
+      },
+      "status_code": 200,
+      "output": {
+        "cohort_summary": {
+          "product_id": "synthetic-kettle",
+          "aspect": "leak",
+          "negative_rate": 0.42,
+          "total_reviews": 1280
+        },
+        "representative_evidence": [
+          {
+            "review_id": "RV-8821",
+            "text_snippet": "Device charges extremely slowly and overheats following firmware update v1.2",
+            "product_version": "v1.2",
+            "score": 0.92,
+            "relevance_reason": "High negative polarity on aspect: battery_charging"
+          }
+        ],
+        "grounded_root_cause_hypotheses": [
+          {
+            "root_cause": "Firmware v1.2 power management loop bug",
+            "affected_versions": [
+              "1.2",
+              "1.2.1"
+            ],
+            "evidence_count": 35,
+            "status": "investigating"
+          }
+        ],
+        "confidence": 0.89
+      }
+    },
+    {
+      "probe": "negative_top_k",
+      "method": "POST",
+      "path": "/api/v1/investigation/drilldown",
+      "input": {
+        "product_id": "synthetic-phone",
+        "aspect": "screen",
+        "top_k": -1
+      },
+      "status_code": 200,
+      "output": {
+        "cohort_summary": {
+          "product_id": "synthetic-phone",
+          "aspect": "screen",
+          "negative_rate": 0.42,
+          "total_reviews": 1280
+        },
+        "representative_evidence": [
+          {
+            "review_id": "RV-8821",
+            "text_snippet": "Device charges extremely slowly and overheats following firmware update v1.2",
+            "product_version": "v1.2",
+            "score": 0.92,
+            "relevance_reason": "High negative polarity on aspect: battery_charging"
+          }
+        ],
+        "grounded_root_cause_hypotheses": [
+          {
+            "root_cause": "Firmware v1.2 power management loop bug",
+            "affected_versions": [
+              "1.2",
+              "1.2.1"
+            ],
+            "evidence_count": 35,
+            "status": "investigating"
+          }
+        ],
+        "confidence": 0.89
+      }
+    },
+    {
+      "probe": "draft_without_order_or_policy_evidence",
+      "method": "POST",
+      "path": "/api/v1/resolution/draft",
+      "input": {
+        "ticket_id": "audit-ticket",
+        "customer_ref": "synthetic-person",
+        "product_id": "synthetic-kettle",
+        "issue_text": "Ấm nước bị rò nước; chưa xác minh đơn hàng"
+      },
+      "status_code": 200,
+      "output": {
+        "ticket_id": "audit-ticket",
+        "case_summary": "Customer reported malfunction on product synthetic-kettle: Ấm nước bị rò nước; chưa xác minh đơn hàng",
+        "recommended_response": "Hello, our telemetry confirms a known overheating issue during charging on firmware v1.2. Under official warranty guidelines, you are entitled to roll back your firmware to v1.1.2 following the attached guide, or visit your nearest authorized SenticCare service center for a complimentary replacement.",
+        "recommended_actions": [
+          "Provide step-by-step firmware downgrade instructions to v1.1.2",
+          "Offer authorized service center dispatch if charging anomaly persists beyond 24h"
+        ],
+        "citations": [
+          {
+            "source_type": "policy",
+            "source_id": "POL-WARRANTY-2026-v2.1",
+            "snippet": "Clause 4.2: Free component replacement or firmware rollback support for defects stemming from official software updates."
+          }
+        ],
+        "confidence": 0.94,
+        "needs_human_review": false,
+        "reason_for_review": null
+      }
+    },
+    {
+      "probe": "unknown_feedback_type_and_client_supplied_author",
+      "method": "POST",
+      "path": "/api/v1/feedback/contribute",
+      "input": {
+        "feedback_type": "unknown_type",
+        "target_id": "audit-target",
+        "contributed_by": "synthetic-unverified-author",
+        "annotation_payload": {}
+      },
+      "status_code": 201,
+      "output": {
+        "contribution_id": "contrib_6d8ee096",
+        "status": "accepted",
+        "requires_approval": false
+      }
+    },
+    {
+      "probe": "missing_chat_route",
+      "method": "POST",
+      "path": "/api/v1/chat/messages",
+      "input": {
+        "message": "Chính sách đổi trả là gì?"
+      },
+      "status_code": 404,
+      "output": {
+        "detail": "Not Found"
+      }
+    },
+    {
+      "probe": "invalid_sentiment_and_confidence",
+      "output": {
+        "aspect": "audit",
+        "sentiment": "not_a_sentiment",
+        "confidence": 8.0,
+        "category": null
+      }
+    }
+  ],
+  "routes": [
+    {
+      "path": "/openapi.json",
+      "methods": [
+        "GET",
+        "HEAD"
+      ],
+      "endpoint": "openapi"
+    },
+    {
+      "path": "/docs",
+      "methods": [
+        "GET",
+        "HEAD"
+      ],
+      "endpoint": "swagger_ui_html"
+    },
+    {
+      "path": "/docs/oauth2-redirect",
+      "methods": [
+        "GET",
+        "HEAD"
+      ],
+      "endpoint": "swagger_ui_redirect"
+    },
+    {
+      "path": "/redoc",
+      "methods": [
+        "GET",
+        "HEAD"
+      ],
+      "endpoint": "redoc_html"
+    },
+    {
+      "path": "/health/live",
+      "methods": [
+        "GET"
+      ],
+      "endpoint": "liveness"
+    },
+    {
+      "path": "/health/ready",
+      "methods": [
+        "GET"
+      ],
+      "endpoint": "readiness"
+    },
+    {
+      "path": "/health/startup",
+      "methods": [
+        "GET"
+      ],
+      "endpoint": "startup"
+    },
+    {
+      "path": "/api/v1/ingest/feedback",
+      "methods": [
+        "POST"
+      ],
+      "endpoint": "ingest_feedback"
+    },
+    {
+      "path": "/api/v1/investigation/drilldown",
+      "methods": [
+        "POST"
+      ],
+      "endpoint": "investigate_drilldown"
+    },
+    {
+      "path": "/api/v1/resolution/draft",
+      "methods": [
+        "POST"
+      ],
+      "endpoint": "generate_resolution_draft"
+    },
+    {
+      "path": "/api/v1/feedback/contribute",
+      "methods": [
+        "POST"
+      ],
+      "endpoint": "contribute_feedback"
+    },
+    {
+      "path": "/predict",
+      "methods": [
+        "POST"
+      ],
+      "endpoint": "predict_sentiment_legacy"
+    },
+    {
+      "path": "/stats",
+      "methods": [
+        "GET"
+      ],
+      "endpoint": "get_stats_legacy"
+    },
+    {
+      "path": "/ask",
+      "methods": [
+        "POST"
+      ],
+      "endpoint": "ask_feedback_rag_legacy"
+    }
+  ]
+}

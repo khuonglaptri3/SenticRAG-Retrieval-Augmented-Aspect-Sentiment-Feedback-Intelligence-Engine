@@ -1,0 +1,8 @@
+# Keep English report text consistent across platforms.
+.gitattributes text eol=lf
+AGENTS.md text eol=lf
+docs/reports/**/*.md text eol=lf
+
+# Audit hashes describe exact bytes, including original log line endings.
+docs/reports/milestones/*/evidence/** -text whitespace=cr-at-eol
+docs/architecture/DATA_REQUIREMENTS.md -text whitespace=cr-at-eol

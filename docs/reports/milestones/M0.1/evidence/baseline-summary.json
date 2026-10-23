@@ -1,0 +1,78 @@
+{
+  "audit_timestamp_utc": "2026-10-23T16:59:27.697071+00:00",
+  "git_sha": "256c0b47155f0e6876e3f3d6d050177c44c11b36",
+  "historical_git_sha": "90831354250a7c79f4d3d5bc54dd7b3b9a55b429",
+  "tracked_files": 133,
+  "python_files": 65,
+  "python_categories": {
+    "python_placeholder": 61,
+    "application_code": 2,
+    "test_code": 2
+  },
+  "inventory_categories": {
+    "configuration_or_asset": 18,
+    "documentation": 16,
+    "python_placeholder": 61,
+    "directory_placeholder": 35,
+    "application_code": 2,
+    "test_code": 2
+  },
+  "source_count": 39,
+  "source_states": {
+    "CURRENT_FILE_VERIFIED": 28,
+    "HISTORICAL_BLOB_VERIFIED": 5,
+    "EXTERNAL_REFERENCE_NOT_RECHECKED": 5,
+    "UNTRACKED_REFERENCE": 1
+  },
+  "requirements": 90,
+  "requirement_states": {
+    "NOT_IMPLEMENTED": 58,
+    "MOCK_ONLY": 11,
+    "PARTIAL_SCAFFOLD": 4,
+    "NOT_MEASURED": 9,
+    "DEFERRED_NOT_IMPLEMENTED": 5,
+    "CONDITIONAL_NOT_IMPLEMENTED": 3
+  },
+  "validated_product_requirements": 0,
+  "requirements_with_source_and_valid_tasks": 90,
+  "broken_or_machine_specific_links": 5,
+  "crawler_page_records": 56,
+  "crawler_complete_capture_sets": 52,
+  "api_probes": 16,
+  "environment": {
+    "python": "3.11.16 (main, Aug 25 2026, 13:59:19) [MSC v.1944 64 bit (AMD64)]",
+    "platform": "Windows-10-10.0.26300-SP0",
+    "packages": {
+      "annotated-doc": "0.0.5",
+      "annotated-types": "0.8.0",
+      "anyio": "4.15.1",
+      "ast_serialize": "0.12.1",
+      "certifi": "2026.7.22",
+      "colorama": "0.4.6",
+      "fastapi": "0.143.0",
+      "h11": "0.16.0",
+      "httpcore": "1.0.9",
+      "httpx": "0.28.1",
+      "idna": "3.20",
+      "iniconfig": "2.3.1",
+      "librt": "0.16.0",
+      "mypy": "2.4.0",
+      "mypy_extensions": "1.1.0",
+      "opentelemetry-api": "1.45.1",
+      "packaging": "26.3",
+      "pathspec": "1.1.1",
+      "pluggy": "1.6.0",
+      "pydantic": "2.14.1",
+      "pydantic_core": "2.50.1",
+      "Pygments": "2.21.0",
+      "pytest": "9.1.1",
+      "ruff": "0.17.0",
+      "starlette": "1.7.0",
+      "typing_extensions": "4.16.0",
+      "typing-inspection": "0.4.4"
+    },
+    "isolation": "Temporary uv venv. API/test/lint/typecheck subset pinned through poetry.lock constraints; full ML dependency installation and Python 3.12 matrix NOT_RUN.",
+    "external_dataset_directory": "C:/Users/lanph/Downloads/data",
+    "external_dataset_directory_exists": false
+  }
+}
