@@ -67,6 +67,8 @@ secrets/
 *.key
 
 # Model artifacts and local data
+# Crawler sources and snapshots are maintained on feature/Data_preparing, not develop.
+/Data_crawling/
 artifacts/models/
 artifacts/cache/
 data/raw/

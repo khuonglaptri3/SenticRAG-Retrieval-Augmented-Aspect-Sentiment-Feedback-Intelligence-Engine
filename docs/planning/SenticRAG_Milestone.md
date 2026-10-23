@@ -2,7 +2,7 @@
 
 > Baseline lập ngày 23/10/2026. Một người thực hiện: Trần Đình Khương. Bắt đầu thứ Hai 26/10/2026; hết tuần 14 ngày 31/01/2027; ngày làm việc cuối 29/01/2027. Đây là kế hoạch triển khai, không phải báo cáo thành tích.
 
-[Mở workbook milestone](SenticRAG_Milestone.xlsx) · [Xem bản HTML](SenticRAG_Milestone.html) · [Mẫu Excel người dùng cung cấp](https://github.com/khuonglaptri3/qpaf-visual-document-retrieval/blob/feature/m3-6-integrity-review/docs/GUILDLINE_OVERVIEWS_PROPOSAL/POAI_Milestone_Group01_Hoan_Chinh.xlsx)
+[Tài nguyên, Modal và ngân sách](SenticRAG_Resources_and_Deployment.md) · [Mở workbook milestone](SenticRAG_Milestone.xlsx) · [Xem bản HTML](SenticRAG_Milestone.html) · [Mẫu Excel người dùng cung cấp](https://github.com/khuonglaptri3/qpaf-visual-document-retrieval/blob/feature/m3-6-integrity-review/docs/GUILDLINE_OVERVIEWS_PROPOSAL/POAI_Milestone_Group01_Hoan_Chinh.xlsx)
 
 ## 1. Phạm vi, cách tổ chức và giả định lịch
 
@@ -63,7 +63,7 @@ M2 hoàn thành chatbot demo cuối W4 (20/11). M3 có context/eligibility/agent
 - Lịch: 26/10/2026 (PM) → 27/10/2026; 1 ngày; Trần Đình Khương đảm nhiệm vai trò Product / UX.
 - Phụ thuộc: M0.1. Loại: Core. Trạng thái baseline: Not Started.
 - Input: US-BUY-01, US-AGENT-01, chính sách mẫu
-- Cách làm: Vẽ màn hình chat, citations, history, lỗi và chuyển CSKH; mô tả intent, câu hỏi nối tiếp, thông tin thiếu; tách hỏi chính sách khỏi quyết định theo đơn hàng.
+- Cách làm: Thiết kế một apps/web với bốn khu vực Buyer Chat, Agent Copilot, Analyst BI & GraphRAG, Steward Queue cho năm personas; dùng chung layout, session, API client và citation viewer. Vẽ chat, history, lỗi, chuyển CSKH và thông tin thiếu; tách policy Q&A khỏi quyết định theo đơn hàng; route ẩn không thay kiểm quyền API.
 - Output: Wireframe + conversation flow + scope MVP chatbot tuần 4
 - Module / công nghệ: MOD-01, MOD-03 — React/TypeScript; design document
 - Contract: IO-01, IO-02.
@@ -75,10 +75,10 @@ M2 hoàn thành chatbot demo cuối W4 (20/11). M3 có context/eligibility/agent
 - Lịch: 27/10/2026 (PM) → 28/10/2026; 1 ngày; Trần Đình Khương đảm nhiệm vai trò Backend / kiến trúc.
 - Phụ thuộc: M0.2. Loại: Core. Trạng thái baseline: Not Started.
 - Input: M0.1–M0.2; schemas hiện tại; Decisions
-- Cách làm: Chọn LLM/embedding qua smoke tiếng Việt, ngân sách và khả năng truy cập; giữ API /api/v1; thiết kế ChatRequest không bắt buộc product_id; chốt namespace, ID, policy version, memory, timeout và cấu hình.
+- Cách làm: Chọn LLM/embedding qua smoke tiếng Việt, ngân sách và khả năng truy cập; giữ API /api/v1; khóa ChatMessageRequest/Response (product_ref/order_ref optional), Citation phân loại nguồn và ABSA prediction có version ở cấp kết quả; chốt namespace, ID, policy version, memory, timeout. Ghi ADR DEC-15/16/17 cho PostgreSQL stack, apps/web và lựa chọn FSM/LangGraph; không làm hai orchestrator. Ghi source-of-truth theo SRC-02 §8.2: CRM/live orders, approved Policy Registry, versioned graph và prediction tables; Redis/Qdrant là cache/index. Khóa profile demo và architecture-target riêng (DEC-18), thời điểm đo latency và effort còn thiếu tại G0.
 - Output: ADR + schema/chat examples; OpenAPI dự kiến; bảng module; capability/provider matrix
 - Module / công nghệ: MOD-01, MOD-02, MOD-03, MOD-04, MOD-12 — Python 3.11/3.12; Poetry lock; FastAPI; Pydantic; PostgreSQL; Redis; Qdrant
-- Contract: IO-01..IO-05.
+- Contract: IO-01..IO-05; IO-08; IO-10.
 - Hoàn thành khi: Có chính sách session ownership, context limit, không đưa raw PII ra LLM; cloud/GPU thiếu phải ghi tác động.
 - Nguồn: SRC-02 §5,8,9; SRC-06; SRC-07; SRC-16
 
@@ -87,11 +87,11 @@ M2 hoàn thành chatbot demo cuối W4 (20/11). M3 có context/eligibility/agent
 - Lịch: 28/10/2026 (PM) → 29/10/2026; 1 ngày; Trần Đình Khương đảm nhiệm vai trò Full-stack / QA.
 - Phụ thuộc: M0.3. Loại: Core. Trạng thái baseline: Not Started.
 - Input: ADR, wireframe, 5 stories và fixture nhỏ
-- Cách làm: Tạo cấu trúc conversation/chat app, migration/schema ban đầu, cấu hình môi trường, test scaffold; ghi rubric eval, business baseline và phiên bản artifacts; chuẩn bị login/session boundary.
+- Cách làm: Tạo shell apps/web dùng chung và conversation API; khai báo/lock SQLAlchemy 2.x, psycopg[binary] 3.x, Alembic cho Python 3.11/3.12; tạo migration/schema ban đầu và transaction boundary; cấu hình môi trường, test scaffold, rubric eval, business baseline; chuẩn bị login/session boundary.
 - Output: Khung ứng dụng có smoke; test plan và rubric; baseline measurement protocol
 - Module / công nghệ: MOD-01, MOD-03, MOD-12 — FastAPI; PostgreSQL migrations; React/TypeScript; pytest; Docker Compose; GitHub Actions
 - Contract: IO-01, IO-15.
-- Hoàn thành khi: Health thật phản ánh dependency; cấu hình không chứa secret; có kế hoạch 5 kịch bản E2E và negative paths.
+- Hoàn thành khi: Health thật phản ánh dependency; cấu hình không chứa secret; cài từ lockfile và kết nối PostgreSQL thật; migration từ DB rỗng và upgrade từ revision trước pass trên DB thử nghiệm, rollback/restore được mô tả; có kế hoạch 5 kịch bản E2E và negative paths; contract test cho policy Q&A không có product và citation sai nguồn/version.
 - Nguồn: SRC-02 §15–17,21; SRC-04; SRC-16
 
 #### M0.G — G0 — Review, nghiệm thu và báo cáo giai đoạn
@@ -103,7 +103,7 @@ M2 hoàn thành chatbot demo cuối W4 (20/11). M3 có context/eligibility/agent
 - Output: docs/reports/milestones/m0-review.md; checklist; demo; manifest phiên bản
 - Module / công nghệ: MOD-12 — pytest; eval reports; Git
 - Contract: Review/report theo IO-15.
-- Hoàn thành khi: G0: thiết kế chatbot, I/O, scope và ngưỡng eval có owner; quyết định chưa chốt được ghi rõ; 1 người/14 tuần khả thi ở phạm vi demo.
+- Hoàn thành khi: G0: khóa I/O, ADR, profile demo/architecture-target và ngưỡng eval; rà lại effort M0.4/M3.4/M4.5/M6.7/M8.2 theo smoke thực. Lịch 14 tuần là baseline, chưa chứng minh feasibility; thiếu resource/effort phải ghi blocker hoặc rebaseline.
 - Nguồn: SRC-02 §21; SRC-03; SRC-04
 
 #### M0.B — Dự phòng sửa lỗi, tích hợp hoặc nghỉ theo lịch thực tế
@@ -265,7 +265,7 @@ M2 hoàn thành chatbot demo cuối W4 (20/11). M3 có context/eligibility/agent
 - Lịch: 12/11/2026 (AM) → 12/11/2026; 1 ngày; Trần Đình Khương đảm nhiệm vai trò Backend / LLM.
 - Phụ thuộc: M2.3. Loại: Core. Trạng thái baseline: Not Started.
 - Input: EvidencePack; model config; chat eval
-- Cách làm: Viết client có timeout/retry hữu hạn; prompt tiếng Việt theo evidence; schema output; kiểm citation tồn tại/đúng clause và claims; abstain hoặc hỏi thêm; ghi prompt/model version.
+- Cách làm: Viết client có timeout/retry hữu hạn; prompt tiếng Việt theo evidence; schema output; kiểm citation tồn tại/đúng clause và claims; abstain hoặc hỏi thêm; ghi prompt/model version. Tách claim verification, schema validation, policy compliance và output PII filter; kiểm đủ từng bước, không coi JSON hợp lệ là grounded.
 - Output: LLM service + guardrails + Answer contract
 - Module / công nghệ: MOD-03 — LLM API cấu hình; HTTP client; Pydantic; pytest
 - Contract: IO-02, IO-05.
@@ -277,11 +277,11 @@ M2 hoàn thành chatbot demo cuối W4 (20/11). M3 có context/eligibility/agent
 - Lịch: 13/11/2026 (AM) → 16/11/2026; 1.5 ngày; Trần Đình Khương đảm nhiệm vai trò Backend.
 - Phụ thuộc: M2.4. Loại: Core. Trạng thái baseline: Not Started.
 - Input: ChatRequest/Response, generation service, PostgreSQL
-- Cách làm: POST /api/v1/chat/messages; lưu message/request_id/idempotency; ownership; sliding context và summary; rewrite follow-up từ lịch sử; hủy/timeout; chỉ truy lịch sử được phép.
+- Cách làm: POST /api/v1/chat/messages; lưu message/request_id/idempotency; ownership; sliding context và summary; rewrite follow-up từ lịch sử; hủy/timeout; chỉ truy lịch sử được phép. Đặt Redis sliding-window rate limit trước gọi retrieval/LLM, quota token/request, input size và timeout; Redis unavailable trả lỗi có kiểm soát. M2 route bằng intent/rules policy_query/out_of_scope; classifier đầy đủ bổ sung ở M4.
 - Output: Conversation service; migrations; session/history endpoints; auth integration
 - Module / công nghệ: MOD-01 — FastAPI; PostgreSQL; Redis cache; Pydantic
 - Contract: IO-01, IO-02.
-- Hoàn thành khi: Hai phiên không lẫn dữ liệu; retry không nhân đôi message; follow-up giữ policy context; không bắt nhập product cho câu hỏi chung.
+- Hoàn thành khi: Hai phiên không lẫn dữ liệu; retry không nhân đôi message; follow-up giữ policy context; không bắt nhập product cho câu hỏi chung. Test 429/Retry-After, quota và Redis failure trước gọi LLM; request bị từ chối không tiêu token.
 - Nguồn: SRC-02 §5.4,7.9; SRC-16
 
 #### M2.6 — Giao diện chatbot và nguồn tham khảo
@@ -290,7 +290,7 @@ M2 hoàn thành chatbot demo cuối W4 (20/11). M3 có context/eligibility/agent
 - Phụ thuộc: M2.5. Loại: Core. Trạng thái baseline: Not Started.
 - Input: Wireframe; chat/history API
 - Cách làm: Tạo màn chat, lịch sử, nguồn clickable, error/retry, loading, clarification và nút chuyển hỗ trợ; nối API thật; kiểm desktop/mobile và accessibility cơ bản.
-- Output: apps/chatbot chạy với backend thật; UI smoke scripts
+- Output: Buyer Chat trong apps/web chạy với backend thật; UI smoke scripts
 - Module / công nghệ: MOD-01 — React; TypeScript; CSS; browser tests
 - Contract: IO-01, IO-02.
 - Hoàn thành khi: Cả happy path và thiếu bằng chứng hoạt động; trạng thái chờ không tạo nội dung giả; nguồn mở đúng clause/doc.
@@ -329,7 +329,7 @@ M2 hoàn thành chatbot demo cuối W4 (20/11). M3 có context/eligibility/agent
 - Output: docs/reports/milestones/m2-review.md; checklist; demo; manifest phiên bản
 - Module / công nghệ: MOD-12 — pytest; eval reports; Git
 - Contract: Review/report theo IO-15.
-- Hoàn thành khi: G2: chatbot UI→API→retrieval→LLM→citations chạy thật; multi-turn/fallback/privacy pass; benchmark riêng retrieval và generation.
+- Hoàn thành khi: G2: chatbot UI→API→retrieval→LLM→citations chạy thật; multi-turn/fallback/privacy, claim/schema/policy/output filter và rate-limit/quota pass; benchmark retrieval/generation riêng. Chưa có ABSA/GraphRAG không được gọi hoàn thành full Buyer story.
 - Nguồn: SRC-03 US-BUY-01; SRC-04; SRC-02 §21
 
 #### M2.B — Dự phòng sửa lỗi, tích hợp hoặc nghỉ theo lịch thực tế
@@ -378,7 +378,7 @@ M2 hoàn thành chatbot demo cuối W4 (20/11). M3 có context/eligibility/agent
 - Lịch: 24/11/2026 (AM) → 24/11/2026; 1 ngày; Trần Đình Khương đảm nhiệm vai trò Backend.
 - Phụ thuộc: M3.1. Loại: Core. Trạng thái baseline: Not Started.
 - Input: Orders + auth/session
-- Cách làm: Implement query_customer_order và context adapter; kiểm order ownership trước đọc; chỉ expose trường cần; tìm region/service center; hỏi lại khi thiếu hoặc không khớp.
+- Cách làm: Implement query_customer_order và context adapter; kiểm order ownership trước đọc; chỉ expose trường cần; tìm region/service center; hỏi lại khi thiếu hoặc không khớp. Recall chỉ lấy ticket/order history được phép của đúng customer; working context/message buffer có giới hạn; playbook/rules có version là procedural memory, không coi lời hứa cũ trong ticket là policy hiện hành.
 - Output: Customer context service + tool schemas + seed CRM adapter
 - Module / công nghệ: MOD-05 — FastAPI; PostgreSQL; typed tools; RBAC
 - Contract: IO-06.
@@ -402,11 +402,11 @@ M2 hoàn thành chatbot demo cuối W4 (20/11). M3 có context/eligibility/agent
 - Lịch: 26/11/2026 (AM) → 27/11/2026; 1.5 ngày; Trần Đình Khương đảm nhiệm vai trò Backend / orchestration.
 - Phụ thuộc: M3.3. Loại: Core. Trạng thái baseline: Not Started.
 - Input: Chat, policy decision, tools, ticket model
-- Cách làm: Ingested→context→evidence→decision→draft→guarded→approved/escalated; giới hạn 1 lượt bổ sung evidence và timeout; MCP adapter query order/check warranty/route ticket; Pydantic inputs, allowlist, audit.
+- Cách làm: Ingested→context→evidence→decision→draft→guarded→pending_review→approved/rejected/escalated; giới hạn 1 lượt bổ sung evidence và timeout; lưu state/version, review ID và audit trong PostgreSQL; approval/resume kiểm quyền, chống duyệt hai lần và stale draft; MCP adapter query order/check warranty/route ticket; Pydantic inputs và allowlist. Dùng một orchestrator theo DEC-17. Planning step tạo plan có kiểu: intent, nguồn evidence cần lấy, tool allowlist, missing fields và stop condition; sau M4 ánh xạ Triaged bằng ABSA thật. Chứng minh MCP bằng client/server local qua một transport được pin, tools/list và tools/call cho ba tool canonical; adapter gọi hàm Python riêng chưa đủ nghiệm thu MCP.
 - Output: Resolution orchestrator; /api/v1/resolution/draft nối thật; tool integration tests
 - Module / công nghệ: MOD-01, MOD-03, MOD-05, MOD-06 — Python FSM; MCP SDK/adapter; FastAPI; Pydantic
 - Contract: IO-08.
-- Hoàn thành khi: Retry không lặp action; lỗi/thiếu evidence chuyển đúng hàng đợi; không tự xác nhận root cause; action cần approval không chạy trước duyệt.
+- Hoàn thành khi: Retry hoặc restart tại pending_review không mất draft và không lặp action; test approve/reject/resume, duplicate approval, stale draft, sai quyền và timeout; lỗi/thiếu evidence chuyển đúng hàng đợi; không tự xác nhận root cause; action cần approval không chạy trước duyệt. Checkpoint không thay action idempotency/transaction. Integration test MCP có input/output schema, denied tool, timeout và lỗi transport; lưu trace plan→tools→guardrails. Mapping trạng thái giữ tương ứng lifecycle SRC-05 §6.5.
 - Nguồn: SRC-02 §7.9; SRC-05 L2,L5,L6
 
 #### M3.5 — Agent Workspace: context, evidence và review
@@ -415,7 +415,7 @@ M2 hoàn thành chatbot demo cuối W4 (20/11). M3 có context/eligibility/agent
 - Phụ thuộc: M3.4. Loại: Core. Trạng thái baseline: Not Started.
 - Input: Ticket/draft/citation APIs
 - Cách làm: Ticket list/card: order, warranty, urgency, evidence/policy dates; approve/edit/reject với reason; specialist escalation; ABSA tạm hiển thị pending/manual; hypothesis label rõ.
-- Output: Agent Workspace + review endpoints; browser flows
+- Output: Agent Copilot trong apps/web + review endpoints; browser flows
 - Module / công nghệ: MOD-11 — React; TypeScript; FastAPI; PostgreSQL
 - Contract: IO-08, IO-09, IO-13.
 - Hoàn thành khi: Agent đọc được bằng chứng trước duyệt; chỉnh sửa có tác giả/thời gian; không hiển thị hypothesis thành fact.
@@ -466,7 +466,7 @@ M2 hoàn thành chatbot demo cuối W4 (20/11). M3 có context/eligibility/agent
 - Output: docs/reports/milestones/m3-review.md; checklist; demo; manifest phiên bản
 - Module / công nghệ: MOD-12 — pytest; eval reports; Git
 - Contract: Review/report theo IO-15.
-- Hoàn thành khi: G3: order ownership + deterministic policy + agent review/outcome pass; điều kiện thiếu được hỏi lại; có ticket tới specialist thật trong app.
+- Hoàn thành khi: G3: order ownership + deterministic policy + agent review/outcome pass; restart/resume/idempotency và ba MCP tools qua protocol có evidence; điều kiện thiếu được hỏi lại; có ticket tới specialist thật trong app.
 - Nguồn: SRC-02 BUY-AC-02..05; AG-AC-01..05; SRC-04
 
 #### M3.B — Dự phòng sửa lỗi, tích hợp hoặc nghỉ theo lịch thực tế
@@ -543,7 +543,7 @@ M2 hoàn thành chatbot demo cuối W4 (20/11). M3 có context/eligibility/agent
 - Output: ABSA comparison report; champion config; release decision
 - Module / công nghệ: MOD-07 — scikit-learn metrics; Python eval; model registry manifest
 - Contract: IO-14.
-- Hoàn thành khi: MVP floor 0.80 chỉ demo; production target 0.85, critical aspect 0.75; thiếu threshold phải fail/giới hạn, không chỉnh số đo.
+- Hoàn thành khi: Demo classification floor 0.80 và critical aspect 0.75 chỉ thuộc profile demo đã khóa G0; architecture-target classification/polarity ≥0.85. Báo ATE span F1 riêng, target ≥0.85 theo SRC-05 §9.1 với định nghĩa averaging/span match khóa G0. Thiếu span labels/test → ATE NOT VALIDATED và chưa đạt đầy đủ architecture; không dùng category F1 thay ATE.
 - Nguồn: SRC-06 §3.3; SRC-04; SRC-07
 
 #### M4.5 — Ingestion, queue và batch phủ toàn corpus
@@ -551,11 +551,11 @@ M2 hoàn thành chatbot demo cuối W4 (20/11). M3 có context/eligibility/agent
 - Lịch: 14/12/2026 (AM) → 15/12/2026; 1.5 ngày; Trần Đình Khương đảm nhiệm vai trò Backend / Data.
 - Phụ thuộc: M4.4. Loại: Core. Trạng thái baseline: Not Started.
 - Input: ABSA model; FeedbackRecord; review data
-- Cách làm: POST ingest persist rồi queue; dedup source+ID; validate spam/empty/date/lang; Redis Streams consumer retry/DLQ; infer tất cả accepted records; append predictions và enrich review index.
+- Cách làm: POST ingest ghi record + outbox event trong cùng PostgreSQL transaction rồi trả 202/batch_id; mask PII trước phát event, outbox/queue chỉ chứa masked payload và authorized record refs; dispatcher retry đưa Redis Streams; dedup source+ID/event_id; worker ack sau durable prediction commit, reclaim pending sau crash và DLQ. Validate spam/empty/date/lang; infer tất cả accepted records; append predictions và enrich review index bằng job idempotent. Qdrant lỗi không làm mất prediction; replay từ SQL/outbox.
 - Output: Pipeline A; workers; absa_predictions; feedback_reviews index; coverage report
 - Module / công nghệ: MOD-02, MOD-04, MOD-07 — FastAPI; Redis Streams; PostgreSQL; Qdrant
 - Contract: IO-03, IO-10.
-- Hoàn thành khi: Không giới hạn bằng top_k; accepted=processed+pending+failed có lý do; replay không trùng; model version không overwrite.
+- Hoàn thành khi: Không giới hạn bằng top_k; accepted=processed+pending+failed có lý do; replay không trùng; model version không overwrite. Fault injection tại sau DB commit/trước enqueue, sau publish/trước đánh dấu outbox, sau prediction commit/trước ack; không mất accepted record hoặc tăng đôi prediction.
 - Nguồn: SRC-02 §5.2,7.1,8; SRC-06 §2–4; SRC-14
 
 #### M4.6 — Semantic router, rate limit và triage API
@@ -563,7 +563,7 @@ M2 hoàn thành chatbot demo cuối W4 (20/11). M3 có context/eligibility/agent
 - Lịch: 15/12/2026 (PM) → 16/12/2026; 1 ngày; Trần Đình Khương đảm nhiệm vai trò Backend / ML.
 - Phụ thuộc: M4.5. Loại: Core. Trạng thái baseline: Not Started.
 - Input: Router labels, known safety patterns, ABSA inference
-- Cách làm: Seed 1,500 router texts bằng templates + kiểm thủ công mẫu; benchmark rules vs classifier; route macro_review/complaint_ticket/out_of_scope; policy_query vào nhánh chat; Redis sliding window và quota.
+- Cách làm: Seed 1,500 router texts bằng templates + kiểm thủ công mẫu; benchmark rules vs classifier; route macro_review/complaint_ticket/out_of_scope; policy_query vào nhánh chat; Redis sliding window và quota. Tái sử dụng rate limiter đã có ở M2.5; ở đây mở rộng theo route/worker, không đợi M4 mới bảo vệ chat.
 - Output: Router dataset/card; router service; rate limiter; /api/v1/absa/predict
 - Module / công nghệ: MOD-01, MOD-02, MOD-07, MOD-12 — scikit-learn/embedding classifier; Redis; FastAPI
 - Contract: IO-03, IO-10.
@@ -591,7 +591,7 @@ M2 hoàn thành chatbot demo cuối W4 (20/11). M3 có context/eligibility/agent
 - Output: docs/reports/milestones/m4-review.md; checklist; demo; manifest phiên bản
 - Module / công nghệ: MOD-12 — pytest; eval reports; Git
 - Contract: Review/report theo IO-15.
-- Hoàn thành khi: G4: batch coverage 100% accepted corpus với failures minh bạch; model eval thật; triage/corrections hoạt động; target chưa đạt phải ghi rõ.
+- Hoàn thành khi: G4: accepted=processed+pending+failed với lý do; coverage inference báo processed/accepted riêng; outbox/retry/ack fault tests pass; triage/corrections hoạt động. Demo gate và architecture-target ABSA/ATE báo riêng theo DEC-18; thiếu ATE không thành full architecture PASS.
 - Nguồn: SRC-04; SRC-06 §3; SRC-07 ABSA
 
 #### M4.B — Dự phòng sửa lỗi, tích hợp hoặc nghỉ theo lịch thực tế
@@ -777,8 +777,8 @@ M2 hoàn thành chatbot demo cuối W4 (20/11). M3 có context/eligibility/agent
 - Lịch: 05/01/2027 (AM) → 05/01/2027; 1 ngày; Trần Đình Khương đảm nhiệm vai trò Full-stack.
 - Phụ thuộc: M6.5. Loại: Core. Trạng thái baseline: Not Started.
 - Input: Proposed mutations + role matrix
-- Cách làm: UI queue approve/reject/conflict; quyền analyst/steward riêng dù demo cùng người; retire policy; atomic publish/version; audit và rollback; sensitive updates chờ reviewer được chỉ định.
-- Output: Steward workflow + knowledge versions + approval records
+- Cách làm: UI queue approve/reject/conflict; quyền analyst/steward riêng dù demo cùng người; retire policy; chuẩn bị snapshot/version rồi publish qua release manifest; audit và rollback; sensitive updates chờ reviewer được chỉ định.
+- Output: Steward Queue trong apps/web + knowledge versions + approval records
 - Module / công nghệ: MOD-08, MOD-11, MOD-06 — FastAPI; PostgreSQL change log; Neo4j; React
 - Contract: IO-13.
 - Hoàn thành khi: Chưa approved không ảnh hưởng runtime; không silent overwrite; production reviewer độc lập cần người được ủy quyền.
@@ -789,11 +789,11 @@ M2 hoàn thành chatbot demo cuối W4 (20/11). M3 có context/eligibility/agent
 - Lịch: 06/01/2027 (AM) → 06/01/2027; 1 ngày; Trần Đình Khương đảm nhiệm vai trò Backend / Platform.
 - Phụ thuộc: M6.6. Loại: Core. Trạng thái baseline: Not Started.
 - Input: Published graph/policy revisions + index snapshots
-- Cách làm: Invalidate cache/reindex khi policy thay; báo stale; graph/policy/index release manifest; rollback tri thức không rollback app; kiểm integrity và retention references.
+- Cách làm: Build policy/index/graph snapshots có version, kiểm integrity rồi chuyển active release pointer bằng một PostgreSQL transaction; mỗi request pin manifest/version và query đúng snapshot. Không giả định transaction chung PostgreSQL/Qdrant/Neo4j. Invalidate Redis, chặn policy retired ở resolver trước phát câu trả lời, retry/reconcile khi sync lỗi; rollback pointer về bộ version tương thích; giữ retention references.
 - Output: Knowledge publication pipeline; version rollback drill
 - Module / công nghệ: MOD-04, MOD-06, MOD-08, MOD-12 — PostgreSQL; Qdrant; Neo4j; Redis; manifests
 - Contract: IO-15.
-- Hoàn thành khi: Draft trace đúng policy/graph version; policy retired không được lấy qua cache cũ.
+- Hoàn thành khi: Draft trace đúng policy/graph version; policy retired không được lấy qua cache cũ. Test crash ở từng bước publish, stale cache và một store unavailable; request không trộn release; draft đã duyệt phải revalidate policy trước action/send.
 - Nguồn: SRC-02 §15,20; SRC-06 §5–7
 
 #### M6.8 — Nghiệm thu vòng analyst→knowledge→chatbot
@@ -829,7 +829,7 @@ M2 hoàn thành chatbot demo cuối W4 (20/11). M3 có context/eligibility/agent
 - Output: docs/reports/milestones/m6-review.md; checklist; demo; manifest phiên bản
 - Module / công nghệ: MOD-12 — pytest; eval reports; Git
 - Contract: Review/report theo IO-15.
-- Hoàn thành khi: G6: quant→qual→proposed→review→publish→new ticket có bằng chứng; rollback tri thức và các trạng thái chưa xác nhận hoạt động.
+- Hoàn thành khi: G6: quant→qual→proposed→review→publish→new ticket có bằng chứng; release manifest pin policy/graph/index, crash/reconcile và rollback pass; chưa xác nhận không được khẳng định.
 - Nguồn: SRC-02 AN-AC-04..06; §3.5,19; SRC-04
 
 #### M6.B — Nghỉ dự kiến 01/01/2027 (trích quỹ dự phòng)
@@ -979,11 +979,11 @@ M2 hoàn thành chatbot demo cuối W4 (20/11). M3 có context/eligibility/agent
 - Lịch: 19/01/2027 (AM) → 19/01/2027; 1 ngày; Trần Đình Khương đảm nhiệm vai trò Platform.
 - Phụ thuộc: M8.1. Loại: Core. Trạng thái baseline: Not Started.
 - Input: Compose release + infrastructure ADR + cloud prerequisites
-- Cách làm: Helm/Terraform cấu hình bounded demo; OIDC builder/staging/prod roles; per-service identity; Secrets, NetworkPolicy, non-root/read-only; CPU/GPU worker separation; validate/render plan.
+- Cách làm: Helm/Terraform cấu hình bounded demo; OIDC builder/staging/prod roles; per-service identity; Secrets, NetworkPolicy, non-root/read-only; CPU/GPU worker separation; validate/render plan. IAM matrix: builder chỉ push ECR; staging/prod deploy role riêng, production environment có reviewer; API read-only S3 docs + secrets cần thiết; training worker read/write dataset bucket. Chọn Pod Identity hoặc IRSA, chặn pod lấy node-role credentials qua IMDS; validate securityContext runAsNonRoot/readOnlyRootFilesystem/drop ALL và NetworkPolicy. Tên role theo SenticRAG, không sao chép project-a.
 - Output: IaC/chart package; IAM matrix; rendered manifests; cloud cost/prerequisite record
 - Module / công nghệ: MOD-12 — Helm; Terraform; EKS/ECR/S3/Secrets target; Kubernetes
 - Contract: IO-15.
-- Hoàn thành khi: Không hứa production full trong 1 ngày: scope là minimal validated package; thiếu account hoặc resource thì live apply là BLOCKED.
+- Hoàn thành khi: Không hứa production full trong 1 ngày: scope là minimal validated package; thiếu account hoặc resource thì live apply là BLOCKED. Render/lint/policy checks không chứng minh IAM runtime; negative access tests chỉ PASS khi chạy trên môi trường thật, thiếu cloud ghi NOT RUN.
 - Nguồn: SRC-02 §14.3,16; SRC-05 §7; DEC-11
 
 #### M8.3 — Deploy demo và health/observability thật
@@ -1003,7 +1003,7 @@ M2 hoàn thành chatbot demo cuối W4 (20/11). M3 có context/eligibility/agent
 - Lịch: 21/01/2027 (AM) → 21/01/2027; 1 ngày; Trần Đình Khương đảm nhiệm vai trò QA / Platform.
 - Phụ thuộc: M8.3. Loại: Core. Trạng thái baseline: Not Started.
 - Input: Frozen corpus, fixed hardware and release
-- Cách làm: Cold/warm p50/p95/p99 và concurrency; 1x/3x/10x synthetic load nếu tài nguyên cho phép; stage time, RAM/disk/GPU; inject timeout/Qdrant/Neo4j/queue errors; backlog/resume.
+- Cách làm: Cold/warm p50/p95/p99 và concurrency; 1x/3x/10x synthetic load nếu tài nguyên cho phép; stage time, RAM/disk/GPU; inject timeout/Qdrant/Neo4j/queue errors; backlog/resume. Báo riêng thời gian Pipeline B, full response và TTFT; chờ người duyệt là trạng thái pending có đồng hồ riêng. Pipeline B vượt 2s thì profile architecture-target FAIL dù demo <60s có thể pass.
 - Output: Load/failure report + measured resource envelope + tuned config
 - Module / công nghệ: MOD-04, MOD-07, MOD-12 — Python load harness; metrics; Docker stats
 - Contract: IO-14, IO-15.
@@ -1090,7 +1090,7 @@ M2 hoàn thành chatbot demo cuối W4 (20/11). M3 có context/eligibility/agent
 - Input: Message + authenticated session + permitted history
 - Output: Answer/citations/clarification/handoff; persisted messages
 - Nhiệm vụ: Session ownership; sliding buffer/summary; intent/follow-up; orchestration; buyer UI
-- Vị trí: `apps/api; packages/conversation (mới); apps/chatbot (mới)`
+- Vị trí: `apps/api; packages/conversation (mới); apps/web/src/features/buyer-chat (mới)`
 - Công nghệ: FastAPI; PostgreSQL; Redis; React/TypeScript
 - Contract/API: IO-01, IO-02; POST /api/v1/chat/messages (mới); phụ thuộc: MOD-02/03/04; optional 05/06/07/08.
 - Ranh giới: Không bắt ChatRequest phải có product/order. Order tool chỉ chạy sau xác thực. Backend modular monolith, worker riêng khi cần.
@@ -1189,7 +1189,7 @@ M2 hoàn thành chatbot demo cuối W4 (20/11). M3 có context/eligibility/agent
 - Input: Metrics/cohort filters + evidence + graph context
 - Output: Charts, issue detail, evidence drill-down, analyst annotations
 - Nhiệm vụ: Filter state preservation; population/freshness; graph path viewer; issue ownership/lifecycle; role-safe drill-down
-- Vị trí: `apps/analyst_dashboard; apps/api investigation routes`
+- Vị trí: `apps/web/src/features/analytics (mới); apps/api investigation routes; apps/analyst_dashboard là scaffold tham chiếu`
 - Công nghệ: React; TypeScript; chart component; FastAPI
 - Contract/API: IO-11/12/13; POST /api/v1/investigation/drilldown (mở rộng); phụ thuộc: MOD-04/08/09/11.
 - Ranh giới: Nêu rõ candidate cause vs confirmed; metric lineage đủ để tái tính; user không cần biết vector score nội bộ.
@@ -1200,7 +1200,7 @@ M2 hoàn thành chatbot demo cuối W4 (20/11). M3 có context/eligibility/agent
 - Input: Drafts/tickets, correction/relevance/outcome, proposed knowledge changes
 - Output: Final reviewed responses; approved labels; dataset/knowledge change versions
 - Nhiệm vụ: Approve/edit/reject/reasons/escalation; annotations; stewardship queue; active learning export; status workflow
-- Vị trí: `apps/agent_workspace; packages/feedback/{annotations,knowledge_approval,active_learning}`
+- Vị trí: `apps/web/src/features/{agent-copilot,steward} (mới); packages/feedback/{annotations,knowledge_approval,active_learning}; apps/agent_workspace là scaffold tham chiếu`
 - Công nghệ: React; FastAPI; PostgreSQL; Python export/training jobs
 - Contract/API: IO-09/13; POST /api/v1/feedback/contribute; phụ thuộc: MOD-06/07/08/12.
 - Ranh giới: Một người dev có thể mô phỏng 5 vai trò, không có nghĩa đã có independent UAT/production approver.
@@ -1232,8 +1232,8 @@ Các JSON sau chỉ minh họa, không thay Pydantic schema đầy đủ. ID d�
 
 ```json
 {
-  "conversation_id": "conv-demo-01",
-  "client_request_id": "req-demo-01",
+  "conversation_id": "b33b56b8-a6b7-42a7-85fa-a2761262ecf5",
+  "client_request_id": "bdbbd5d4-fae8-486a-89e7-7bf334ff5a42",
   "message": "Chính sách đổi trả thế nào?"
 }
 ```
@@ -1243,7 +1243,7 @@ Các JSON sau chỉ minh họa, không thay Pydantic schema đầy đủ. ID d�
 - Giai đoạn: M2; producer: MOD-01/03 → consumer: Buyer UI.
 - Input: Authorized message + EvidencePack + bounded history
 - Output: conversation_id; message_id; answer; citations[]; status: answered|needs_clarification|needs_human_review|error; missing_fields[]; ticket_id?; trace_id
-- Validation/failure: Citations resolve thật; no-evidence không kết luận; timeout/error rõ; stream nếu dùng chỉ phát nội dung được kiểm theo policy.
+- Validation/failure: Citation chung có source_type/source_id/snippet; policy citation thêm policy_id, clause_id, chunk_id, source_url, policy_version, effective_from/effective_to nullable với unknown rõ. Ticket/graph citation dùng resolver theo loại, không ép trường policy. Resolver kiểm nguồn/version/điều khoản và evidence hỗ trợ claim; URL hợp lệ chưa đủ. No-evidence không kết luận; timeout/error rõ; stream nếu dùng chỉ phát nội dung đã kiểm.
 - Persistence: interactions, llm_generations, citations
 - API: Response /api/v1/chat/messages; GET conversation/history — mới
 - Nguồn: SRC-02 §7.9; SRC-04; đề xuất chatbot
@@ -1265,8 +1265,8 @@ Các JSON sau chỉ minh họa, không thay Pydantic schema đầy đủ. ID d�
 - Giai đoạn: M1/M4; producer: Source adapter/chat event → consumer: MOD-02→MOD-07.
 - Input: source/source_record_id/text/language/created_at/product_id; product_version?/customer_ref?/order_ref?/rating?
 - Output: accepted/rejected/batch_id; durable record IDs; masked text; validation errors; processing status
-- Validation/failure: Dedup source+source_record_id; UTC timestamps; product missing phải quarantine/enrich, không invent; accepted chỉ sau persist/queue.
-- Persistence: Immutable ingest manifest + reviews/support_tickets + queue/DLQ
+- Validation/failure: Dedup source+source_record_id; UTC timestamps; product missing phải quarantine/enrich, không invent; accepted/202 chỉ sau commit record+outbox trong cùng transaction. Queue có thể pending; trả processing_status và retry/replay có lý do.
+- Persistence: Immutable ingest manifest + reviews/support_tickets + SQL outbox + queue/DLQ
 - API: POST /api/v1/ingest/feedback — schema có, handler hiện mock cần triển khai
 - Nguồn: SRC-06 §2; SRC-02 §7.1,9; SRC-16
 
@@ -1413,8 +1413,8 @@ Các JSON sau chỉ minh họa, không thay Pydantic schema đầy đủ. ID d�
 
 - Giai đoạn: M4; producer: MOD-02 + model/taxonomy → consumer: MOD-07→MOD-04/09/11.
 - Input: record_id; text_masked; language; model/taxonomy version; metadata
-- Output: aspects[{aspect,category,sentiment,confidence,evidence_span?}]; entities[]; inference_timestamp; versions; supported_language; status
-- Validation/failure: Evidence span optional only if supported by source labels/model; positive/neutral/negative; confidence calibrated/marked; preserve aspect-polarity pairing.
+- Output: aspects[{aspect,category,sentiment,confidence,evidence_span?}]; entities[]; inference_timestamp; model_version; taxonomy_version; supported_language; status
+- Validation/failure: evidence_span optional/nullable chỉ khi labels/model hỗ trợ; không suy span từ category labels. model_version và taxonomy_version bắt buộc ở cấp prediction, không lặp trên từng aspect; positive/neutral/negative; confidence calibrated/marked; giữ cặp aspect-polarity. Contract tests kiểm version thiếu, span không có và payload nhiều aspect.
 - Persistence: absa_predictions keyed by record+model+taxonomy+timestamp; Qdrant derived payload
 - API: POST /api/v1/absa/predict; batch worker; legacy /predict deprecated
 - Nguồn: SRC-02 §7.3; SRC-06 §3; SRC-07 ABSA
@@ -1563,18 +1563,18 @@ Các JSON sau chỉ minh họa, không thay Pydantic schema đầy đủ. ID d�
 | ID | Năng lực | Công nghệ | Giai đoạn | Trạng thái chọn | Cách dùng | Nguồn |
 | --- | --- | --- | --- | --- | --- | --- |
 | TECH-01 | Backend & API | Python 3.11/3.12; FastAPI; Pydantic; Poetry | M0→M8 | Có trong repo | Typed APIs, validation, middleware, contracts; pin dependencies từ poetry.lock; /api/v1 canonical | SRC-01; SRC-16; WEB-01 |
-| TECH-02 | Frontend | React + TypeScript; một bộ component chung | M0/M2→M6 | Đề xuất; framework UI chưa có implementation | Buyer chat trước; tái sử dụng cho agent/analyst/steward; responsive basic; chốt bundler/chart library M0, tránh nhiều frontend stack | WEB-04; SRC-14 |
-| TECH-03 | Operational storage | PostgreSQL + versioned migrations | M0→M8 | Target repo | Sessions/history/orders/policies/outcomes/annotations và metric source of truth; chọn driver/migration library tại G0 | SRC-02 §8; SRC-06 §1 |
+| TECH-02 | Frontend | React + TypeScript; một ứng dụng apps/web; component/API client dùng chung | M0/M2→M6 | Đề xuất; framework UI chưa có implementation | Một build/deploy: Buyer Chat (M2), Agent Copilot (M3), Analyst BI & GraphRAG cho Analyst/PM (M5–M6), Steward Queue (M6–M7); route và API kiểm quyền; chốt bundler/chart library M0; không dựng ba project frontend | WEB-04; SRC-14 |
+| TECH-03 | Operational storage | PostgreSQL + SQLAlchemy 2.x + psycopg[binary] 3.x + Alembic | M0→M8 | Target repo | Sessions/history/orders/policies/outcomes/annotations và metric source of truth; SQLAlchemy quản lý truy cập/transaction, psycopg là driver, Alembic quản lý migration; khóa phiên bản tương thích Python 3.11/3.12 tại M0.4; migrations ứng dụng có một owner | SRC-02 §8; SRC-06 §1 |
 | TECH-04 | Cache / queues | Redis; Redis Streams; sliding-window limits | M2/M4 | Repo có Redis; queue strategy cần thống nhất | Chọn Redis Streams cho demo, một worker đơn giản; không triển khai đồng thời Celery và Kafka. Cache không là source of truth | SRC-01; SRC-14; DEC-08 |
 | TECH-05 | Parsing / ingestion | Python HTML parser, JSONL/Parquet, Pydantic | M1/M4 | Cần triển khai clean/chunk | Tái dùng crawler export; chọn parser theo snapshot; clause-based chunking giữ điều kiện; không cần OCR cho corpus HTML hiện tại | SRC-10; SRC-06 |
 | TECH-06 | Vector / lexical retrieval | Qdrant + sentence-transformers + BM25 + RRF | M2/M5 | Target repo; module khung | Benchmark local BM25 reference và Qdrant dense; chọn sparse server-side khi parity/filter tests pass; không gắn vào free-tier quota chưa đo | SRC-02 §7.5; SRC-06 §4; WEB-02 |
 | TECH-07 | Embedding & reranker | Vietnamese/multilingual embedding candidate; BGE reranker candidate | M0 smoke; M2 eval | Chốt model ở G0/G2 | Dimension theo model thật; pin version/license; measured quality/latency/resource; enable rerank qua evidence, không mặc định | SRC-06 §4; SRC-07 Retrieval |
 | TECH-08 | LLM | Provider-configured LLM API hoặc local model đủ tài nguyên | M0 chọn; M2 tích hợp | Chưa chọn provider/model | Smoke tiếng Việt + JSON/citation; model ID/context/token/cost limit ghi config; secrets ngoài repo; không fine-tune LLM trong 14 tuần | SRC-02 §7.9; DEC-10 |
-| TECH-09 | Orchestration/tools | Python bounded FSM; typed tools; MCP adapter; task isolation | M3 | Target architecture | Allowlist/order/warranty/route tools; bounded reflection; action idempotency; không cần framework agent lớn ở MVP; microVM riêng extension | SRC-05 L2/L5; SRC-02 §7.9 |
+| TECH-09 | Orchestration/tools | Python bounded FSM; typed tools; MCP adapter; task isolation | M3 | Target architecture | Baseline Python bounded FSM với trạng thái lưu PostgreSQL, approval/resume và action idempotency; LangGraph chỉ chọn theo DEC-17, không bắt buộc M2; allowlist tools; microVM riêng extension | SRC-05 L2/L5; SRC-02 §7.9 |
 | TECH-10 | ABSA | TF-IDF + Logistic Regression; PhoBERT candidate với PyTorch/Transformers | M4/M7 | Dependencies có; model pipeline chưa có | Baseline trước; một candidate bounded; tokenizer/splits pin; GPU access quyết định M0; ATE labels riêng; sklearn calibration/metrics | SRC-06 §3; SRC-07 ABSA |
 | TECH-11 | Graph | Neo4j; Cypher parameterized; Python driver | M6 | Target repo | Issue-centered canonical schema; constraints/controlled hops; local graph + vector bridge; global summaries/DRIFT để extension | SRC-02 §7.6–7.7; SRC-08; WEB-03 |
 | TECH-12 | Analytics | PostgreSQL SQL aggregates; scheduled Python jobs; React charts | M5 | Target repo | Denominator/population, version/freshness, min samples; reuse relational data; BI dedicated product không bắt buộc | SRC-02 §7.4; SRC-14 |
-| TECH-13 | Quality & tests | pytest; browser E2E runner; versioned JSONL eval; load harness | M0→M8 | pytest có; browser runner chọn G0 | Unit/contract/integration/eval/E2E/smoke/load; holdout splits; source and safety checks; browser tool cùng một stack cho 3 UIs | SRC-01; SRC-02 §13,16; SRC-16 |
+| TECH-13 | Quality & tests | pytest; browser E2E runner; versioned JSONL eval; load harness | M0→M8 | pytest có; browser runner chọn G0 | Unit/contract/integration/eval/E2E/smoke/load; holdout splits; source and safety checks; một browser test stack cho apps/web và bốn khu vực, kiểm quyền của đủ năm personas | SRC-01; SRC-02 §13,16; SRC-16 |
 | TECH-14 | Observability | OpenTelemetry; Prometheus; Grafana target | M2→M8 | Dependencies cơ bản có | Request/story/ticket IDs, versions, token/cost, p95, queue/drift; redact logs; dashboards bounded cho demo | SRC-05 L7; SRC-07 monitoring |
 | TECH-15 | Packaging & CI | Docker Compose; GitHub Actions; immutable images; manifests | M0→M8 | Có scaffold | Run locally early; AI gates and same artifact promotion; versioned data/model/knowledge rollback | SRC-16; SRC-15; SRC-02 §15–16 |
 | TECH-16 | Cloud target | Helm; Terraform; AWS EKS/ECR/S3/Secrets; OIDC and per-service identity | M8; production rollout conditional | Target docs; chưa chứng minh live | Minimal package validate; actual cloud needs access/budget/reviewer; production-grade scaling/HA thêm roadmap; không lấy quota free tier làm cam kết | SRC-02 §14.3,16; SRC-05 §7; DEC-11 |
@@ -1585,13 +1585,13 @@ Tất cả gate/metric ở baseline có trạng thái **NOT RUN**. Một test su
 
 | ID | Nội dung | Mốc | Ngưỡng | Đo thế nào | Artifact | Nguồn/loại | Giới hạn |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| G0 | Thiết kế chatbot và khóa phạm vi | M0 | G0: thiết kế chatbot, I/O, scope và ngưỡng eval có owner; quyết định chưa chốt được ghi rõ; 1 người/14 tuần khả thi ở phạm vi demo. | Review all preceding phase tasks + demo + regression + source coverage | docs/reports/milestones/m0-review.md; checklist; demo; manifest phiên bản | SRC-02 §21; SRC-03; SRC-04; Gate bàn giao | Một người tự review theo checklist; external acceptance cần người được ủy quyền nếu áp dụng. |
+| G0 | Thiết kế chatbot và khóa phạm vi | M0 | G0: khóa I/O, ADR, profile demo/architecture-target và ngưỡng eval; rà lại effort M0.4/M3.4/M4.5/M6.7/M8.2 theo smoke thực. Lịch 14 tuần là baseline, chưa chứng minh feasibility; thiếu resource/effort phải ghi blocker hoặc rebaseline. | Review all preceding phase tasks + demo + regression + source coverage | docs/reports/milestones/m0-review.md; checklist; demo; manifest phiên bản | SRC-02 §21; SRC-03; SRC-04; Gate bàn giao | Một người tự review theo checklist; external acceptance cần người được ủy quyền nếu áp dụng. |
 | G1 | Chuẩn hóa dữ liệu chính sách cho chatbot | M1 | G1: 5–10 policies/~30 clauses đã duyệt, truy nguồn đầy đủ; 40 queries + 20 hội thoại; privacy fixtures; ingestion idempotent. | Review all preceding phase tasks + demo + regression + source coverage | docs/reports/milestones/m1-review.md; checklist; demo; manifest phiên bản | SRC-06; SRC-10; SRC-04; Gate bàn giao | Một người tự review theo checklist; external acceptance cần người được ủy quyền nếu áp dụng. |
-| G2 | Chatbot RAG đầu tiên chạy xuyên suốt | M2 | G2: chatbot UI→API→retrieval→LLM→citations chạy thật; multi-turn/fallback/privacy pass; benchmark riêng retrieval và generation. | Review all preceding phase tasks + demo + regression + source coverage | docs/reports/milestones/m2-review.md; checklist; demo; manifest phiên bản | SRC-03 US-BUY-01; SRC-04; SRC-02 §21; Gate bàn giao | Một người tự review theo checklist; external acceptance cần người được ủy quyền nếu áp dụng. |
-| G3 | Chatbot theo đơn hàng và Copilot CSKH | M3 | G3: order ownership + deterministic policy + agent review/outcome pass; điều kiện thiếu được hỏi lại; có ticket tới specialist thật trong app. | Review all preceding phase tasks + demo + regression + source coverage | docs/reports/milestones/m3-review.md; checklist; demo; manifest phiên bản | SRC-02 BUY-AC-02..05; AG-AC-01..05; SRC-04; Gate bàn giao | Một người tự review theo checklist; external acceptance cần người được ủy quyền nếu áp dụng. |
-| G4 | ABSA và ingestion toàn corpus | M4 | G4: batch coverage 100% accepted corpus với failures minh bạch; model eval thật; triage/corrections hoạt động; target chưa đạt phải ghi rõ. | Review all preceding phase tasks + demo + regression + source coverage | docs/reports/milestones/m4-review.md; checklist; demo; manifest phiên bản | SRC-04; SRC-06 §3; SRC-07 ABSA; Gate bàn giao | Một người tự review theo checklist; external acceptance cần người được ủy quyền nếu áp dụng. |
+| G2 | Chatbot RAG đầu tiên chạy xuyên suốt | M2 | G2: chatbot UI→API→retrieval→LLM→citations chạy thật; multi-turn/fallback/privacy, claim/schema/policy/output filter và rate-limit/quota pass; benchmark retrieval/generation riêng. Chưa có ABSA/GraphRAG không được gọi hoàn thành full Buyer story. | Review all preceding phase tasks + demo + regression + source coverage | docs/reports/milestones/m2-review.md; checklist; demo; manifest phiên bản | SRC-03 US-BUY-01; SRC-04; SRC-02 §21; Gate bàn giao | Một người tự review theo checklist; external acceptance cần người được ủy quyền nếu áp dụng. |
+| G3 | Chatbot theo đơn hàng và Copilot CSKH | M3 | G3: order ownership + deterministic policy + agent review/outcome pass; restart/resume/idempotency và ba MCP tools qua protocol có evidence; điều kiện thiếu được hỏi lại; có ticket tới specialist thật trong app. | Review all preceding phase tasks + demo + regression + source coverage | docs/reports/milestones/m3-review.md; checklist; demo; manifest phiên bản | SRC-02 BUY-AC-02..05; AG-AC-01..05; SRC-04; Gate bàn giao | Một người tự review theo checklist; external acceptance cần người được ủy quyền nếu áp dụng. |
+| G4 | ABSA và ingestion toàn corpus | M4 | G4: accepted=processed+pending+failed với lý do; coverage inference báo processed/accepted riêng; outbox/retry/ack fault tests pass; triage/corrections hoạt động. Demo gate và architecture-target ABSA/ATE báo riêng theo DEC-18; thiếu ATE không thành full architecture PASS. | Review all preceding phase tasks + demo + regression + source coverage | docs/reports/milestones/m4-review.md; checklist; demo; manifest phiên bản | SRC-04; SRC-06 §3; SRC-07 ABSA; Gate bàn giao | Một người tự review theo checklist; external acceptance cần người được ủy quyền nếu áp dụng. |
 | G5 | Dashboard toàn corpus và điều tra bằng evidence | M5 | G5: dashboard từ corpus đầy đủ → filtered evidence có thể tái lập; số liệu không lấy từ mock; có freshness và denominator. | Review all preceding phase tasks + demo + regression + source coverage | docs/reports/milestones/m5-review.md; checklist; demo; manifest phiên bản | SRC-02 AN-AC-01..03; SRC-03 US-PM-01; Gate bàn giao | Một người tự review theo checklist; external acceptance cần người được ủy quyền nếu áp dụng. |
-| G6 | GraphRAG và quản trị tri thức | M6 | G6: quant→qual→proposed→review→publish→new ticket có bằng chứng; rollback tri thức và các trạng thái chưa xác nhận hoạt động. | Review all preceding phase tasks + demo + regression + source coverage | docs/reports/milestones/m6-review.md; checklist; demo; manifest phiên bản | SRC-02 AN-AC-04..06; §3.5,19; SRC-04; Gate bàn giao | Một người tự review theo checklist; external acceptance cần người được ủy quyền nếu áp dụng. |
+| G6 | GraphRAG và quản trị tri thức | M6 | G6: quant→qual→proposed→review→publish→new ticket có bằng chứng; release manifest pin policy/graph/index, crash/reconcile và rollback pass; chưa xác nhận không được khẳng định. | Review all preceding phase tasks + demo + regression + source coverage | docs/reports/milestones/m6-review.md; checklist; demo; manifest phiên bản | SRC-02 AN-AC-04..06; §3.5,19; SRC-04; Gate bàn giao | Một người tự review theo checklist; external acceptance cần người được ủy quyền nếu áp dụng. |
 | G7 | Closed-loop feedback và cải thiện mô hình | M7 | G7: sửa nhãn/tri thức→duyệt→dataset/model/knowledge version→đánh giá→publish hoặc reject được chạy và truy vết. | Review all preceding phase tasks + demo + regression + source coverage | docs/reports/milestones/m7-review.md; checklist; demo; manifest phiên bản | SRC-02 §7.10,21; SRC-04; Gate bàn giao | Một người tự review theo checklist; external acceptance cần người được ủy quyền nếu áp dụng. |
 | G8 | Tích hợp, vận hành và bàn giao | M8 | G8: demo 5 stories + quality/data/governance/release evidence; đánh giá riêng core demo, target quality, cloud và business validation; còn thiếu ghi OPEN. | Review all preceding phase tasks + demo + regression + source coverage | docs/reports/milestones/m8-review.md; checklist; demo; manifest phiên bản | SRC-02 §21; SRC-03; SRC-04; SRC-07; Gate bàn giao | Một người tự review theo checklist; external acceptance cần người được ủy quyền nếu áp dụng. |
 | Q-01 | Chatbot policy QA rubric | M2/M8 | ≥90% trên held-out policy QA (đề xuất MVP) | Human rubric correctness/relevance/helpfulness; report n and failure reasons | chatbot_mvp_eval report | Đề xuất mới cho G2; Đề xuất cần khóa G0 | Chưa đo; không phải kết quả hiện tại |
@@ -1601,15 +1601,15 @@ Tất cả gate/metric ở baseline có trạng thái **NOT RUN**. Một test su
 | Q-05 | FRT and response latency | M2/M8 | Standard full-response cases <60s; <30s stretch; báo TTFT/p95/p99 riêng | Warm/cold, hardware/corpus/concurrency pin; useful response time vs full response defined | latency report | SRC-03; SRC-04; SRC-05 §5.2; DEC-03; Target tài liệu | Chưa đo; không phải kết quả hiện tại |
 | Q-06 | Retrieval quality | M2 baseline/M5/M6 final | Recall@5 ≥.88; MRR ≥.82; Recall@10 ≥.85; nDCG@10 ≥.75 | ≥100 golden queries final, separate policy/review/graph slices; paired modes/corpus; count queries and relevance grading | retrieval benchmark matrix | SRC-05 §9; SRC-06 §4; Target tài liệu | M2 40-query baseline chưa đại diện final corpus; threshold shortfall=FAIL/limited demo, không claim achieved. |
 | Q-07 | Filter correctness/source integrity | M2/M5/M6 | 100% authorized filter correctness and source ID resolution on tests | Test date/product/version/aspect-polarity/tenant/approved policy; missing docs and empty cohort | filter/source report | SRC-06 §4; SRC-07 RET-AC; Target tài liệu | Chưa đo; không phải kết quả hiện tại |
-| Q-08 | ABSA classification | M4/M8 | MVP floor Macro-F1 ≥.80; target ≥.85; critical per-aspect F1 ≥.75 | Fixed test split; baseline vs candidate; macro/per-aspect confusion/slices; state class averaging explicitly | ABSA eval + model card | SRC-06 §3; SRC-04; DEC-05; Target tài liệu | Chưa đo; không phải kết quả hiện tại |
-| Q-09 | ATE/entity/calibration | M4/M8 | Báo span extraction F1, entities và ECE; floor khóa G0 sau label inventory | ATE chỉ trên span labels; polarity metric riêng; calibration fitted dev; report slang/negation/emoji slices | span/calibration report | SRC-02 §13.1; SRC-06 §3; SRC-07; Target cần dữ liệu | Không đánh đồng F1 category/polarity với span extraction; thiếu span test=NOT VALIDATED. |
+| Q-08 | ABSA classification | M4/M8 | Demo classification Macro-F1 ≥.80, critical per-aspect ≥.75 nếu khóa G0; architecture-target classification/polarity ≥.85, đánh giá ATE riêng Q-09 | Fixed test split; baseline vs candidate; macro/per-aspect confusion/slices; state class averaging explicitly | ABSA eval + model card | SRC-05 §9.1; SRC-06 §3; SRC-04; DEC-05; DEC-18; Target tài liệu | Chưa đo; không phải kết quả hiện tại |
+| Q-09 | ATE/entity/calibration | M4/M8 | Architecture-target ATE F1 ≥.85 (SRC-05 §9.1); khóa span matching/averaging và tách polarity, entities, ECE tại G0; thiếu span test → NOT VALIDATED | ATE chỉ trên span labels; polarity metric riêng; calibration fitted dev; report slang/negation/emoji slices | span/calibration report | SRC-05 §9.1; SRC-02 §13.1; SRC-06 §3; SRC-07; DEC-18; Target cần dữ liệu | Không đánh đồng F1 category/polarity với span extraction; thiếu span test=NOT VALIDATED. |
 | Q-10 | Corpus and BI lineage | M4/M5 | 100% eligible ingested records accounted; processed/pending/failed tổng khớp accepted | SQL counts independent; one selected model per record; denominator integrity; no top-k aggregation | coverage/analytics report | SRC-04; SRC-02 AN-AC-01; Target tài liệu | Chưa đo; không phải kết quả hiện tại |
 | Q-11 | Representative drill-down | M5/M6 | 5–10 diverse cases nếu cohort đủ; keep all filters | Duplicate/source diversity checks; direct SQL filter parity; report when fewer results exist | investigation eval | SRC-04; SRC-02 AN-AC-02..03; Target tài liệu | Chưa đo; không phải kết quả hiện tại |
 | Q-12 | Graph/knowledge governance | M6/M7 | 100% published mutations approved/audited; zero illegal state transitions or invalid relations in suite | Constraints/orphan/duplicate checks; denied mutation/rollback; source coverage; domain-specific cycle rules | graph eval + approval audit | SRC-05 §4; SRC-02 §13.3; DEC-06; Target tài liệu | Chưa đo; không phải kết quả hiện tại |
 | Q-13 | Anomaly/knowledge freshness | M5/M6/M8 | Alert precision ≥90%; drift detection <24h; knowledge freshness <24h (targets) | Labeled anomaly replay + measured schedules; real observed window needed; published version timestamps | alert/freshness report | SRC-05 §4; Target tài liệu | Synthetic replay pass không đủ chứng minh production detection SLA. |
 | Q-14 | Root-cause investigation speed | M6/M8 | Investigation time <2h; emerging issue detection 24–48h (different clocks) | Start alert→analyst conclusion; issue first event→detection; require reviewers/sample cases | investigation timing report | SRC-05 §4; SRC-03; Target tài liệu | Không nhập hai định nghĩa thời gian thành một; self-run demo ghi rõ. |
 | Q-15 | Business impact | M8 / live pilot | AHT reduction ≥40%; FCR improvement ≥15%; draft acceptance ≥80%; track MTTR/CSAT/reopen/cost | Manual vs assisted comparable cohorts; define relative FCR change; n/time window/confounds; real customer pilot separate | business KPI report | SRC-03; SRC-05 §4,9; SRC-06 §7; Target business cần pilot | Không có real pilot → NOT VALIDATED; demo synthetic chỉ kiểm công thức/instrumentation. |
-| Q-16 | Latency, availability and scale | M8 | ABSA p95 ≤300ms; search no-rerank p95 ≤250ms; pipeline <2s; availability 99.5–99.9% là target cần chốt | Freeze hardware/corpus/concurrency/cold-warm; 1x/3x/10x bounded load; separate measured test and long-term uptime | performance/limits report | SRC-07 NFR; SRC-05 §5.2; Giả định planning trong nguồn | Không kiểm chứng sustained availability trong short load test; cần observation window và resource budget. |
+| Q-16 | Latency, availability and scale | M8 | Architecture-target Pipeline B <2s từ query/ticket đã nhận đến output đã qua guardrails, gồm retrieval/rerank/graph/policy/LLM khi route dùng; không thay bằng TTFT. ABSA p95 ≤300ms, search no-rerank p95 ≤250ms và availability 99.5–99.9% là giả định research cần khóa G0 | Freeze hardware/corpus/concurrency/cold-warm; 1x/3x/10x bounded load; separate measured test and long-term uptime | performance/limits report | SRC-07 NFR; SRC-05 §5.2; Giả định planning trong nguồn | Không kiểm chứng sustained availability trong short load test; cần observation window và resource budget. |
 | Q-17 | Release reproducibility and recovery | M8 | Same artifact digest; all versions attached; app/model/index/knowledge rollback demonstrated | Fresh deploy, smoke tests, restore/rebuild and rollback drill; record recovery time/RPO/RTO chosen at G0 | release manifest + recovery report | SRC-02 §15–16,21; SRC-15; Target tài liệu | Chưa đo; không phải kết quả hiện tại |
 | Q-18 | Full user-story acceptance | M8 | 5 role flows demo pass; all core acceptance IDs evidence; conditional/deferred explicit | Browser/API E2E; role matrix; scenario firmware; coverage lookup and reports | UAT recordings + acceptance matrix | SRC-02 §21; SRC-03; SRC-04; Gate bàn giao | Demo completion không tự đóng live cloud/real business impact/advanced extension gates. |
 
@@ -1651,14 +1651,14 @@ Tất cả gate/metric ở baseline có trạng thái **NOT RUN**. Một test su
 | US-ANALYST-01 | Quant→filtered diverse evidence→hypothesis→approved knowledge→support reuse | SRC-03; SRC-05 §3; SRC-02 §3 | M5.4,M6.8,M7.5,M8.6 | MOD-04,MOD-08,MOD-09,MOD-10,MOD-11 | IO-11,IO-12,IO-13 | G8 | Core demo |
 | US-PM-01 | SKU/version defect trends, cause state, ownership và resolution effectiveness | SRC-03; SRC-05 §3; SRC-02 §3 | M5.2,M6.5,M8.6,M8.7 | MOD-08,MOD-09,MOD-10 | IO-09,IO-11,IO-12 | G8 | Core demo |
 | US-STEWARD-01 | Governed graph/policy changes, versions, conflict, access/retention và audit | SRC-03; SRC-05 §3; SRC-02 §3 | M6.6,M6.7,M7.4,M8.6 | MOD-06,MOD-08,MOD-11,MOD-12 | IO-13,IO-15 | G8 | Core demo |
-| ARCH-L1 | Gateway: parse/PII/rate limit/semantic routing | SRC-02 §5–22; SRC-05; SRC-06; SRC-07; SRC-09 | M1.2,M1.3,M4.5,M4.6 | MOD-02,MOD-12 | IO-03 | G4 | Core demo |
+| ARCH-L1 | Gateway: parse/PII/rate limit/semantic routing | SRC-02 §5–22; SRC-05; SRC-06; SRC-07; SRC-09 | M1.2,M1.3,M2.4,M2.5,M4.5,M4.6 | MOD-02,MOD-12 | IO-01,IO-02,IO-03 | G2,G4 | Core demo |
 | ARCH-L2 | Planning/FSM/bounded reflection và handoff | SRC-02 §5–22; SRC-05; SRC-06; SRC-07; SRC-09 | M3.4,M3.7 | MOD-01,MOD-06 | IO-08 | G3 | Core demo |
 | ARCH-L3 | Working context; sliding buffer; episodic recall; semantic/procedural memory | SRC-02 §5–22; SRC-05; SRC-06; SRC-07; SRC-09 | M0.3,M2.5,M3.2,M3.3,M6.3 | MOD-01,MOD-05,MOD-06,MOD-08 | IO-01,IO-06,IO-07 | G3,G6 | Core demo |
 | ARCH-L4 | Dense/BM25/RRF/BGE + metadata + operational GraphRAG | SRC-02 §5–22; SRC-05; SRC-06; SRC-07; SRC-09 | M2.1,M2.2,M2.3,M5.3,M6.3 | MOD-04,MOD-08 | IO-05,IO-12 | G2,G6 | Core demo |
 | ARCH-L5 | Typed/function tools/MCP; authorized actions và task isolation | SRC-02 §5–22; SRC-05; SRC-06; SRC-07; SRC-09 | M3.4,M3.8 | MOD-05,MOD-06,MOD-12 | IO-06,IO-07,IO-08 | G3 | Core demo |
 | ARCH-L6 | Claim/citation/schema/policy guard + output PII + abstention | SRC-02 §5–22; SRC-05; SRC-06; SRC-07; SRC-09 | M2.4,M2.8,M3.7,M6.4,M8.5 | MOD-03,MOD-06 | IO-02,IO-08 | G2,G3,G8 | Core demo |
 | ARCH-L7 | OTel traces, tokens/cost, model/data drift và operational metrics | SRC-02 §5–22; SRC-05; SRC-06; SRC-07; SRC-09 | M2.7,M7.3,M8.3 | MOD-09,MOD-12 | IO-15 | G2,G7,G8 | Core demo |
-| ARCH-PIPE-A | Ingest→mask→ABSA 100% corpus→SQL→BI, async throughput | SRC-02 §5–22; SRC-05; SRC-06; SRC-07; SRC-09 | M4.5,M5.1 | MOD-02,MOD-07,MOD-09 | IO-03,IO-10,IO-11 | G5 | Core demo |
+| ARCH-PIPE-A | Ingest→outbox/queue→mask→ABSA toàn corpus→SQL→BI; replay/ack idempotent | SRC-02 §5–22; SRC-05; SRC-06; SRC-07; SRC-09 | M4.5,M5.1 | MOD-02,MOD-07,MOD-09 | IO-03,IO-10,IO-11 | G5 | Core demo |
 | ARCH-PIPE-B | Query→filters→evidence→graph/policy→generation→guardrails | SRC-02 §5–22; SRC-05; SRC-06; SRC-07; SRC-09 | M2.8,M3.4,M6.4 | MOD-01,MOD-03,MOD-04,MOD-06,MOD-08 | IO-01,IO-05,IO-08 | G6 | Core demo |
 | ARCH-BOUNDARY | ABSA != retrieval; Top-K != statistics; GraphRAG operational; policy deterministic | SRC-02 §5–22; SRC-05; SRC-06; SRC-07; SRC-09 | M0.3,M3.3,M4.5,M5.4,M6.1 | MOD-04,MOD-06,MOD-07,MOD-08,MOD-09 | IO-07,IO-10,IO-11 | G6 | Core demo |
 | API-CONTRACTS | Canonical /api/v1 ingest/investigation/resolution/feedback plus chat/ABSA/retrieval | SRC-02 §5–22; SRC-05; SRC-06; SRC-07; SRC-09 | M0.3,M2.5,M3.4,M4.5,M4.6,M5.3,M7.1 | MOD-12 | IO-01,IO-03,IO-08,IO-10,IO-12,IO-13 | G8 | Core demo |
@@ -1716,9 +1716,9 @@ Tất cả gate/metric ở baseline có trạng thái **NOT RUN**. Một test su
 | --- | --- | --- | --- | --- | --- | --- |
 | DEC-01 | Lịch và nhân lực | User: 14 tuần từ 26/10/2026; chỉ 1 người | 14 tuần đến 31/01/2027; làm việc cuối 29/01; 5 ngày/tuần, 1 ngày=8h; 60 ngày task + 10 slot dự phòng/nghỉ. 01/01/2027 dành 1 slot nghỉ dự kiến; còn 9 ngày dự phòng thực. | Đã xác nhận lịch/người; giờ/nghỉ là giả định | M0.G | Nếu làm part-time/nghỉ thêm: dùng dự phòng rồi rebaseline; không song song nhiều vai trò. |
 | DEC-02 | Phạm vi một người | Full blueprint gồm nhiều tầng enterprise; 14 tuần không đồng nghĩa production đạt hết | Cam kết phạm vi bounded demo 5 personas; every requirement có coverage. Optional advanced được deferred; cloud/real CRM/business pilot có gate phụ thuộc. | Đề xuất kế hoạch | M0.G | Không tuyên bố toàn bộ target architecture đã production-ready; gate thất bại cần kế hoạch sửa. |
-| DEC-03 | FRT 30s/60s và pipeline <2s | User story <30s; acceptance/blueprint <60s; architecture pipeline <2s | Chat MVP standard scenarios: full response <60s trên bộ test; <30s stretch. <2s tách stage budget/target cần đo, không thay nghĩa thành first-token nếu chưa có ADR. | Cần chốt tại G0 | M0.G; M2.G; M8.4 | FRT đo từ gửi ticket đến phản hồi đầu hữu ích; TTFT và full latency báo riêng, sample/hardware rõ. |
+| DEC-03 | FRT 30s/60s và pipeline <2s | User story <30s; acceptance/blueprint <60s; architecture pipeline <2s | Chat MVP standard scenarios: full response <60s trên bộ test; <30s stretch. Architecture-target Pipeline B <2s đến guarded output gồm mọi stage route dùng; báo stage times, TTFT và chờ approval riêng, không thay target bằng first-token. Khóa boundary/percentile/concurrency tại G0; xem DEC-18. | Cần chốt tại G0 | M0.G; M2.G; M8.4 | FRT đo từ gửi ticket đến phản hồi đầu hữu ích; TTFT và full latency báo riêng, sample/hardware rõ. |
 | DEC-04 | Unsupported action / citations / business KPI | Acceptance zero promises; architecture ≤1% actions, ≥95% completeness; FCR +15% chưa rõ đơn vị | Zero unsupported policy/refund commitments trên critical suite; generic unsupported-action rate báo riêng. Policy claims cần citation 100%, completeness chung ≥95%. FCR +15% tạm hiểu tương đối, chốt baseline/denominator tại G0. | Cần chốt ngưỡng/định nghĩa | M0.G; M3.7; M8.7 | Mục tiêu business AHT ≥40%, FCR ≥15%, draft accept ≥80% chưa là kết quả; real pilot mới validate. |
-| DEC-05 | ABSA/Recall và latency targets | Research ghi MVP F1 .80; acceptance .85; Recall@5 .88/@10 .85; p95 250/300ms giả định | Demo floor F1 .80, production .85, critical aspect .75. Báo Recall@5 và @10 riêng cùng query set; @10 phải không thấp hơn @5 thực đo. Tất cả latency trên hardware/corpus pin. | Targets cần baseline; không sửa số đo | M0.G; M4.4; M5.3 | Ngưỡng Recall@10 thấp hơn @5 là floor yếu hơn, không phải kỳ vọng Recall giảm. Model failure không tự giảm gate. |
+| DEC-05 | ABSA/Recall và latency targets | Research ghi MVP F1 .80; acceptance .85; Recall@5 .88/@10 .85; p95 250/300ms giả định | Demo classification floor .80, critical aspect .75 nếu khóa G0; architecture-target classification/polarity và ATE ≥.85, ATE đo riêng theo Q-09/DEC-18. Báo Recall@5 và @10 trên cùng ranked list/query set; @10 không thấp hơn @5. Tất cả latency trên hardware/corpus pin. | Targets cần baseline; không sửa số đo | M0.G; M4.4; M5.3 | Ngưỡng Recall@10 thấp hơn @5 là floor yếu hơn, không phải kỳ vọng Recall giảm. Model failure không tự giảm gate. |
 | DEC-06 | Ontology và trạng thái nguyên nhân | Blueprint có Issue/Firmware/Evidence/Team; schema rút gọn lấy RootCause trung tâm; status names khác | Canonical Issue-centered ontology theo blueprint; adapter cho schema rút gọn; tách issue vs root-cause states; cause hypothesis/under_review/confirmed/rejected; issue emerging/investigating/confirmed/mitigated/monitored/closed. | Đề xuất ADR | M0.3; M6.1 | Chu trình graph hợp lệ không cấm toàn cục; chỉ kiểm chu trình trái invariant. Knowledge freshness <24h là target cần đo. |
 | DEC-07 | API và schemas chưa đủ chatbot | Blueprint cũ /v1/... khác README /api/v1/...; FeedbackRecord bắt product_id; Citation thiếu URL/version | Giữ /api/v1 hiện có, thêm /chat/messages, schema conversation riêng; mở rộng citation và investigation; status enum; legacy endpoints deprecated; migration tương thích. | Đề xuất chuẩn canonical | M0.3; M2.5; M5.3 | Không chặn hỏi chính sách chung do thiếu product. Ghi OpenAPI version và contract tests. |
 | DEC-08 | BM25 backend, queue và scale | README BM25 ngoài/Qdrant; data spec server-side sparse; worker nhắc Redis/Kafka, README Celery | Demo một Redis Streams worker; local BM25 làm reference; dense+BM25+RRF contract ổn định. Chọn server-side sparse sau parity/filter benchmark; API modular monolith + worker. | Đề xuất đơn giản hóa triển khai | M0.3; M2.2; M4.5 | Không đưa Kafka/Celery/microservices vào cùng sprint; độc lập scale là boundary thiết kế và roadmap. |
@@ -1728,6 +1728,13 @@ Tất cả gate/metric ở baseline có trạng thái **NOT RUN**. Một test su
 | DEC-12 | Nguồn lịch sử và bảo vệ dữ liệu | Research còn nhắc kiosk/old docs; Final_project tham chiếu file không có; legal claims chưa kiểm chứng độc lập | Lấy user instruction + current product/architecture làm chuẩn; research dùng eval/NFR/baseline. Ghi nguồn thiếu; privacy controls triển khai; legal/licensing sign-off giao owner, không claim compliance. | Source precedence | M0.1; M7.4; M8.5 | Không đưa ASR/TTS kiosk thành requirement SenticRAG; không tự thực thi policy theo văn bản luật trích dẫn chưa rà soát. |
 | DEC-13 | Human reviewer khi chỉ một developer | 5 personas gồm agent/steward; governance cần người được ủy quyền | Dev mô phỏng roles bằng accounts tách trong demo; tự review theo checklist có evidence. External UAT/production approval chỉ ghi Done khi người có thẩm quyền thực sự duyệt. | Giới hạn kiểm chứng | M0.G; M6.6; M8.6 | Không bịa nhóm 3 người từ template; không gán tên thành viên dự án khác. |
 | DEC-14 | PII và policy applicability | 100% masking/context trong acceptance là target tuyệt đối; policy crawl thiếu ngày hiệu lực | Kiểm 0 leaks trên suite có scope; entity/date thiếu → unknown/review, không tự điền. 100% context availability hiểu có trạng thái known/missing/unauthorized rõ, không invent order. | Cần chốt acceptance scope | M1.3; M3.2; M8.5 | Production redaction/generalization cần audit thêm; chưa có identity liên kết thì phải xác minh. |
+| DEC-15 | Driver và migration PostgreSQL | TECH-03 đã yêu cầu migrations nhưng chưa chọn thư viện; pyproject chưa khai báo driver | Chọn SQLAlchemy 2.x + psycopg[binary] 3.x + Alembic cho ứng dụng; lock phiên bản sau smoke; một migration owner | Chọn cho kế hoạch; chưa triển khai | M0.3–M0.4; M2.5 | Phân biệt ORM/driver/migration; kiểm DB rỗng, upgrade, transaction và restore; không coi dependency là chức năng đã xong. |
+| DEC-16 | Một web app cho demo | TECH-02 mới dùng chung component; module paths vẫn tách frontend | Một apps/web, một build/deploy, bốn khu vực cho Buyer, Agent, Analyst/PM và Steward; mở dần M2/M3/M5/M6/M7 | Chọn cho kế hoạch; chưa triển khai | M0.2–M0.4; M2.6; M3.5; M5; M6.6; M7 | Giữ đủ năm personas và API authorization; các scaffold cũ không là project frontend riêng; không khẳng định tiết kiệm 70%. |
+| DEC-17 | FSM và LangGraph | re.txt coi LangGraph là dependency bắt buộc, khác TECH-09 baseline | Giữ Python bounded FSM có PostgreSQL state/review journal. LangGraph StateGraph + langgraph-checkpoint-postgres chỉ thay baseline nếu ADR M0 chứng minh pause/restart/resume và phù hợp effort; nếu không giữ FSM | LangGraph là phương án có điều kiện; chưa chọn | M0.3–M0.G; M3.4 | Không dựng cả hai runtime. Nếu chọn: stable thread ID gắn ownership, checkpointer setup/upgrade riêng, một reflection tối đa, audit và action idempotency; M0 hết timebox chưa đủ evidence thì giữ FSM. |
+| DEC-18 | Demo và chuẩn kiến trúc | SRC-05 yêu cầu ATE/polarity ≥.85, Pipeline B <2s; research có demo .80 và giả định latency | Giữ hai profile nghiệm thu: demo và architecture-target. Không hạ ngưỡng SRC-05 bằng demo pass; ATE thiếu labels/test là NOT VALIDATED; reranker tắt là deviation có benchmark/ADR | Quy tắc kế hoạch; metric definitions khóa G0 | M0.G; M2.G; M4.G; M8.G | Ghi kết quả riêng cho quality, topology, cloud và business; .80/demo <60s không chứng nhận đạt toàn kiến trúc. |
+| DEC-19 | Delivery và knowledge consistency | DB commit rồi queue/publish nhiều stores có cửa sổ mất event hoặc trộn version | PostgreSQL outbox + at-least-once dispatch/consumer idempotency; knowledge snapshots được verify rồi publish active manifest bằng SQL transaction; request pin release | Chọn thiết kế cho kế hoạch; chưa triển khai | M4.5; M6.6–M6.7; M8.5 | Fault tests/replay/reconcile bắt buộc; không tuyên bố exactly-once hay distributed ACID giữa SQL/Redis/Qdrant/Neo4j. |
+| DEC-20 | 7 tầng triển khai theo thời điểm dùng | M2 dùng LLM nhưng rate limit ở M4; planning/MCP mới nêu chung | M2 có gateway guardrails/rate limit; M3 có typed plan, recall và MCP protocol integration; M4 mở rộng router/triage; M6 thêm graph evidence | Bổ sung tiêu chí cho các task hiện hữu | M0.G; M2.5; M3.4; M4.6 | Không thêm nhiều agent runtime; giữ module boundaries và source-of-truth; effort cần rà G0. |
+| DEC-21 | Nguồn hiện tại và lịch sử | Planning lập từ 9083135 khác develop eb194ff; một số nguồn vắng và hash kiến trúc cũ | Ưu tiên yêu cầu người dùng; SRC-05 cho 7 tầng/target, SRC-02 bổ sung; mâu thuẫn phải ghi ADR. SRC-06/10..13 trỏ blob 9083135 thay link local hỏng | Đã đối chiếu nguồn; không duyệt data | M0.1; M0.G; mỗi lần rebaseline | Báo cáo audit tách requirement gốc, lựa chọn demo, điều kiện còn mở và thiếu evidence; không sửa đặc tả nguồn để hợp thức hóa plan. |
 
 | ID | Hạng mục | Scope | Task xem xét | Nguồn | Điều kiện | Output tương lai | Giới hạn core |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -1779,24 +1786,25 @@ Tất cả gate/metric ở baseline có trạng thái **NOT RUN**. Một test su
 | N16 | Sử dụng mẫu | Giữ 5 sheet chính, task/start/end/responsibility/deliverable/status/Gantt. Thay lịch 16→14 tuần, owner nhóm→1 người; bổ sung 11 sheet cho I/O/module/gates/data/tech/decision/capacity. Không giữ dữ liệu/trạng thái nghiên cứu QPAF. |
 | N17 | Phạm vi công việc lượt này | Chỉ tạo kế hoạch XLSX/Markdown; không triển khai chatbot, train model, chạy cloud, gọi LLM production hay sửa API. Verification hiện tại kiểm tính toàn vẹn của kế hoạch/workbook. |
 | N18 | Đồng bộ tài liệu | Markdown là bản đọc tại baseline; WBS Excel là nơi theo dõi tiến độ sau bàn giao. Khi đổi scope/deadline/effort, cập nhật cả milestone details, traceability, gates và capacity; không chỉ đổi ngày trên Cover. |
+| N19 | Tài nguyên và deployment | Tài nguyên/chi phí: SenticRAG_Resources_and_Deployment.md. Local cho phát triển; Modal ưu tiên thử cho demo ít tải và GPU jobs; VPS/EKS theo nhu cầu và ngân sách. Đây là phương án cần smoke/khóa tại M0, không phải dịch vụ đã deploy hoặc cam kết miễn phí. |
 
 ## 11. Nguồn đã đối chiếu
 
-Repo snapshot đọc: `9083135`. Nội dung tài liệu được snapshot bằng SHA-256 trong workbook. Các tài liệu lịch sử được nhắc nhưng không có file tại repo được ghi rõ ở Source Register; không suy diễn rằng đã đọc chúng.
+Baseline nguồn ban đầu: `9083135`; lượt audit 23/10/2026 đọc working tree trên `develop` tại `eb194ff` và các sửa planning chưa commit. SRC-02/SRC-05 được cập nhật hash hiện tại. SRC-06 và SRC-10..13 không có trong checkout hiện tại; xác minh blob tại `9083135` khớp hash lịch sử, không coi là file đang có hoặc dữ liệu đã duyệt. SRC-06 được đọc từ blob để kiểm nguồn kỹ thuật; không nghiệm thu crawler/raw data.
 
 - **SRC-01 — [README và repo layout](../../README.md)**: Executive summary; architecture; API layout; setup. Mapping: M0.1; M0.3; M8.8. Current project overview; claims production phải kiểm code/evidence.
 - **SRC-02 — [Final project tiếng Việt](../architecture/Final_project_rewritten.md)**: §0–4 product/personas; §5–9 architecture/modules/data/API; §10 research; §11–12 changes/layout; §13–17 eval/governance/ops; §18–24 roadmap/scenario/risks/DoD/narrative/sources. Mapping: M0–M8; all acceptance IDs; Extensions. Nguồn bao quát nhất; old referenced Bai_Toan_Dat_Ra/Final_project(3) không tìm thấy trong repo hiện tại.
 - **SRC-03 — [Product user stories](../product/user-stories.md)**: US-BUY-01, US-AGENT-01, US-ANALYST-01, US-PM-01. Mapping: M2–M8. Outcome numbers là targets; FRT khác acceptance cần DEC-03.
 - **SRC-04 — [Product acceptance](../product/acceptance-criteria.md)**: Buyer/Agent/Analyst/PM readiness. Mapping: G2–G8; Q-02..18. Tiêu chí dùng nghiệm thu, không là số đo repo.
 - **SRC-05 — [Architecture blueprint](../architecture/ARCHITECTURE.md)**: §0–4 purpose/story/traceability; §5 7-layer/memory/2 pipelines; §6–10 modules/security/APIs/metrics/roadmap. Mapping: ARCH-L1..L7; M0–M8. Có US-STEWARD-01 và production targets; chatbot-first đổi thứ tự, giữ coverage.
-- **SRC-06 — [Production data specification](../reports/production-data-specification.md)**: §1 storage; §2 PII/router; §3 ABSA; §4 retrieval; §5 graph/policy/CRM; §6 resolution; §7 feedback; §8 data checklist. Mapping: Data Plan; IO-03..15; M1/M3/M4/M6/M7. Counts/splits/model/quota minh họa cần verify, không copy làm kết quả/thông số runtime đã đo.
+- **SRC-06 — Production data specification** (`git show 9083135:docs/reports/production-data-specification.md`): §1 storage; §2 PII/router; §3 ABSA; §4 retrieval; §5 graph/policy/CRM; §6 resolution; §7 feedback; §8 data checklist. Mapping: Data Plan; IO-03..15; M1/M3/M4/M6/M7. HISTORICAL ONLY: không có trong checkout eb194ff; git show 9083135:docs/reports/production-data-specification.md có blob khớp SHA-256. Counts/splits/model/quota minh họa cần verify, không copy làm kết quả/thông số runtime đã đo.
 - **SRC-07 — [Deep research report](../reports/deep-research-report.md)**: ABSA/Retrieval AC; baseline-first; NFR/governance; doc template/roadmap. Mapping: ABSA-AC-01..10; RET-AC-01..12; M0/M4/M8. Historical context; kiosk/old API/missing docs không override current product. Numerical thresholds marked assumptions.
 - **SRC-08 — [Ontology schema](../ontology/ontology-schema.md)**: Nodes, edges, traversal pattern. Mapping: M6.1–M6.3; DEC-06. Schema rút gọn phải reconcile với Issue/Firmware/Evidence/Team trong blueprint.
 - **SRC-09 — [Capability map](../product/capability-map.md)**: Quantitative/qualitative/actionable/learning; module invariants. Mapping: Module Catalog; ARCH-BOUNDARY. Giữ ranh giới ABSA/retrieval/graph/policy.
-- **SRC-10 — [Crawler README](../../Data_crawling/README.md)**: Discovery/scrape exports; raw captures; isolation. Mapping: M1.1–M1.2. Chỉ raw data; navigation/footer chưa clean; adapter file boundary.
-- **SRC-11 — [Crawler design](../../Data_crawling/docs/design.md)**: Scope, URL handling, workflow, limits. Mapping: M1.1; DATA-01. Không mở scope crawler trong plan này.
-- **SRC-12 — [Crawler implementation plan](../../Data_crawling/docs/implementation-plan.md)**: Standalone boundaries; implementation/verification history. Mapping: M0.1; M1.1. Historical completed crawl work; không gán Done cho new ingestion pipeline.
-- **SRC-13 — [Crawler verification](../../Data_crawling/docs/verification.md)**: 26/34 tests; 56 attempted/52 success/4 fail historical batch. Mapping: M0.1; M1.1; DATA-01. Evidence lịch sử 19–20/10/2026, không phải rerun của lượt lập kế hoạch này.
+- **SRC-10 — Crawler README** (`git show 9083135:Data_crawling/README.md`): Discovery/scrape exports; raw captures; isolation. Mapping: M1.1–M1.2. HISTORICAL ONLY: không có trong checkout eb194ff; git show 9083135:Data_crawling/README.md có blob khớp SHA-256. Chỉ raw data; navigation/footer chưa clean; adapter file boundary.
+- **SRC-11 — Crawler design** (`git show 9083135:Data_crawling/docs/design.md`): Scope, URL handling, workflow, limits. Mapping: M1.1; DATA-01. HISTORICAL ONLY: không có trong checkout eb194ff; git show 9083135:Data_crawling/docs/design.md có blob khớp SHA-256. Không mở scope crawler trong plan này.
+- **SRC-12 — Crawler implementation plan** (`git show 9083135:Data_crawling/docs/implementation-plan.md`): Standalone boundaries; implementation/verification history. Mapping: M0.1; M1.1. HISTORICAL ONLY: không có trong checkout eb194ff; git show 9083135:Data_crawling/docs/implementation-plan.md có blob khớp SHA-256. Historical completed crawl work; không gán Done cho new ingestion pipeline.
+- **SRC-13 — Crawler verification** (`git show 9083135:Data_crawling/docs/verification.md`): 26/34 tests; 56 attempted/52 success/4 fail historical batch. Mapping: M0.1; M1.1; DATA-01. HISTORICAL ONLY: không có trong checkout eb194ff; git show 9083135:Data_crawling/docs/verification.md có blob khớp SHA-256. Evidence lịch sử 19–20/10/2026, không phải rerun của lượt lập kế hoạch này.
 - **SRC-14A — [Agent workspace scope](../../apps/agent_workspace/README.md)**: Triage/context/draft/actions/feedback. Mapping: M3.5; M4.7; M6.4; M7.1. README target; app code còn khung.
 - **SRC-14B — [Analyst dashboard scope](../../apps/analyst_dashboard/README.md)**: Macro BI; drill-down; graph explorer; contribution. Mapping: M5; M6.5. README target; app code còn khung.
 - **SRC-14C — [Worker scope](../../apps/worker/README.md)**: Consumers/jobs/alerts/active learning. Mapping: M4.5; M5.1; M7.2–M7.3. Chốt queue tại DEC-08.
@@ -1810,3 +1818,43 @@ Repo snapshot đọc: `9083135`. Nội dung tài liệu được snapshot bằng
 - **WEB-02 — [Qdrant Hybrid Queries official docs](https://qdrant.tech/documentation/search/hybrid-queries/)**: Dense/sparse fusion reference. Mapping: TECH-06; M2.2. Referenced for design; no performance or quota claims inferred.
 - **WEB-03 — [Neo4j constraints official docs](https://neo4j.com/docs/cypher-manual/current/schema/constraints/)**: Graph integrity reference. Mapping: TECH-11; M6.2. Edition/version support must be checked during implementation.
 - **WEB-04 — [React TypeScript official docs](https://react.dev/learn/typescript)**: Typed frontend reference. Mapping: TECH-02. Frontend choice proposed, not existing implementation.
+
+## 12. Rà soát cải tiến ngoài data — 23/10/2026
+
+**Phạm vi:** Rà soát re.txt ngày 23/10/2026: chỉ cải tiến ngoài data. 52 file chưa được người dùng duyệt; lần sửa này không nghiệm thu dữ liệu, không đổi Data Plan/M1.
+
+**Đã có trong kế hoạch:** DEC-07 và IO-01/02 đã có chatbot không bắt buộc product; IO-10 có span optional và version; TECH-03 có migrations; TECH-02 có component dùng chung; TECH-09 có bounded FSM.
+
+**Cụ thể hóa:** M0.3/0.4 khóa stack PostgreSQL, contracts và kiểm chứng; IO-02 quy định citation theo nguồn và kiểm claim; IO-10 đặt model/taxonomy version ở prediction. IO-08 dùng cùng Citation canonical với IO-02; không tạo schema citation khác cho resolution.
+
+**UI theo giai đoạn:** M0 shell/routing/session; M2 Buyer Chat; M3 Agent Copilot; M5 Analytics cho Analyst/PM; M6 graph viewer và Steward Queue; M7 bổ sung annotation/active-learning queue trong Steward. Các UI task mở rộng apps/web, dùng chung citation viewer/API client, không dựng app mới.
+
+**LangGraph:** Không phải dependency bắt buộc. Chỉ chọn trong ADR M0 nếu lợi ích resume/persistence đủ rõ trong timebox hiện có; nếu chọn thay FSM runtime và cập nhật TECH-09, MOD-06, M3.4, lockfile; không chạy hai runtime. Dù chọn gì, M3 phải có durable approval/resume và chống lặp action.
+
+**Nghiệm thu liên quan:** G0: ADR/contract/migration smoke; G2: Q&A không product + citation resolver; G3: restart/approval/resume/idempotency; G4: ABSA versions/span; G5/G6/G7: route/API role checks cho các khu vực được mở; G8: đủ năm persona flows trên một app. Các trạng thái vẫn NOT RUN/Not Started.
+
+**Effort và lịch:** Giữ lịch 14 tuần và 60 ngày core/gate; UI hợp nhất thay cách triển khai trong task cũ. FSM persistence làm rõ yêu cầu approval hiện có. Không thêm LangGraph spike ngoài timebox M0; nếu vượt effort cần dùng dự phòng có ghi nhận hoặc rebaseline, không giả định giảm 70% công sức.
+
+**Tài liệu kỹ thuật:** SQLAlchemy PostgreSQL: https://docs.sqlalchemy.org/en/20/dialects/postgresql.html ; Alembic: https://alembic.sqlalchemy.org/en/latest/tutorial.html ; LangGraph interrupt: https://reference.langchain.com/python/langgraph/types/interrupt
+
+**Trạng thái:** Đây là cập nhật kế hoạch, chưa cài dependency, tạo UI hay triển khai schema. Không đánh dấu task/gate hoàn thành từ việc chỉnh tài liệu.
+
+## 13. Đối chiếu đặc tả kiến trúc — 23/10/2026
+
+Kết luận: phù hợp làm baseline demo 14 tuần sau các sửa dưới đây; chưa đủ evidence để cam kết toàn bộ architecture-target hoặc effort. Xem [báo cáo audit chi tiết](../reports/planning-architecture-audit-2026-10-23.md). Không nghiệm thu 52 file; Data Plan/M1 giữ nguyên.
+
+| ID | Nguồn | Mapping | Kết luận kế hoạch | Evidence cần có |
+| --- | --- | --- | --- | --- |
+| ARCH-01 | §1,5.2: hai pipelines | M4.5/M5.1 và M2/M3/M6 | Đúng; bổ sung outbox/replay | G4/G5: accounting, inference coverage và delivery fault tests |
+| ARCH-02 | §5.3,6.1: input/gateway | M1.3/M2.4/M2.5/M4.6 | Sửa rate limit sớm M2 | G2: quota/429/Redis failure/PII; G4 router regression |
+| ARCH-03 | §5.3,6.5: planning/FSM | M3.4/M4.7 | Làm rõ typed plan và Triaged | G3: plan/tool/guardrail trace; G4: ABSA triage |
+| ARCH-04 | §5.4: memory | M2.5/M3.2/M3.3/M6.3 | Đúng; cụ thể recall/playbook | Ownership/history/context limits và versioned rules |
+| ARCH-05 | §6.3: hybrid/BGE | M2.1–M2.3/M5.3 | BGE enable có điều kiện khác topology chuẩn | Benchmark bật/tắt; tắt ghi deviation, không full topology PASS |
+| ARCH-06 | §6.4 + SRC-02 §7.6: ontology | M6.1–M6.8 | Issue-centered mở rộng hợp lý; lifecycle có ADR | Không coi cycle hợp lệ là lỗi; approved/confirmed evidence và version pin |
+| ARCH-07 | §6.5: MCP | M3.4/M3.8 | Bổ sung protocol-level acceptance | tools/list/call ba tool, schema/denied/timeout/transport |
+| ARCH-08 | §5.3,6.5: guardrails | M2.4/M3.3/M3.4 | Tách claim/schema/policy/PII rõ | JSON valid chưa chứng minh grounded; action approval/idempotency |
+| ARCH-09 | §7: IAM/container | M8.2/M8.3/M8.5 | Cụ thể permissions; live conditional | Render là design evidence; IAM runtime cần cloud tests |
+| ARCH-10 | §8: APIs/contracts | IO-01..13; M0/M2/M3/M4/M5 | Giữ bốn API, mở chat tương thích | UUID example sửa; auth-derived authors; typed feedback/citations |
+| ARCH-11 | §9: ATE/F1/latency/KPIs | Q-05/Q-08/Q-09/Q-15/Q-16 | Tách demo và architecture-target | Không thay .85 bằng .80 hoặc Pipeline B <2s bằng TTFT; pilot riêng |
+| ARCH-12 | §10: roadmap | M0–M8, DEC-01/02/16 | 14 tuần/chatbot-first khác roadmap 12 tuần có chủ đích | Một app vẫn đủ năm personas; lịch hợp lệ chưa chứng minh effort đủ |
+| ARCH-13 | Nguồn và đồng bộ artifacts | SRC-02/05/06/10..13; DEC-21 | Hash/refs được sửa; data giữ chưa duyệt | Hash hiện tại vs historical; bảng Decisions và HTML đồng bộ |
