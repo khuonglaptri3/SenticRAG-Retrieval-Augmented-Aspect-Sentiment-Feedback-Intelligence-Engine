@@ -1,0 +1,28 @@
+[
+  {
+    "check": "compose_config",
+    "command": [
+      "docker",
+      "compose",
+      "-f",
+      "infra/compose/docker-compose.yml",
+      "config",
+      "--quiet"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "check": "docker_engine",
+    "command": [
+      "docker",
+      "version",
+      "--format",
+      "{{json .Server.Version}}"
+    ],
+    "exit_code": 1,
+    "stdout": "\n",
+    "stderr": "failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified.\n"
+  }
+]

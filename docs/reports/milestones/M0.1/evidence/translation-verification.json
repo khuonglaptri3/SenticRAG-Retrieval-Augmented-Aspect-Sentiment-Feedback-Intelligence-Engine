@@ -1,0 +1,176 @@
+{
+  "status": "PASS",
+  "checked_at_utc": "2026-10-23T18:05:08.860913+00:00",
+  "branch": "docs/english-reports",
+  "scope": "English report edition and publication integrity only. Original application tests were not rerun; original results and gate statuses are retained.",
+  "method": "Python standard-library CSV/JSON parsing, original-byte comparisons, SHA-256, git show at the audit revision, requirement/task reference checks, Vietnamese prose scan, and local Markdown link/fence checks.",
+  "markdown_reports_translated": 4,
+  "csv_tables": {
+    "requirements.csv": {
+      "rows": 90,
+      "unique_ids": 90,
+      "translated_cells": 57,
+      "ids_statuses_mappings_and_measurements_preserved": true
+    },
+    "local-data-intake.csv": {
+      "rows": 34,
+      "unique_ids": 34,
+      "translated_cells": 27,
+      "ids_statuses_mappings_and_measurements_preserved": true
+    }
+  },
+  "original_manifest_artifacts_verified": 12,
+  "unchanged_evidence": [
+    {
+      "path": "docs/reports/milestones/M0.1/evidence/api-probes.json",
+      "sha256": "b3b437db780d1ba9ae395be359c5cd8e85df062a1bea29567b06663e827d7d02"
+    },
+    {
+      "path": "docs/reports/milestones/M0.1/evidence/artifact-verification.json",
+      "sha256": "36c72cc0b309cd29ea71f212877cf9e7ae89a941a6453a4a29a26d2355fde86c"
+    },
+    {
+      "path": "docs/reports/milestones/M0.1/evidence/baseline-summary.json",
+      "sha256": "b44731a98c330a5c21a7b18b13a206e9e58877c15df5537ee2fd48afbd552336"
+    },
+    {
+      "path": "docs/reports/milestones/M0.1/evidence/checks.txt",
+      "sha256": "c2133ae0c7ede9ad0136192b19e0d4862de797f9f571abd36b7d93a643b78637"
+    },
+    {
+      "path": "docs/reports/milestones/M0.1/evidence/crawler-snapshot.json",
+      "sha256": "1a39aa54c8d82132f4867bcce42e62e627b858dfe7e0eaaa48c0c7034ac0d989"
+    },
+    {
+      "path": "docs/reports/milestones/M0.1/evidence/document-links.json",
+      "sha256": "31c781812c9fda65a783674ea3faad4b06f48a318e76fb3e6094bc189183faa7"
+    },
+    {
+      "path": "docs/reports/milestones/M0.1/evidence/infrastructure-checks.json",
+      "sha256": "436a811923966e9e5030eafeb9deed13a8bc8d3418fc3d2d45ce243a9e17e402"
+    },
+    {
+      "path": "docs/reports/milestones/M0.1/evidence/inventory.csv",
+      "sha256": "e3542eeae7323ad1cbdef83f4a58dcbf31421653413bea33bf3ae0a88d0e0605"
+    },
+    {
+      "path": "docs/reports/milestones/M0.1/evidence/source-register.csv",
+      "sha256": "317b219c793421243db68c9ef82070c75aef296474a807d7bdd132ad160b8798"
+    }
+  ],
+  "baseline_git_blobs_verified": 133,
+  "baseline_working_tree_inputs_verified": 134,
+  "registered_sources_verified_at_original_revision": 34,
+  "current_baseline_input_changes": [
+    "docs/reports/deep-research-report.md",
+    "docs/reports/planning-architecture-audit-2026-10-23.md"
+  ],
+  "baseline_hash_policy": "Inventory and Source Register hashes identify the original audit revision/working-tree bytes. The two translated source reports now differ as recorded here; current report hashes are in run-manifest.json artifact_hashes.",
+  "local_markdown_links_checked": 31,
+  "research_json_examples_parsed_and_unchanged": 8,
+  "research_citation_markers_and_external_urls_preserved": true,
+  "remaining_vietnamese": [
+    {
+      "path": "docs/reports/deep-research-report.md",
+      "line": 258,
+      "reason": "Original Vietnamese JSON example input or matching evidence/snippet"
+    },
+    {
+      "path": "docs/reports/deep-research-report.md",
+      "line": 284,
+      "reason": "Original Vietnamese JSON example input or matching evidence/snippet"
+    },
+    {
+      "path": "docs/reports/deep-research-report.md",
+      "line": 290,
+      "reason": "Original Vietnamese JSON example input or matching evidence/snippet"
+    },
+    {
+      "path": "docs/reports/deep-research-report.md",
+      "line": 427,
+      "reason": "Original Vietnamese JSON example input or matching evidence/snippet"
+    },
+    {
+      "path": "docs/reports/deep-research-report.md",
+      "line": 451,
+      "reason": "Original Vietnamese JSON example input or matching evidence/snippet"
+    },
+    {
+      "path": "docs/reports/deep-research-report.md",
+      "line": 899,
+      "reason": "Original Vietnamese JSON example input or matching evidence/snippet"
+    },
+    {
+      "path": "docs/reports/deep-research-report.md",
+      "line": 919,
+      "reason": "Original Vietnamese JSON example input or matching evidence/snippet"
+    },
+    {
+      "path": "docs/reports/deep-research-report.md",
+      "line": 925,
+      "reason": "Original Vietnamese JSON example input or matching evidence/snippet"
+    },
+    {
+      "path": "docs/reports/deep-research-report.md",
+      "line": 1014,
+      "reason": "Original Vietnamese JSON example input or matching evidence/snippet"
+    },
+    {
+      "path": "docs/reports/deep-research-report.md",
+      "line": 1035,
+      "reason": "Original Vietnamese JSON example input or matching evidence/snippet"
+    },
+    {
+      "path": "docs/reports/milestones/M0.1/evidence/api-probes.json",
+      "line": 63,
+      "reason": "Original recorded synthetic request/response; file preserved byte-for-byte"
+    },
+    {
+      "path": "docs/reports/milestones/M0.1/evidence/api-probes.json",
+      "line": 70,
+      "reason": "Original recorded synthetic request/response; file preserved byte-for-byte"
+    },
+    {
+      "path": "docs/reports/milestones/M0.1/evidence/api-probes.json",
+      "line": 86,
+      "reason": "Original recorded synthetic request/response; file preserved byte-for-byte"
+    },
+    {
+      "path": "docs/reports/milestones/M0.1/evidence/api-probes.json",
+      "line": 93,
+      "reason": "Original recorded synthetic request/response; file preserved byte-for-byte"
+    },
+    {
+      "path": "docs/reports/milestones/M0.1/evidence/api-probes.json",
+      "line": 109,
+      "reason": "Original recorded synthetic request/response; file preserved byte-for-byte"
+    },
+    {
+      "path": "docs/reports/milestones/M0.1/evidence/api-probes.json",
+      "line": 114,
+      "reason": "Original recorded synthetic request/response; file preserved byte-for-byte"
+    },
+    {
+      "path": "docs/reports/milestones/M0.1/evidence/api-probes.json",
+      "line": 279,
+      "reason": "Original recorded synthetic request/response; file preserved byte-for-byte"
+    },
+    {
+      "path": "docs/reports/milestones/M0.1/evidence/api-probes.json",
+      "line": 284,
+      "reason": "Original recorded synthetic request/response; file preserved byte-for-byte"
+    },
+    {
+      "path": "docs/reports/milestones/M0.1/evidence/api-probes.json",
+      "line": 324,
+      "reason": "Original recorded synthetic request/response; file preserved byte-for-byte"
+    }
+  ],
+  "limitations": [
+    "Vietnamese JSON samples and recorded API payloads/responses are preserved as source data, not report prose.",
+    "DATA_REQUIREMENTS.md is published unchanged as an original source outside docs/reports; its audit-time untracked/unvalidated status remains historical.",
+    "Legacy conversation-specific citation tokens in the research report do not resolve on GitHub; primary-source URLs are preserved, without a new web/source review.",
+    "Application tests, AI benchmarks, Docker execution, and external legal/pricing sources were not reverified for this documentation translation."
+  ],
+  "errors": []
+}

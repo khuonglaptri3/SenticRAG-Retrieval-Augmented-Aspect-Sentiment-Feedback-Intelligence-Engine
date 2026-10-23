@@ -1,76 +1,78 @@
-# Nghiên cứu chuyên sâu: Thiết kế `GIOI_THIEU_SAN_PHAM_VI.md` cho SenticRAG với ABSA và Retrieval
+# Deep research: Designing `GIOI_THIEU_SAN_PHAM_VI.md` for SenticRAG with ABSA and Retrieval
 
-## Tóm tắt điều hành
+English edition: 24 October 2026. This is a translation of the existing research report, not a new benchmark or source review. Original citation markers and historical filenames are retained for provenance; conversation-specific citation markers do not resolve as GitHub links. The primary-source URLs remain in the references table. Vietnamese JSON sample inputs and corresponding evidence/snippets are retained as language-specific example data, while report prose and the document template are in English.
 
-**Kết luận quan trọng nhất:** `GIOI_THIEU_SAN_PHAM_VI.md` **không nên là một user story**, nhưng cũng **không nên chỉ là một problem description**. Hình thức phù hợp nhất với dự án là một **Problem-led Product Specification** — tài liệu giới thiệu và đặc tả sản phẩm bắt đầu từ bài toán kinh doanh, sau đó xác định người dùng, giá trị, phạm vi, kiến trúc mức cao, contract của từng module, các user story đại diện, acceptance criteria, yêu cầu phi chức năng, dữ liệu, vận hành và cách đo thành công.
+## Executive summary
 
-Lý do là user story được thiết kế để biểu diễn một phần chức năng tương đối nhỏ, có giá trị và đủ nhỏ để triển khai/kiểm thử; tiêu chí INVEST còn yêu cầu story phải Independent, Negotiable, Valuable, Estimable, Small và Testable. Trong khi đó, Product Goal và Product Backlog tồn tại ở mức cao hơn để mô tả trạng thái tương lai của sản phẩm và phân rã nó thành các hạng mục nhỏ hơn. Vì vậy, biến toàn bộ `GIOI_THIEU_SAN_PHAM_VI.md` thành một user story sẽ trộn lẫn **product vision** với **implementation backlog**. citeturn11search1turn11search7
+**Main conclusion:** `GIOI_THIEU_SAN_PHAM_VI.md` **should not be a single user story**, but it **should also go beyond a problem description**. The most suitable format is a **Problem-led Product Specification**: a product introduction and specification that starts with the business problem, then defines users, value, scope, high-level architecture, module contracts, representative user stories, acceptance criteria, nonfunctional requirements, data, operations, and success measures.
 
-Ba tài liệu hiện tại cũng cho thấy cần tách rõ mục đích tài liệu. File `GIOI_THIEU_SAN_PHAM_VI.md` hiện mô tả một **“Trợ Lý Ảo Kiosk TMA”** theo hướng sales/demo, không phải SenticRAG. fileciteturn0file0 Trong khi đó, `README.md` xác định SenticRAG là hệ thống phân tích phản hồi với **ABSA, hybrid retrieval Dense + BM25, RRF, reranking, citation**, cùng các service `/predict`, `/stats`, `/ask`. fileciteturn0file2 `Final_project(2).md` tiếp tục đặt SenticRAG vào target architecture gồm FastAPI, Postgres/Redis/Qdrant, pipelines, evaluation, Docker, observability và production deployment, đồng thời nói rõ một số phần là **target state chứ chưa được audit/xác minh như implementation hiện hữu**. fileciteturn0file1
+A user story describes a relatively small, valuable unit of functionality that can be implemented and tested; INVEST further requires stories to be Independent, Negotiable, Valuable, Estimable, Small, and Testable. The Product Goal and Product Backlog operate at a higher level, describing the product's future state and breaking it into smaller items. Turning all of `GIOI_THIEU_SAN_PHAM_VI.md` into one user story would therefore mix **product vision** with the **implementation backlog**. citeturn11search1turn11search7
 
-Do đó, tôi khuyến nghị **thay nội dung** của `GIOI_THIEU_SAN_PHAM_VI.md`, không mở rộng tài liệu kiosk hiện tại.
+The three existing documents also demonstrate why their purposes should be separated. `GIOI_THIEU_SAN_PHAM_VI.md` currently describes a **TMA Virtual Kiosk Assistant** for sales/demo purposes, rather than SenticRAG. fileciteturn0file0 Meanwhile, `README.md` defines SenticRAG as a feedback analysis system with **ABSA, hybrid Dense + BM25 retrieval, RRF, reranking, and citations**, with `/predict`, `/stats`, and `/ask` services. fileciteturn0file2 `Final_project(2).md` places SenticRAG in a target architecture with FastAPI, Postgres/Redis/Qdrant, pipelines, evaluation, Docker, observability, and production deployment, explicitly identifying some components as **a target state that has not been audited or verified as an existing implementation**. fileciteturn0file1
 
-**Định vị tài liệu nên là:**
+I therefore recommend **replacing the content** of `GIOI_THIEU_SAN_PHAM_VI.md` rather than extending the existing kiosk document.
 
-> `GIOI_THIEU_SAN_PHAM_VI.md` = “Tài liệu giới thiệu sản phẩm + đặc tả mức sản phẩm”, giải thích **vì sao sản phẩm tồn tại, ai sử dụng, module làm gì, contract là gì, thế nào được coi là đạt**.
-> `README.md` = tài liệu kỹ thuật dành cho developer.
-> `docs/architecture/*` = chi tiết kiến trúc.
+**Recommended document roles:**
+
+> `GIOI_THIEU_SAN_PHAM_VI.md` = product introduction and product-level specification explaining **why the product exists, who uses it, what each module does, its contracts, and what constitutes acceptance**.
+> `README.md` = technical documentation for developers.
+> `docs/architecture/*` = architecture details.
 > `docs/model_cards/*` = model behavior/evaluation.
-> `docs/data_cards/*` = nguồn dữ liệu và governance.
-> `docs/runbooks/*` = vận hành.
+> `docs/data_cards/*` = data sources and governance.
+> `docs/runbooks/*` = operations.
 
-**Bài toán sản phẩm đề xuất:**
+**Proposed product problem:**
 
-> Doanh nghiệp có lượng lớn phản hồi khách hàng dạng văn bản nhưng khó biến chúng thành thông tin có cấu trúc và bằng chứng có thể truy nguyên. SenticRAG biến phản hồi thô thành **aspect + sentiment**, cho phép **truy xuất đúng các phản hồi liên quan**, và ở lớp RAG tùy chọn, tạo câu trả lời có **citation về review gốc**.
+> Businesses have large volumes of textual customer feedback but struggle to turn it into structured information and traceable evidence. SenticRAG transforms raw feedback into **aspect + sentiment**, enables **retrieval of relevant feedback**, and optionally uses a RAG layer to generate answers with **citations to original reviews**.
 
-Cách định nghĩa này phù hợp với ABSA kinh điển: SemEval-2014 phân tách bài toán theo aspect/aspect category và polarity thay vì chỉ gán một sentiment cho toàn văn bản. citeturn11search8 Nó cũng phù hợp với nguyên lý RAG: hệ thống kết hợp kiến thức tham số với nguồn tri thức truy xuất được, nhằm cải thiện khả năng cập nhật kiến thức và provenance. citeturn14search7
+This definition aligns with classical ABSA: SemEval-2014 separates aspect/aspect-category identification and polarity rather than assigning a single sentiment to the entire text. citeturn11search8 It also follows the RAG principle of combining parametric knowledge with retrieved knowledge to improve knowledge freshness and provenance. citeturn14search7
 
-**Các giả định được sử dụng trong báo cáo:**
+**Assumptions used in this report:**
 
-| Giả định                                                                                  | Căn cứ / trạng thái                                                                                                                                                                   |
+| Assumption | Basis / status |
 | -------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Dữ liệu chính là review/feedback khách hàng                                            | Suy ra từ README và blueprint của SenticRAG. fileciteturn0file2                                                                                                                  |
-| Tiếng Việt là ngôn ngữ chính; có khả năng mở rộng tiếng Anh                      | PhoBERT và taxonomy hiện tại cho thấy trọng tâm tiếng Việt; song ngữ chưa được xác định thành requirement bắt buộc. fileciteturn0file2                           |
-| Taxonomy ban đầu gồm`quality`, `price`, `delivery`, `customer_service`            | Theo README hiện tại; cần version hóa taxonomy, không coi đây là ontology cuối cùng. fileciteturn0file2                                                                   |
-| Retrieval là module trả về ranked evidence; generation`/ask` là lớp downstream        | Đây là cách tách module tôi đề xuất để retrieval có thể đánh giá độc lập. README hiện có`/ask` và citation. fileciteturn0file2                              |
-| FastAPI, Qdrant, Redis/Postgres là target stack                                             | Được mô tả trong hai tài liệu dự án. fileciteturn0file1 fileciteturn0file2                                                                                           |
-| Chưa có số liệu production về QPS, corpus size, hardware, latency hay F1/Recall         | Không có benchmark xác minh trong các tài liệu được cung cấp; các ngưỡng số phía dưới là**mục tiêu khởi điểm đề xuất**, phải thay bằng benchmark thật. |
-| Các claim “giảm 50% chi phí” hoặc “chính xác 100%” chưa có benchmark đính kèm | README hiện chứa các claim như vậy; không nên đưa vào tài liệu product chính thức cho đến khi có bằng chứng reproducible. fileciteturn0file2                     |
+| Customer reviews/feedback are the primary data | Inferred from the SenticRAG README and blueprint. fileciteturn0file2 |
+| Vietnamese is the primary language, with possible English expansion | PhoBERT and the current taxonomy indicate a Vietnamese focus; bilingual support has not been established as a mandatory requirement. fileciteturn0file2 |
+| The initial taxonomy contains `quality`, `price`, `delivery`, and `customer_service` | Based on the current README; version the taxonomy and do not treat it as the final ontology. fileciteturn0file2 |
+| Retrieval returns ranked evidence; `/ask` generation is downstream | This is the proposed separation so retrieval can be evaluated independently. The README already includes `/ask` and citations. fileciteturn0file2 |
+| FastAPI, Qdrant, and Redis/Postgres form the target stack | Described in the two project documents. fileciteturn0file1 fileciteturn0file2 |
+| Production QPS, corpus size, hardware, latency, and F1/Recall measurements are unavailable | The supplied documents contain no verified benchmarks; numerical thresholds below are **proposed starting targets** that must be replaced with real benchmark results. |
+| Claims of a 50% cost reduction or 100% accuracy lack supporting benchmarks | Such claims appear in the current README; exclude them from formal product documentation until reproducible evidence is available. fileciteturn0file2 |
 
-## Đánh giá tài liệu hiện tại và cách tổ chức nội dung đúng
+## Assessment of the current document and recommended organization
 
-Tài liệu kiosk hiện tại làm khá tốt một việc: kể hành trình người dùng và giá trị sản phẩm bằng ngôn ngữ dễ hiểu. Nhưng nó đang mô tả sản phẩm khác hoàn toàn — kiosk thoại song ngữ, ASR/TTS, đặt lịch và dashboard lễ tân. fileciteturn0file0 Với SenticRAG, nên **giữ cách trình bày problem/value-oriented**, nhưng thay domain, stakeholder, workflows và acceptance criteria bằng ABSA + Retrieval.
+The kiosk document communicates the user journey and product value clearly, but describes a different product: a bilingual voice kiosk, ASR/TTS, appointment scheduling, and a reception dashboard. fileciteturn0file0 For SenticRAG, **retain the focus on problems and value**, while replacing the domain, stakeholders, workflows, and acceptance criteria with those for ABSA + Retrieval.
 
-Một `GIOI_THIEU_SAN_PHAM_VI.md` tốt cho dự án này nên trả lời sáu câu hỏi theo thứ tự:
+A useful `GIOI_THIEU_SAN_PHAM_VI.md` for this project should answer six questions in order:
 
-| Câu hỏi                                 | Nội dung phải có                                                              |
+| Question | Required content |
 | ----------------------------------------- | -------------------------------------------------------------------------------- |
-| **Why?**                            | Bài toán khách hàng/doanh nghiệp và hậu quả nếu không giải quyết     |
-| **Who?**                            | Ai sử dụng, ai hưởng lợi, ai chịu trách nhiệm                            |
-| **What?**                           | ABSA và Retrieval làm gì / không làm gì                                    |
+| **Why?** | Customer/business problem and the consequences of leaving it unresolved |
+| **Who?** | Users, beneficiaries, and accountable owners |
+| **What?** | What ABSA and Retrieval do and do not do |
 | **How does information flow?**      | Input, output, data source, pipeline, API, integration                           |
 | **How good is good enough?**        | Business KPI, ML metrics, retrieval metrics, NFR, acceptance criteria            |
 | **How do we trust and operate it?** | Data governance, privacy, security, monitoring, testing, deployment, limitations |
 
-Đây cũng là điểm khác biệt giữa **user story** và **product specification**. Scrum Guide mô tả Product Goal là trạng thái tương lai của sản phẩm; Product Backlog sau đó được refinement thành các item nhỏ và chính xác hơn. Một sản phẩm có boundary, stakeholder và user/customer rõ ràng. citeturn11search1 User story vì thế nên được đặt **bên trong section của mỗi module**, đóng vai trò ví dụ end-to-end và nguồn để tạo backlog, không phải làm khung cho toàn bộ file.
+This also distinguishes a **user story** from a **product specification**. The Scrum Guide defines the Product Goal as a future product state; the Product Backlog is then refined into smaller, more precise items. A product has clear boundaries, stakeholders, and users/customers. citeturn11search1 User stories should therefore appear **within each module's section**, providing end-to-end examples and inputs to the backlog rather than structuring the entire file.
 
-Một cấu trúc tài liệu hợp lý là:
+A suitable document structure is:
 
 ```text
 GIOI_THIEU_SAN_PHAM_VI.md
 │
-├── Tóm tắt điều hành
-├── Bài toán, bối cảnh và giá trị
-├── Phạm vi và giả định
-├── Người dùng / stakeholder
-├── Mục tiêu và chỉ số thành công
-├── Kiến trúc tổng quan
+├── Executive summary
+├── Problem, context, and value
+├── Scope and assumptions
+├── Users / stakeholders
+├── Goals and success metrics
+├── Architecture overview
 │
-├── Module ABSA
-│   ├── Mục đích
+├── ABSA module
+│   ├── Purpose
 │   ├── Stakeholder
 │   ├── Input / Output contract
-│   ├── Dữ liệu
+│   ├── Data
 │   ├── Pipeline
 │   ├── Scenarios
 │   ├── User stories
@@ -81,8 +83,8 @@ GIOI_THIEU_SAN_PHAM_VI.md
 │   ├── Monitoring
 │   └── Testing
 │
-├── Module Retrieval
-│   └── [cùng cấu trúc]
+├── Retrieval module
+│   └── [same structure]
 │
 ├── Data governance & ethics
 ├── Security & privacy
@@ -93,73 +95,73 @@ GIOI_THIEU_SAN_PHAM_VI.md
 └── References
 ```
 
-Điều quan trọng là **không biến file này thành README thứ hai**. README hiện đã chứa repository layout, quickstart và Gitflow. fileciteturn0file2 `Final_project(2).md` còn chứa chi tiết sâu về EKS, Helm, Terraform, ECR, CI/CD và production runbooks. fileciteturn0file1 Trong `GIOI_THIEU_SAN_PHAM_VI.md`, chỉ nên mô tả những chi tiết kỹ thuật nào ảnh hưởng trực tiếp đến product contract hoặc acceptance.
+**Do not turn this file into a second README.** The current README already covers repository layout, quickstart, and Gitflow. fileciteturn0file2 `Final_project(2).md` provides detailed EKS, Helm, Terraform, ECR, CI/CD, and production runbooks. fileciteturn0file1 Include technical details in `GIOI_THIEU_SAN_PHAM_VI.md` only when they directly affect product contracts or acceptance.
 
-Một câu mở đầu phù hợp hơn tài liệu kiosk hiện tại là:
+A more appropriate opening than the existing kiosk introduction is:
 
 ```markdown
-# SenticRAG — Nền tảng Phân tích Cảm xúc Theo Khía cạnh
-# và Truy xuất Trí tuệ Phản hồi Khách hàng
+# SenticRAG — Aspect-Based Sentiment Analysis
+# and Customer Feedback Intelligence Retrieval Platform
 
-> SenticRAG giúp doanh nghiệp chuyển hàng nghìn phản hồi khách hàng
-> dạng văn bản thành thông tin có cấu trúc theo từng khía cạnh,
-> tìm lại bằng chứng liên quan và hỗ trợ trả lời câu hỏi có khả năng
-> truy nguyên về phản hồi gốc.
+> SenticRAG helps businesses turn thousands of textual customer reviews
+> into structured information by aspect,
+> retrieve relevant evidence, and support answers
+> that can be traced back to original feedback.
 
-SenticRAG gồm hai năng lực cốt lõi:
+SenticRAG provides two core capabilities:
 
 1. **ABSA (Aspect-Based Sentiment Analysis):**
-   xác định khách hàng đang nói về khía cạnh nào và cảm xúc đối với
-   từng khía cạnh.
+   identify the aspects customers discuss and the sentiment
+   expressed toward each aspect.
 
 2. **Retrieval:**
-   tìm và xếp hạng những phản hồi/bằng chứng liên quan nhất cho
-   một câu hỏi hoặc nhu cầu phân tích.
+   find and rank the feedback/evidence most relevant to
+   a question or analytical need.
 
-Lớp RAG có thể sử dụng các kết quả Retrieval làm bằng chứng để
-tạo câu trả lời có trích dẫn; tuy nhiên Retrieval được thiết kế và
-đánh giá như một module độc lập.
+A RAG layer can use Retrieval results as evidence to
+generate cited answers; Retrieval itself is designed and
+evaluated as an independent module.
 ```
 
-Tôi cũng khuyến nghị thay những từ như **“production-ready”, “enterprise-grade”, “100% chính xác”, “triệt tiêu hallucination”, “giảm 50% chi phí”** bằng các phát biểu có điều kiện và metric đo được. Blueprint hiện tại đã thận trọng xác định nhiều phần là target state và các benchmark chưa được cung cấp. fileciteturn0file1 Một product document tốt nên nói “mục tiêu”, “đã đo”, “chưa đo”, “version nào”, thay vì biến aspiration thành fact.
+I also recommend replacing claims such as **production-ready, enterprise-grade, 100% accurate, eliminates hallucination, and reduces costs by 50%** with qualified statements and measurable metrics. The existing blueprint already identifies many elements as a target state and acknowledges missing benchmarks. fileciteturn0file1 Product documentation should distinguish targets, measured results, unmeasured results, and versions instead of presenting aspirations as facts.
 
-## Đặc tả cấp dự án và kiến trúc đề xuất
+## Project-level specification and proposed architecture
 
-**Mục tiêu cấp sản phẩm** nên được viết theo outcome, không theo công nghệ:
+**Product-level goals** should describe outcomes rather than technologies:
 
-> **Product Goal:** Giúp đội Product, Customer Experience, Customer Support và Business Analyst hiểu *khách hàng đang nói về vấn đề gì, cảm xúc ra sao, bằng chứng cụ thể nằm ở đâu*, với kết quả đủ chính xác, nhanh, có thể truy nguyên và quản trị được để hỗ trợ quyết định.
+> **Product Goal:** Help Product, Customer Experience, Customer Support, and Business Analyst teams understand *which issues customers discuss, how they feel, and where the supporting evidence is*, with results accurate, fast, traceable, and governable enough to support decisions.
 
-Đó là abstraction tốt hơn “xây PhoBERT + Qdrant”, vì model hoặc database có thể đổi mà Product Goal không đổi. Tương tự, Scrum Guide xem Product Goal là objective dài hạn còn implementation details nằm ở backlog. citeturn11search1
+This is a more durable abstraction than building PhoBERT + Qdrant: the model or database may change without changing the Product Goal. Similarly, the Scrum Guide treats the Product Goal as a long-term objective and places implementation details in the backlog. citeturn11search1
 
-**Stakeholder map đề xuất:**
+**Proposed stakeholder map:**
 
-| Stakeholder                  | Giá trị nhận được                                | Điều họ cần tin tưởng                              |
+| Stakeholder | Value received | What they need to trust |
 | ---------------------------- | ------------------------------------------------------ | -------------------------------------------------------- |
-| Customer Experience Manager  | Biết vấn đề tiêu cực tập trung ở aspect nào   | Aspect/sentiment đủ chính xác, có drill-down review |
-| Product Manager              | Tìm pain point theo sản phẩm/phiên bản/thời gian | Filter đúng, kết quả có provenance                  |
-| Customer Support             | Tìm nhanh những phản hồi tương tự               | Retrieval nhanh và phù hợp                            |
-| Business Analyst             | Phân tích trend, cohort, nguyên nhân               | Dữ liệu có lineage và taxonomy ổn định            |
-| Data Scientist / ML Engineer | Train, evaluate và cải thiện ABSA/retrieval         | Dataset/version/model/eval reproducible                  |
-| Data Engineer                | Ingest, validate, index dữ liệu                      | Schema rõ và failure handling rõ                      |
-| Platform/SRE                 | Chạy service ổn định                               | SLO, metrics, tracing, rollback                          |
-| Security/Privacy/Legal       | Giảm rủi ro dữ liệu cá nhân và AI               | Access control, retention, audit, governance             |
-| Management                   | Đo ROI và adoption                                   | KPI business, không chỉ model accuracy                 |
+| Customer Experience Manager | Identify aspects with concentrated negative feedback | Accurate aspect/sentiment results with review drill-down |
+| Product Manager | Find pain points by product/version/time | Correct filters and result provenance |
+| Customer Support | Quickly find similar feedback | Fast, relevant retrieval |
+| Business Analyst | Analyze trends, cohorts, and causes | Data lineage and a stable taxonomy |
+| Data Scientist / ML Engineer | Train, evaluate, and improve ABSA/retrieval | Reproducible datasets, versions, models, and evaluations |
+| Data Engineer | Ingest, validate, and index data | Clear schemas and failure handling |
+| Platform/SRE | Operate services reliably | SLOs, metrics, tracing, and rollback |
+| Security/Privacy/Legal | Reduce personal-data and AI risks | Access control, retention, audit, and governance |
+| Management | Measure ROI and adoption | Business KPIs beyond model accuracy |
 
-**Success metrics phải có bốn tầng**, tránh lỗi phổ biến “F1 cao = sản phẩm thành công”:
+**Success metrics must cover multiple layers**, avoiding the common mistake of equating a high F1 score with product success:
 
-| Tầng     | Metric nên dùng                                                     | Mục tiêu ví dụ                                                        |
+| Layer | Recommended metrics | Example target |
 | --------- | --------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| Business  | thời gian từ câu hỏi → insight, % insight có evidence, adoption | giảm thời gian phân tích thủ công; mục tiêu số cần đo baseline |
-| ABSA      | Macro-F1, per-aspect F1, confusion matrix, coverage                   | ví dụ MVP Macro-F1 ≥ 0,80*                                             |
-| Retrieval | Recall@K, nDCG@K/MRR, zero-result rate, citation validity             | ví dụ Recall@10 ≥ 0,85*                                                |
-| System    | p95 latency, throughput, availability, error rate, index freshness    | ví dụ ABSA p95 ≤ 300 ms*, Retrieval p95 ≤ 250 ms*                     |
-| Data      | schema rejection, duplicate rate, PII leakage, label agreement, drift | PII trong application logs = 0 theo test suite*                           |
+| Business | Time from question to insight, percentage of insights with evidence, adoption | Reduce manual analysis time; numerical targets require a measured baseline |
+| ABSA | Macro-F1, per-aspect F1, confusion matrix, coverage | Example MVP Macro-F1 ≥ 0.80* |
+| Retrieval | Recall@K, nDCG@K/MRR, zero-result rate, citation validity | Example Recall@10 ≥ 0.85* |
+| System | p95 latency, throughput, availability, error rate, index freshness | Example ABSA p95 ≤ 300 ms*, Retrieval p95 ≤ 250 ms* |
+| Data | Schema rejection, duplicate rate, PII leakage, label agreement, drift | Zero PII in application logs according to the test suite* |
 
-\* **Các con số trên là giả định planning cho MVP, không phải benchmark hiện hữu của SenticRAG.** Tốt nhất giữ placeholder `[TBD_AFTER_BASELINE]` trong bản đầu và khóa giá trị sau benchmark sprint đầu tiên.
+\* **These numbers are MVP planning assumptions, not existing SenticRAG benchmarks.** Prefer `[TBD_AFTER_BASELINE]` placeholders initially and freeze values after the first benchmark sprint.
 
-ISO/IEC 25010:2023 định nghĩa product quality model với chín characteristic và đặc biệt cho phép dùng mô hình này khi xác định requirements, testing objectives, quality-control criteria và acceptance criteria. Vì thế, NFR không nên chỉ có latency mà cần nhìn cả reliability, security, maintainability và các thuộc tính chất lượng khác. citeturn12search1turn12search12
+ISO/IEC 25010:2023 defines a product quality model with nine characteristics and supports its use in requirements, testing objectives, quality-control criteria, and acceptance criteria. NFRs should therefore cover reliability, security, maintainability, and other quality attributes in addition to latency. citeturn12search1turn12search12
 
-**Kiến trúc đề xuất:**
+**Proposed architecture:**
 
 ```mermaid
 flowchart LR
@@ -198,9 +200,9 @@ flowchart LR
     API --> CLIENT
 ```
 
-Đây gần với target architecture hiện đã được mô tả trong README và production blueprint: ingestion/validation, ABSA, embeddings, Qdrant, retrieval, citation, API và observability là các thành phần riêng biệt. fileciteturn0file1 fileciteturn0file2 Về retrieval, Qdrant hiện hỗ trợ hybrid dense + sparse và RRF, phù hợp với architecture đã chọn cho SenticRAG. citeturn11search2turn11search6
+This is close to the target architecture described in the README and production blueprint, with separate ingestion/validation, ABSA, embeddings, Qdrant, retrieval, citation, API, and observability components. fileciteturn0file1 fileciteturn0file2 For retrieval, Qdrant supports hybrid dense + sparse search and RRF, matching the architecture selected for SenticRAG. citeturn11search2turn11search6
 
-**Luồng dữ liệu end-to-end:**
+**End-to-end data flow:**
 
 ```mermaid
 sequenceDiagram
@@ -234,21 +236,21 @@ sequenceDiagram
     API-->>U: evidence / answer / metadata
 ```
 
-Phần Retrieval nên vẫn hoạt động hữu ích khi LLM tắt. Điều này giảm coupling, cho phép benchmark relevance độc lập, và tránh việc “câu trả lời nghe hợp lý” che đi retrieval kém. Đây là một design recommendation; nguyên lý RAG ban đầu cũng tách việc truy xuất non-parametric memory ra khỏi generation. citeturn14search7
+Retrieval should remain useful when the LLM is disabled. This reduces coupling, enables independent relevance benchmarks, and prevents plausible-sounding answers from concealing weak retrieval. This is a design recommendation; the original RAG principle also separates retrieval from non-parametric memory from the generation step. citeturn14search7
 
-## Đặc tả module ABSA
+## ABSA module specification
 
-ABSA nên được mô tả như một **product capability có contract rõ**, không phải “model PhoBERT”.
+Describe ABSA as a **product capability with an explicit contract**, rather than merely a PhoBERT model.
 
-SemEval-2014 định nghĩa ABSA quanh việc nhận diện target/aspect và polarity tương ứng, cho thấy lý do một review như “máy đẹp nhưng giao hàng quá chậm” không thể được biểu diễn tốt bởi một nhãn sentiment duy nhất. citeturn11search8 Với tiếng Việt, PhoBERT là một mô hình tiền huấn luyện đơn ngữ tiếng Việt được công bố bởi VinAI và ACL, do đó là candidate hợp lý để benchmark cho encoder-based ABSA; tuy nhiên không có cơ sở để tuyên bố PhoBERT mặc định tốt nhất cho dữ liệu SenticRAG nếu chưa benchmark chính dataset đó. citeturn12search0
+SemEval-2014 defines ABSA around target/aspect identification and the corresponding polarity, explaining why a review meaning 'the device looks good but delivery is far too slow' cannot be represented adequately by one sentiment label. citeturn11search8 For Vietnamese, PhoBERT is a monolingual pretrained model published by VinAI and ACL and is a reasonable encoder-based ABSA benchmark candidate. It cannot be assumed to be the best choice for SenticRAG without benchmarking the project's own dataset. citeturn12search0
 
-**Mục đích nên ghi trong tài liệu:**
+**Purpose to state in the document:**
 
-> Module ABSA biến một review không cấu trúc thành danh sách các **khía cạnh được đề cập**, **sentiment đối với từng khía cạnh**, mức confidence và — nếu cấu hình — đoạn text làm bằng chứng. Kết quả phục vụ dashboard, analytics, trend detection, filtering và downstream Retrieval/RAG.
+> The ABSA module transforms an unstructured review into a list of **mentioned aspects**, **sentiment for each aspect**, confidence, and optionally evidence spans. Results support dashboards, analytics, trend detection, filtering, and downstream Retrieval/RAG.
 
-**Stakeholder chính:** CX, Product Manager, BA, Support, Data Science. CX/Product hưởng lợi từ aggregate insight; Support/BA hưởng lợi từ drill-down; ML team dùng output quality metrics để cải thiện model.
+**Primary stakeholders:** CX, Product Managers, BAs, Support, and Data Science. CX/Product benefit from aggregate insights; Support/BAs benefit from drill-down; the ML team uses output quality metrics to improve the model.
 
-**Input contract đề xuất:**
+**Proposed input contract** (Vietnamese sample text and matching evidence spans are preserved as language-specific example data):
 
 ```json
 {
@@ -264,9 +266,9 @@ SemEval-2014 định nghĩa ABSA quanh việc nhận diện target/aspect và po
 }
 ```
 
-Các field tối thiểu nên là `review_id` và `text`; metadata không nên bị model phụ thuộc ngầm nếu không được ghi rõ trong model card.
+The minimum fields should be `review_id` and `text`; models must not implicitly depend on metadata unless the model card documents that dependency.
 
-**Output contract đề xuất:**
+**Proposed output contract:**
 
 ```json
 {
@@ -291,11 +293,11 @@ Các field tối thiểu nên là `review_id` và `text`; metadata không nên b
 }
 ```
 
-Nên trả `model_version` và `taxonomy_version`, bởi nếu taxonomy hoặc model thay đổi mà output schema không thể truy nguyên version thì analytics lịch sử sẽ rất khó giải thích.
+Return `model_version` and `taxonomy_version`: historical analytics become difficult to explain if model or taxonomy changes cannot be traced through output versions.
 
-**Nguồn dữ liệu.** Production data nên ưu tiên dữ liệu do tổ chức sở hữu hoặc có quyền xử lý, được version hóa và có lineage. Với nghiên cứu tiếng Việt, UIT-ViSFD là nguồn tham khảo hữu ích: repository công bố 11.122 feedback smartphone, 10 aspects và 3 polarities, chia train/dev/test; tuy nhiên tác giả cũng yêu cầu công ty liên hệ khi sử dụng dataset cho mục đích thương mại. Vì vậy không nên ghi “public dataset = free for commercial production”. citeturn12search2
+**Data sources.** Prioritize production data owned by the organization or covered by processing rights, with versioning and lineage. For Vietnamese research, UIT-ViSFD is a useful reference: its repository describes 11,122 smartphone feedback records, 10 aspects, and 3 polarities, divided into train/dev/test splits. The authors also ask companies to contact them for commercial use. Public availability must not be equated with unrestricted commercial production use. citeturn12search2
 
-**Processing pipeline nên ghi rõ:**
+**Document the processing pipeline explicitly:**
 
 ```text
 Raw review
@@ -321,7 +323,7 @@ Store + API response
 Monitoring / drift statistics
 ```
 
-Taxonomy phải là artifact versioned, ví dụ:
+The taxonomy must be a versioned artifact, for example:
 
 ```yaml
 taxonomy_version: aspect-v1
@@ -338,50 +340,50 @@ sentiments:
   - negative
 ```
 
-Bốn aspect trên xuất phát từ định hướng hiện tại trong README chứ chưa được chứng minh là ontology hoàn chỉnh cho production. fileciteturn0file2
+These four aspects reflect the current README's direction and have not been established as a complete production ontology. fileciteturn0file2
 
-**So sánh model ABSA:**
+**ABSA model comparison:**
 
-| Lựa chọn                   | Điểm mạnh                                                                                        | Hạn chế                                                                          | Compute          | Vai trò khuyến nghị                                                                                    |
+| Option | Strengths | Limitations | Compute | Recommended role |
 | ---------------------------- | --------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ---------------- | --------------------------------------------------------------------------------------------------------- |
-| TF-IDF + Logistic Regression | đơn giản, nhanh, dễ tạo baseline và debug                                                     | biểu diễn ngữ nghĩa/ngữ cảnh hạn chế                                       | thấp, CPU       | **Bắt buộc giữ làm baseline**; README đã xác định candidate này. fileciteturn0file2 |
-| PhoBERT fine-tuned           | encoder tiền huấn luyện chuyên tiếng Việt; phù hợp để benchmark downstream Vietnamese NLP | train/inference nặng hơn baseline; cần fine-tuning và monitoring               | trung bình      | Candidate chính cho dữ liệu Việt sau benchmark. citeturn12search0                               |
-| viBERT-class model           | đã nằm trong candidate set của dự án                                                          | chưa có benchmark SenticRAG được cung cấp                                    | trung bình      | So sánh trên cùng split/eval harness. fileciteturn0file2                                         |
-| Multilingual Transformer     | hữu ích nếu corpus thực sự Việt–Anh/code-switching                                           | có thể tốn tài nguyên và không mặc định hơn model Việt                 | trung bình/cao  | Chỉ thêm nếu business requirement xác nhận multilingual                                              |
-| LLM structured extraction    | ontology linh hoạt, dễ prototype hoặc hỗ trợ labeling                                          | latency/cost cao hơn, output cần validation và khó kiểm soát hơn classifier | cao/biến động | weak labeling, adjudication hoặc fallback; không chọn mặc định nếu classifier đáp ứng           |
+| TF-IDF + Logistic Regression | Simple, fast, easy to baseline and debug | Limited semantic/contextual representation | Low, CPU | **Retain as a mandatory baseline**; the README already identifies this candidate. fileciteturn0file2 |
+| Fine-tuned PhoBERT | Vietnamese-specific pretrained encoder; suitable for downstream Vietnamese NLP benchmarks | Heavier training/inference than the baseline; requires fine-tuning and monitoring | Medium | Primary Vietnamese-data candidate, subject to benchmarking. citeturn12search0 |
+| viBERT-class model | Already included in the project's candidate set | No SenticRAG benchmark supplied | Medium | Compare using the same splits/evaluation harness. fileciteturn0file2 |
+| Multilingual Transformer | Useful for a genuinely Vietnamese–English/code-switching corpus | May require more resources and does not automatically outperform Vietnamese models | Medium/high | Add only when a business requirement confirms multilingual support |
+| LLM structured extraction | Flexible ontology; easy prototyping or labeling assistance | Higher latency/cost; outputs require validation and are harder to control than classifiers | High/variable | Weak labeling, adjudication, or fallback; not the default when a classifier meets requirements |
 
-Lưu ý: đây là **decision matrix**, không phải ranking chất lượng đã được đo. Candidate thắng phải được chọn bằng test set versioned, latency benchmark và cost profile trên hardware thực tế.
+This is a **decision matrix**, not a measured quality ranking. Select the winning candidate using a versioned test set, latency benchmarks, and cost profiles on actual hardware.
 
-**Kịch bản sử dụng cụ thể:**
+**Concrete usage scenarios:**
 
-> Trong một tuần có 40.000 review. CX Manager không muốn đọc từng review; họ xem tỷ lệ sentiment âm theo `delivery`, phát hiện spike, drill down vào review gốc, rồi chuyển bằng chứng cho đội vận hành.
+> A week brings 40,000 reviews. Instead of reading each one, a CX Manager views the negative-sentiment rate for `delivery`, detects a spike, drills down to original reviews, and forwards the evidence to operations.
 
-> Product Manager lọc `product_id=P01`, aspect `product_quality`, sentiment `negative`, so sánh xu hướng trước/sau release.
+> A Product Manager filters `product_id=P01`, aspect `product_quality`, and sentiment `negative`, then compares trends before and after a release.
 
-> Retrieval có thể dùng aspect/sentiment do ABSA sinh ra như filter để trả lời “Các khiếu nại tiêu cực về giao hàng trong tháng này là gì?”.
+> Retrieval can use ABSA-generated aspect/sentiment filters to answer: 'What negative delivery complaints were raised this month?'
 
-**User story ABSA mẫu:**
+**Example ABSA user story:**
 
-> **Là một Customer Experience Manager**, tôi muốn hệ thống tự động nhận diện từng khía cạnh được đề cập và sentiment tương ứng trong feedback, **để tôi biết chính xác nguyên nhân nào đang tạo ra trải nghiệm tiêu cực mà không phải đọc thủ công mọi review**.
+> **As a Customer Experience Manager**, I want the system to identify each aspect mentioned in feedback and its sentiment automatically, **so I can identify the sources of negative experiences without manually reading every review**.
 
-Story này đủ hướng người dùng và giá trị; implementation như “dùng PhoBERT” không thuộc story. Nguyên tắc INVEST nhấn mạnh user story phải có giá trị, đủ nhỏ và testable. citeturn11search7
+This story focuses on the user and value; implementation choices such as PhoBERT do not belong in it. INVEST emphasizes that user stories must be valuable, small enough, and testable. citeturn11search7
 
-**Acceptance criteria ABSA mẫu:**
+**Example ABSA acceptance criteria:**
 
-| ID         | Given / When / Then                                                                           | Tiêu chí                                                                                               |
+| ID | Given / When / Then | Criterion |
 | ---------- | --------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| ABSA-AC-01 | Given review “Máy đẹp nhưng giao hàng quá chậm”, when`/predict` được gọi, then | output chứa ít nhất`product_quality=positive`, `delivery=negative` theo taxonomy đã phê duyệt |
-| ABSA-AC-02 | Given một request hợp lệ                                                                   | response đúng JSON schema và có`review_id`, `model_version`, `taxonomy_version`                |
-| ABSA-AC-03 | Given review không chứa aspect trong taxonomy                                               | model không bắt buộc bịa một aspect; behavior`[]`/`other` phải được quy định              |
-| ABSA-AC-04 | Given malformed payload                                                                       | API trả lỗi validation có cấu trúc, không chạy inference                                          |
-| ABSA-AC-05 | Given evaluation set đã khóa                                                               | Macro-F1 ≥ ngưỡng release;**MVP giả định: 0,80**, phải thay sau baseline                    |
-| ABSA-AC-06 | Given critical aspect                                                                         | per-aspect F1 không thấp hơn floor;**MVP giả định: 0,75**                                    |
-| ABSA-AC-07 | Given target production hardware                                                              | p95 inference ≤**300 ms giả định**, sau warm-up và với payload length đã quy định        |
-| ABSA-AC-08 | Given request có PII                                                                         | raw PII không xuất hiện trong application log sau masking policy                                      |
-| ABSA-AC-09 | Given hai model versions                                                                      | dashboard/report có thể xác định output nào do version nào tạo                                   |
-| ABSA-AC-10 | Given unsupported language                                                                    | service trả trạng thái rõ ràng thay vì âm thầm áp dụng model Việt                             |
+| ABSA-AC-01 | Given a review meaning 'The device looks good but delivery is far too slow', when `/predict` is called | Output includes at least `product_quality=positive` and `delivery=negative` under the approved taxonomy |
+| ABSA-AC-02 | Given a valid request | Response conforms to the JSON schema and includes `review_id`, `model_version`, and `taxonomy_version` |
+| ABSA-AC-03 | Given a review containing no taxonomy aspect | The model is not forced to invent an aspect; define `[]`/`other` behavior explicitly |
+| ABSA-AC-04 | Given a malformed payload | API returns a structured validation error without running inference |
+| ABSA-AC-05 | Given a frozen evaluation set | Macro-F1 ≥ release threshold; **assumed MVP value: 0.80**, to be revised after baseline measurement |
+| ABSA-AC-06 | Given a critical aspect | Per-aspect F1 meets its floor; **assumed MVP value: 0.75** |
+| ABSA-AC-07 | Given target production hardware | Inference p95 ≤ **an assumed 300 ms**, after warm-up and for the specified payload length |
+| ABSA-AC-08 | Given a request containing PII | Raw PII does not appear in application logs after the masking policy is applied |
+| ABSA-AC-09 | Given two model versions | The dashboard/report identifies which version generated each output |
+| ABSA-AC-10 | Given an unsupported language | The service returns an explicit status instead of silently applying the Vietnamese model |
 
-**Integration/API đề xuất:**
+**Proposed integration/API:**
 
 ```http
 POST /v1/absa/predict
@@ -391,34 +393,34 @@ GET  /v1/absa/taxonomy
 GET  /health/ready
 ```
 
-Batch nên có `max_batch_size` rõ ràng; large offline workloads nên đi qua pipeline/job thay vì một HTTP request khổng lồ.
+Specify `max_batch_size` explicitly; large offline workloads should use pipelines/jobs rather than one enormous HTTP request.
 
-**Deployment.** TF-IDF baseline có thể chạy CPU rất nhẹ; Transformer cần benchmark CPU/GPU trước khi quyết định node class. Production blueprint hiện đề xuất Dockerized services và tách release/scaling boundaries, nhưng EKS/Helm/Terraform nên được ghi là **target deployment architecture** nếu chưa có evidence deployment thật. fileciteturn0file1
+**Deployment.** The TF-IDF baseline can run with modest CPU resources; benchmark Transformer CPU/GPU performance before choosing a node class. The production blueprint proposes Dockerized services with separate release/scaling boundaries, but EKS/Helm/Terraform must remain labeled as the **target deployment architecture** without real deployment evidence. fileciteturn0file1
 
-**Observability ABSA** nên theo dõi `request_count`, error rate, p50/p95/p99 inference latency, model/taxonomy version, aspect frequency, predicted-label distribution, confidence distribution, input length, unsupported-language rate và drift indicators. OpenTelemetry hiện hỗ trợ traces, metrics và logs để tạo correlation end-to-end. citeturn14search1
+**ABSA observability** should track `request_count`, error rate, p50/p95/p99 inference latency, model/taxonomy version, aspect frequency, predicted-label and confidence distributions, input length, unsupported-language rate, and drift indicators. OpenTelemetry supports traces, metrics, and logs for end-to-end correlation. citeturn14search1
 
-**Testing ABSA:**
+**ABSA testing:**
 
-| Loại            | Nội dung                                                                                    |
+| Type | Coverage |
 | ---------------- | -------------------------------------------------------------------------------------------- |
 | Unit             | normalizer, taxonomy mapping, schema validation, PII masker, post-processing                 |
 | Integration      | API → model artifact → output schema → database                                           |
 | Data validation  | nulls, duplicates, language, label validity, split leakage, PII                              |
-| ML validation    | Macro-F1, per-aspect F1, confusion matrix, slice theo product/channel/text length            |
-| Regression       | candidate model không được giảm metric dưới release floor so với production baseline |
+| ML validation | Macro-F1, per-aspect F1, confusion matrix, slices by product/channel/text length |
+| Regression | Candidate metrics must not fall below release floors relative to the production baseline |
 | Performance      | p50/p95/p99, throughput, RAM/VRAM, cold/warm behavior                                        |
-| Robustness       | typo, emoji, slang, code-switching, negation, rất dài/rất ngắn                           |
+| Robustness | Typos, emoji, slang, code-switching, negation, very long/short text |
 | Privacy/security | log-redaction test, auth, unauthorized access, malformed payload                             |
 
-## Đặc tả module Retrieval
+## Retrieval module specification
 
-Retrieval không nên được mô tả đơn giản là “vector search”. Contract thực sự của module là:
+Retrieval should not be described merely as vector search. Its actual contract is:
 
-> Với một query và các filter tùy chọn, trả về **tập bằng chứng được xếp hạng**, có `review_id`, snippet, metadata, score/rank và `index_version`, để downstream analytics hoặc RAG có thể kiểm chứng được nguồn.
+> Given a query and optional filters, return **ranked evidence** with `review_id`, snippet, metadata, score/rank, and `index_version`, so downstream analytics or RAG can verify the sources.
 
-README hiện đã chọn hướng hybrid Dense + BM25, RRF và reranker trên Qdrant. fileciteturn0file2 Đây là hướng hợp lý cho use case review vì lexical retrieval xử lý tốt exact terms/IDs trong khi dense retrieval bổ sung semantic matching; Qdrant chính thức hỗ trợ kết hợp sparse và dense trong hybrid query. citeturn11search11turn11search6
+The current README selects hybrid Dense + BM25 retrieval, RRF, and a reranker on Qdrant. fileciteturn0file2 This is suitable for reviews: lexical retrieval handles exact terms/IDs, while dense retrieval adds semantic matching. Qdrant officially supports sparse/dense hybrid queries. citeturn11search11turn11search6
 
-**Input contract đề xuất:**
+**Proposed input contract** (the Vietnamese query and returned snippet are preserved as example data):
 
 ```json
 {
@@ -434,7 +436,7 @@ README hiện đã chọn hướng hybrid Dense + BM25, RRF và reranker trên Q
 }
 ```
 
-**Output contract đề xuất:**
+**Proposed output contract:**
 
 ```json
 {
@@ -459,7 +461,7 @@ README hiện đã chọn hướng hybrid Dense + BM25, RRF và reranker trên Q
 }
 ```
 
-Score không nên được trình bày cho business user như “84,2% đúng”; dense similarity, BM25 score, RRF score và reranker score có ngữ nghĩa khác nhau. RRF được thiết kế để kết hợp các ranked lists mà không yêu cầu các relevance score có cùng scale. citeturn14search0
+Do not present a score to business users as '84.2% correct': dense similarity, BM25, RRF, and reranker scores have different meanings. RRF combines ranked lists without requiring relevance scores to share a scale. citeturn14search0
 
 **Data/index pipeline:**
 
@@ -486,61 +488,61 @@ Golden-query evaluation
 Promote index version
 ```
 
-Với review ngắn, một review có thể là một retrieval unit. Nếu source chuyển thành tài liệu dài, cần explicit chunking strategy. Không nên áp dụng arbitrary chunk size từ tutorial cho mọi loại dữ liệu.
+For short reviews, one review may be one retrieval unit. Long-document sources require an explicit chunking strategy; do not apply an arbitrary tutorial chunk size to every data type.
 
-**So sánh Retrieval methods:**
+**Retrieval method comparison:**
 
-| Phương pháp        | Tốt ở đâu                                                        | Điểm yếu                                                          | Khi phù hợp                                              | Khuyến nghị                                                                                                                                              |
+| Method | Strengths | Weaknesses | Suitable use | Recommendation |
 | --------------------- | -------------------------------------------------------------------- | -------------------------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| BM25 / sparse lexical | keyword, tên sản phẩm, mã, phrase cụ thể                       | paraphrase hoặc query khác từ vựng có thể bị miss             | exact-search, baseline                                     | Giữ làm baseline và một nhánh hybrid; BM25 là lexical scoring phổ biến dựa trên term/document statistics. citeturn15search0turn15search5 |
-| Dense vector          | semantic similarity, paraphrase                                      | exact ID/từ hiếm có thể không nổi bật; cần embedding compute | natural-language search                                    | Dùng làm semantic branch                                                                                                                                 |
-| Hybrid Dense + Sparse | bắt cả semantic và lexical evidence                               | phức tạp/index lớn hơn, cần fusion                              | corpus review có cả query tự nhiên lẫn entity/keyword | **Default recommendation** cho SenticRAG; Qdrant hỗ trợ cả hai representations. citeturn11search11                                          |
-| Hybrid + RRF          | fusion theo rank, không yêu cầu score scales tương thích       | thêm tuning candidate depth/rank window                             | khi có ≥2 retrievers                                     | **Default fusion** trước khi có bằng chứng lựa chọn khác. citeturn14search0turn11search6                                             |
-| Hybrid + reranker     | có thể cải thiện thứ tự top candidates nếu reranker phù hợp | thêm model calls và latency                                        | accuracy-sensitive top-N                                   | Bật chỉ khi held-out eval chứng minh gain; Qdrant cũng khuyến nghị đo reranking trên evaluation data. citeturn11search10                     |
+| BM25 / sparse lexical | Keywords, product names, codes, specific phrases | May miss paraphrases or queries using different vocabulary | Exact search, baseline | Retain as a baseline and hybrid branch; BM25 is a common lexical scoring method based on term/document statistics. citeturn15search0turn15search5 |
+| Dense vector | Semantic similarity, paraphrases | Exact IDs/rare terms may be underweighted; requires embedding compute | Natural-language search | Use as the semantic branch |
+| Hybrid Dense + Sparse | Captures semantic and lexical evidence | Greater complexity/index size; requires fusion | Review corpora with natural-language queries and entities/keywords | **Default recommendation** for SenticRAG; Qdrant supports both representations. citeturn11search11 |
+| Hybrid + RRF | Rank-based fusion without compatible score scales | Requires candidate-depth/rank-window tuning | Two or more retrievers | **Default fusion** until evidence supports another choice. citeturn14search0turn11search6 |
+| Hybrid + reranker | Can improve top-candidate ordering with a suitable reranker | Additional model calls and latency | Accuracy-sensitive top-N results | Enable only when held-out evaluation demonstrates gains; Qdrant also recommends evaluating reranking on evaluation data. citeturn11search10 |
 
-**So sánh indexing:**
+**Indexing comparison:**
 
-| Index                  | Mục tiêu                              | Trade-off                                       | Vai trò trong SenticRAG                                                                                                                        |
+| Index | Purpose | Trade-off | Role in SenticRAG |
 | ---------------------- | --------------------------------------- | ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| Inverted/sparse index  | lexical retrieval                       | không thay thế semantic vector retrieval      | BM25/sparse branch                                                                                                                              |
-| Exact/full vector scan | exact nearest-neighbor baseline         | chi phí tăng mạnh theo corpus                | benchmark nhỏ hoặc correctness reference                                                                                                      |
-| HNSW                   | approximate dense nearest-neighbor      | cần RAM/index build và tuning recall–latency | lựa chọn dense index mặc định khi dùng Qdrant; Qdrant hiện dùng HNSW cho dense vector index. citeturn15search12                   |
-| Payload index          | filter theo aspect/date/product/channel | tăng storage/index-management                  | rất quan trọng nếu filter-heavy; Qdrant khuyến nghị tạo index cho filter fields trước ingestion. citeturn11search5turn15search9 |
+| Inverted/sparse index | Lexical retrieval | Does not replace semantic vector retrieval | BM25/sparse branch |
+| Exact/full vector scan | Exact nearest-neighbor baseline | Cost rises substantially with corpus size | Small benchmarks or correctness reference |
+| HNSW | Approximate dense nearest-neighbor search | RAM/index-build costs and recall–latency tuning | Default dense index with Qdrant, which uses HNSW for dense vector indexing. citeturn15search12 |
+| Payload index | Filtering by aspect/date/product/channel | Additional storage/index management | Essential for heavy filtering; Qdrant recommends indexing filter fields before ingestion. citeturn11search5turn15search9 |
 
-Các tham số HNSW như `m`, `ef_construct` và query-time `ef` ảnh hưởng build/search behavior; chúng phải được tune qua benchmark chứ không copy blind từ project khác. citeturn15search12
+HNSW parameters such as `m`, `ef_construct`, and query-time `ef` affect build/search behavior. Tune them through benchmarks rather than copying them blindly from another project. citeturn15search12
 
-**User story Retrieval mẫu:**
+**Example Retrieval user story:**
 
-> **Là một Product Manager**, tôi muốn nhập câu hỏi “Khách hàng phàn nàn gì về giao hàng của P01 trong tháng này?” và nhận các phản hồi liên quan nhất kèm nguồn gốc, **để tôi có thể kiểm chứng insight trước khi ra quyết định**.
+> **As a Product Manager**, I want to ask 'What are customers complaining about regarding P01 delivery this month?' and receive the most relevant feedback with provenance, **so I can verify insights before making decisions**.
 
-Một story cho analyst:
+An analyst story:
 
-> **Là một Business Analyst**, tôi muốn filter kết quả theo thời gian, sản phẩm, aspect và sentiment, **để cùng một query có thể được phân tích theo cohort mà không phải export toàn bộ dữ liệu và lọc thủ công**.
+> **As a Business Analyst**, I want to filter results by time, product, aspect, and sentiment, **so I can analyze the same query by cohort without exporting all data and filtering manually**.
 
-Một story cho downstream RAG:
+A downstream RAG story:
 
-> **Là một người dùng `/ask`**, tôi muốn mọi luận điểm quan trọng trong câu trả lời có liên kết tới review/evidence đã truy xuất, **để tôi phân biệt được nội dung có bằng chứng với suy luận của mô hình**.
+> **As an `/ask` user**, I want every important claim in an answer linked to retrieved reviews/evidence, **so I can distinguish supported content from model inference**.
 
-**Acceptance criteria Retrieval mẫu:**
+**Example Retrieval acceptance criteria:**
 
 | ID        | Acceptance criterion                                                                                                            |
 | --------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| RET-AC-01 | Request hợp lệ trả`hits[]` theo thứ tự rank và luôn chứa `review_id`, `snippet`, `metadata`, `index_version`  |
-| RET-AC-02 | Filter`product_id/aspect/sentiment/date` không trả item vi phạm filter                                                     |
-| RET-AC-03 | Với golden query set versioned,**MVP giả định Recall@10 ≥ 0,85**; khóa lại sau baseline                            |
-| RET-AC-04 | **MVP giả định nDCG@10 ≥ 0,75** nếu dataset có graded relevance                                                     |
-| RET-AC-05 | 100%`review_id` trả ra phải resolve được tới source record hiện hữu                                                   |
-| RET-AC-06 | Với query không có bằng chứng đủ tốt, hệ thống cho phép trả empty/insufficient-results thay vì buộc có kết quả |
-| RET-AC-07 | Search không reranker có**p95 ≤ 250 ms giả định** trên corpus/hardware baseline đã ghi trong benchmark           |
-| RET-AC-08 | Reranker chỉ được enable production nếu quality gain trên held-out set đủ bù latency/cost theo release criterion       |
-| RET-AC-09 | Mỗi index build có`index_version`, embedding model version, source-data snapshot/version                                    |
-| RET-AC-10 | Index candidate không được promote nếu golden-query regression vượt tolerance                                            |
-| RET-AC-11 | Query PII/sensitive logs tuân thủ redaction policy                                                                            |
-| RET-AC-12 | Khi index chưa ready/rebuilding, readiness và error response phản ánh đúng trạng thái, không trả silent partial index |
+| RET-AC-01 | Valid requests return ranked `hits[]` containing `review_id`, `snippet`, `metadata`, and `index_version` |
+| RET-AC-02 | `product_id/aspect/sentiment/date` filters never return items that violate the filters |
+| RET-AC-03 | On a versioned golden-query set, **assumed MVP Recall@10 ≥ 0.85**; freeze the threshold after baseline measurement |
+| RET-AC-04 | **Assumed MVP nDCG@10 ≥ 0.75** when the dataset has graded relevance |
+| RET-AC-05 | 100% of returned `review_id` values resolve to existing source records |
+| RET-AC-06 | Queries without sufficiently strong evidence may return empty/insufficient results instead of being forced to return hits |
+| RET-AC-07 | Search without reranking has **an assumed p95 ≤ 250 ms** on the corpus/hardware baseline documented in the benchmark |
+| RET-AC-08 | Enable a production reranker only when held-out quality gains justify latency/cost under the release criterion |
+| RET-AC-09 | Every index build records `index_version`, embedding model version, and source-data snapshot/version |
+| RET-AC-10 | Do not promote an index candidate when golden-query regression exceeds tolerance |
+| RET-AC-11 | Query PII/sensitive logs comply with the redaction policy |
+| RET-AC-12 | When the index is unready/rebuilding, readiness and errors reflect its actual state instead of silently serving a partial index |
 
-Không nên đặt arbitrary `score_threshold` trước khi có labeled data. Qdrant cảnh báo threshold áp dụng cho fused score có thể âm thầm cắt result list nếu giá trị được copy từ dense-only search; threshold nên dựa trên evaluation thực tế. citeturn11search5
+Do not choose an arbitrary `score_threshold` before obtaining labeled data. Qdrant warns that applying a threshold copied from dense-only search to fused scores may silently truncate results; derive thresholds from actual evaluation. citeturn11search5
 
-**API đề xuất:**
+**Proposed API:**
 
 ```http
 POST /v1/retrieval/search
@@ -552,7 +554,7 @@ POST /v1/ask
 GET  /health/ready
 ```
 
-Phân biệt rõ:
+Keep these responsibilities distinct:
 
 ```text
 /retrieval/search
@@ -576,82 +578,82 @@ Phân biệt rõ:
     natural-language answer
 ```
 
-Điều này quan trọng vì Retrieval quality và Generation quality là hai failure domains khác nhau. Blueprint hiện cũng đề xuất đánh giá retrieval với Recall@K/MRR/citation và generation với groundedness riêng. fileciteturn0file1
+Retrieval quality and generation quality have different failure modes. The blueprint also proposes separate retrieval evaluation using Recall@K/MRR/citations and generation evaluation using groundedness. fileciteturn0file1
 
-**Monitoring Retrieval** nên bao gồm end-to-end latency và stage latency (`embedding_ms`, `sparse_ms`, `dense_ms`, `fusion_ms`, `rerank_ms`), zero-result rate, result count, index age, indexed document count, `index_version`, filter usage, cache hit, dependency error và offline retrieval metrics. Với distributed services, trace propagation cho phép liên hệ các span của cùng request xuyên nhiều service. citeturn14search1turn14search12
+**Retrieval monitoring** should include end-to-end and stage latency (`embedding_ms`, `sparse_ms`, `dense_ms`, `fusion_ms`, `rerank_ms`), zero-result rate, result count, index age, indexed-document count, `index_version`, filter usage, cache hits, dependency errors, and offline retrieval metrics. In distributed services, trace propagation correlates spans for the same request across services. citeturn14search1turn14search12
 
-**Testing Retrieval:**
+**Retrieval testing:**
 
-| Loại            | Tests                                                                             |
+| Type | Tests |
 | ---------------- | --------------------------------------------------------------------------------- |
 | Unit             | query normalization, filter construction, RRF, rank handling, citation formatting |
 | Integration      | ingestion → Qdrant → query → source resolution                                 |
 | Contract         | stable request/response schema                                                    |
-| Retrieval eval   | Recall@K, MRR, nDCG@K trên golden queries                                        |
-| Filter eval      | exact correctness của product/aspect/date filters                                |
+| Retrieval eval | Recall@K, MRR, nDCG@K on golden queries |
+| Filter eval | Exact correctness of product/aspect/date filters |
 | Index validation | point count, vector/index state, embedding/index version compatibility            |
 | Regression       | compare candidate vs current production index                                     |
 | Performance      | cold/warm p50/p95/p99, concurrency, corpus-size scaling                           |
 | Failure          | Qdrant unavailable, timeout, partial index, malformed filter                      |
 | Security         | unauthorized queries, injection-like metadata/filter payloads, PII logging        |
 
-## Yêu cầu xuyên suốt: dữ liệu, NFR, bảo mật, triển khai và vận hành
+## Cross-cutting requirements: data, NFRs, security, deployment, and operations
 
-**Data governance** không nên nằm như một đoạn “bảo mật dữ liệu” chung chung. Mỗi dataset/index/model phải trả lời được:
+**Data governance** needs more than a generic data-security paragraph. Every dataset/index/model must answer:
 
 ```text
-Nguồn từ đâu?
-Ai sở hữu?
-Mục đích sử dụng?
-Có quyền sử dụng / train / commercial use không?
-Có PII không?
-PII nào được giữ, mask hay xóa?
-Ai được truy cập?
-Version nào?
-Retention bao lâu?
-Có thể xóa một data subject/source record như thế nào?
-Model/index nào được tạo từ version dữ liệu nào?
+Where does the data come from?
+Who owns it?
+What is its intended use?
+Are use / training / commercial-use rights available?
+Does it contain PII?
+Which PII is retained, masked, or deleted?
+Who can access it?
+Which version is in use?
+What is the retention period?
+How can a data subject's data or a source record be deleted?
+Which models/indexes were built from which data versions?
 ```
 
-Tại Việt Nam, Luật Bảo vệ dữ liệu cá nhân số 91/2025/QH15 được ban hành ngày 26/06/2025 và có hiệu lực từ **01/01/2026**. Vì dự án xử lý review có thể chứa tên, số điện thoại, địa chỉ, account identifiers hoặc nội dung cá nhân, data governance cần được coi là product requirement chứ không chỉ là security hardening. citeturn13search0turn13search14
+In Vietnam, Personal Data Protection Law No. 91/2025/QH15 was issued on 26 June 2025 and took effect on **1 January 2026**. Reviews processed by this project may contain names, phone numbers, addresses, account identifiers, or personal content, so data governance must be treated as a product requirement rather than only security hardening. citeturn13search0turn13search14
 
-Tính đến ngày 29/09/2026, Luật Trí tuệ nhân tạo số 134/2025/QH15 cũng đã có hiệu lực từ **01/03/2026**. Nguồn Chính phủ mô tả định hướng lấy con người làm trung tâm, an toàn, quyền con người và kiểm soát của con người, đồng thời nêu các hành vi AI gây phân biệt đối xử hoặc sử dụng trái pháp luật. Việc xác định nghĩa vụ cụ thể của SenticRAG phụ thuộc use case, data và risk classification thực tế, vì vậy product documentation nên có owner pháp lý/compliance thay vì tự tuyên bố “tuân thủ đầy đủ”. citeturn13search1turn13search4
+As of 29 September 2026, Artificial Intelligence Law No. 134/2025/QH15 had also taken effect on **1 March 2026**. Government sources describe a focus on people, safety, human rights, and human control, and identify discriminatory or unlawful AI uses. SenticRAG's specific obligations depend on its actual use cases, data, and risk classification. Product documentation should identify a legal/compliance owner rather than declare full compliance without verification. citeturn13search1turn13search4
 
-Một bảng governance có thể ghi:
+An example governance table:
 
 | Asset          | Owner      | Sensitivity            | Retention                 | Versioning                     | Controls              |
 | -------------- | ---------- | ---------------------- | ------------------------- | ------------------------------ | --------------------- |
-| Raw reviews    | Data Owner | có thể chứa PII     | `[TBD]`                 | source snapshot                | restricted access     |
+| Raw reviews | Data Owner | May contain PII | `[TBD]` | Source snapshot | Restricted access |
 | Masked reviews | Data/ML    | internal               | `[TBD]`                 | dataset manifest               | role-based            |
-| Labels         | ML/Product | internal               | theo dataset              | label schema version           | audit changes         |
-| ABSA model     | ML         | internal IP            | đến khi deprecated      | model version/hash             | controlled promotion  |
-| Embeddings     | ML/Data    | derived sensitive data | cùng/lower than source   | embedding model + data version | controlled access     |
+| Labels | ML/Product | Internal | Aligned with dataset retention | Label schema version | Audit changes |
+| ABSA model | ML | Internal IP | Until deprecated | Model version/hash | Controlled promotion |
+| Embeddings | ML/Data | Derived sensitive data | No longer than source retention | Embedding model + data version | Controlled access |
 | Qdrant index   | Platform   | derived data           | rebuildable               | index version                  | backup/access control |
-| Query logs     | Platform   | có thể nhạy cảm    | ngắn và rõ mục đích | daily partitions               | redact/hash PII       |
+| Query logs | Platform | Potentially sensitive | Short, purpose-specific retention | Daily partitions | Redact/hash PII |
 
-**Đạo đức và Responsible AI.** NIST AI RMF tổ chức AI risk management thành Govern, Map, Measure và Manage, nhấn mạnh quản trị rủi ro xuyên vòng đời thay vì chỉ đánh giá model trước release. citeturn12search3turn12search7 ISO/IEC 42001:2023 cũng đặt AI trong một management system với risk, governance, transparency và continuous improvement. citeturn12search8 Với SenticRAG, các điểm cần ghi rõ gồm bias theo dialect/channel/product group, việc sentiment model có thể sai, không sử dụng sentiment để suy đoán thuộc tính nhạy cảm không có căn cứ, human review cho quyết định quan trọng, khả năng truy nguyên evidence và cơ chế correction/removal dữ liệu.
+**Ethics and Responsible AI.** NIST AI RMF organizes AI risk management into Govern, Map, Measure, and Manage, emphasizing lifecycle risk management rather than only model evaluation before release. citeturn12search3turn12search7 ISO/IEC 42001:2023 also places AI in a management system covering risk, governance, transparency, and continuous improvement. citeturn12search8 SenticRAG should explicitly address bias across dialects/channels/product groups, sentiment-model errors, avoiding unsupported inference of sensitive attributes from sentiment, human review for important decisions, evidence traceability, and data correction/removal mechanisms.
 
-**NFR matrix đề xuất:**
+**Proposed NFR matrix:**
 
-| Nhóm           | Requirement đề xuất                                                                           |
+| Category | Proposed requirement |
 | --------------- | ------------------------------------------------------------------------------------------------ |
 | Performance     | ABSA p95 ≤ 300 ms*; Retrieval no-rerank p95 ≤ 250 ms*                                          |
-| Throughput      | benchmark QPS trên hardware đã khóa; không ghi “high scale” nếu chưa đo                |
-| Scalability     | scale service và index độc lập; benchmark ít nhất current corpus, 3× và 10× data volume |
-| Availability    | API availability target 99,5–99,9%* tùy business criticality                                   |
-| Reliability     | timeout/retry/fallback rõ; no silent partial result                                             |
+| Throughput | Benchmark QPS on fixed hardware; do not claim high scalability without measurements |
+| Scalability | Scale services and indexes independently; benchmark at least the current corpus and 3× and 10× data volumes |
+| Availability | API availability target of 99.5–99.9%*, depending on business criticality |
+| Reliability | Explicit timeouts/retries/fallbacks; no silent partial results |
 | Security        | authentication, authorization, least privilege, TLS, rate limit, secret management               |
 | Privacy         | data minimization, PII masking/redaction, access/retention/deletion policy                       |
-| Traceability    | mọi output có model/index/taxonomy version khi liên quan                                      |
+| Traceability | Every output includes relevant model/index/taxonomy versions |
 | Maintainability | typed contracts, versioned config, CI tests, reproducible artifacts                              |
-| Portability     | Docker image; environment-specific configuration ngoài image                                    |
+| Portability | Docker image; environment-specific configuration outside the image |
 | Observability   | traces + metrics + logs; release/model/index dimensions                                          |
-| Recoverability  | backup/snapshot/rebuild procedure; previous model/index có thể rollback                        |
-| Data freshness  | index freshness SLO, ví dụ <15 phút batch* hoặc theo product requirement                     |
+| Recoverability | Backup/snapshot/rebuild procedures; rollback to previous model/index versions |
+| Data freshness | Index freshness SLO, for example <15-minute batches*, or as required by the product |
 
-\* Giả định starter target.
+\* Assumed starting target.
 
-ISO/IEC 25010:2023 phù hợp để dùng như checklist tránh bỏ sót quality requirements thay vì chỉ tối ưu performance. citeturn12search12
+Use ISO/IEC 25010:2023 as a checklist to avoid missing quality requirements while optimizing performance. citeturn12search12
 
 **Security/privacy design:**
 
@@ -676,19 +678,19 @@ Raw data → PII masking → internal processed data
               └── sensitive mapping access restricted
 ```
 
-Không log nguyên review theo mặc định chỉ vì nó “tiện debug”. Log nên tập trung vào request IDs, model/index versions, timings, error categories và non-sensitive aggregate dimensions.
+Do not log entire reviews by default merely for debugging convenience. Focus logs on request IDs, model/index versions, timings, error categories, and nonsensitive aggregate dimensions.
 
-**Deployment recommendation theo mức trưởng thành:**
+**Deployment recommendations by maturity level:**
 
 | Stage                   | ABSA                                | Retrieval                        | Infrastructure                            |
 | ----------------------- | ----------------------------------- | -------------------------------- | ----------------------------------------- |
 | Developer               | local artifact                      | local Qdrant                     | Docker Compose                            |
 | CI                      | lightweight/test artifact           | ephemeral test index             | isolated runner                           |
 | Staging                 | release candidate                   | staging index snapshot           | containerized environment                 |
-| Production              | immutable model/application version | promoted immutable index version | target Kubernetes/EKS nếu thực sự cần |
+| Production | Immutable model/application version | Promoted immutable index version | Target Kubernetes/EKS if actually needed |
 | Batch training/indexing | separate job                        | separate build/index job         | independent scheduling                    |
 
-Production blueprint hiện đã lựa chọn EKS, Helm, Terraform, ECR, S3 artifacts và independent scaling boundaries như target state. fileciteturn0file1 Tuy nhiên `GIOI_THIEU_SAN_PHAM_VI.md` nên nói “deployment target” thay vì mô tả hàng trăm dòng Kubernetes YAML.
+The production blueprint selects EKS, Helm, Terraform, ECR, S3 artifacts, and independent scaling boundaries as its target state. fileciteturn0file1 `GIOI_THIEU_SAN_PHAM_VI.md` should describe deployment targets rather than reproduce hundreds of Kubernetes YAML lines.
 
 **Observability hierarchy:**
 
@@ -709,9 +711,9 @@ Infrastructure
     CPU / memory / GPU / disk / network
 ```
 
-OpenTelemetry hỗ trợ traces, metrics và logs; đây là abstraction hợp lý để liên kết request qua ABSA, Retrieval và downstream RAG. citeturn14search1
+OpenTelemetry supports traces, metrics, and logs, providing a suitable abstraction for correlating requests across ABSA, Retrieval, and downstream RAG. citeturn14search1
 
-**Release gate nên yêu cầu đồng thời software + ML/data quality:**
+**Release gates should require both software quality and ML/data quality:**
 
 ```text
 Code changes
@@ -735,131 +737,131 @@ promotion
 post-deploy monitoring
 ```
 
-Một model có Macro-F1 cao nhưng làm p95 tăng gấp năm lần không mặc nhiên là release tốt. Tương tự, index mới có latency nhanh nhưng Recall@10 giảm mạnh cũng không nên được promote. Đây là lý do quality gate phải multi-dimensional.
+A model with high Macro-F1 that increases p95 latency fivefold is not automatically a good release. Similarly, a faster index should not be promoted if Recall@10 drops substantially. Quality gates must therefore assess multiple dimensions.
 
-## Mẫu `GIOI_THIEU_SAN_PHAM_VI.md` sẵn sàng sử dụng
+## Ready-to-use `GIOI_THIEU_SAN_PHAM_VI.md` template
 
-Dưới đây là skeleton tôi khuyến nghị sử dụng làm bản mới. Nó cố ý giữ product document đủ cụ thể để BA/Product/Engineer thống nhất contract, nhưng không lặp toàn bộ implementation guide.
+The following skeleton is the recommended replacement. It provides enough detail for BA/Product/Engineering to agree on contracts without repeating the implementation guide. The template is in English; Vietnamese JSON sample inputs and matching outputs remain unchanged to illustrate the language-specific contracts. Historical filenames are retained as source references.
 
-```markdown
+````markdown
 ---
-title: "SenticRAG — Giới thiệu sản phẩm và đặc tả mức sản phẩm"
-language: "vi"
+title: "SenticRAG — Product introduction and product-level specification"
+language: "en"
 status: "draft"
 version: "0.1.0"
 owner: "Product / AI Engineering"
 last_updated: "2026-09-29"
 ---
 
-# SenticRAG — Phân tích Cảm xúc Theo Khía cạnh
-# và Truy xuất Trí tuệ Phản hồi Khách hàng
+# SenticRAG — Aspect-Based Sentiment Analysis
+# and Customer Feedback Intelligence Retrieval
 
-> **Trạng thái tài liệu:** Draft
+> **Document status:** Draft
 >
-> **Mục đích:** Giải thích bài toán, người dùng, giá trị,
-> contract và tiêu chí thành công của SenticRAG.
+> **Purpose:** Explain SenticRAG's problem, users, value,
+> contracts, and success criteria.
 >
-> Các chi tiết implementation sâu được quản lý tại
+> Detailed implementation guidance is maintained in
 > `docs/architecture/`, `docs/model_cards/`,
-> `docs/data_cards/` và `docs/runbooks/`.
+> `docs/data_cards/`, and `docs/runbooks/`.
 
-## Tóm tắt điều hành
+## Executive summary
 
-SenticRAG giúp tổ chức biến lượng lớn phản hồi khách hàng
-dạng văn bản thành insight có cấu trúc và bằng chứng có thể
-truy nguyên.
+SenticRAG helps organizations transform large volumes of textual
+customer feedback into structured insights and evidence
+that can be traced to its source.
 
-Sản phẩm có hai năng lực cốt lõi:
+The product provides two core capabilities:
 
-- **ABSA:** xác định khách hàng đang đề cập tới khía cạnh nào
-  và cảm xúc đối với từng khía cạnh.
-- **Retrieval:** tìm và xếp hạng các phản hồi liên quan nhất
-  đối với một truy vấn và tập filter.
+- **ABSA:** identify which aspects customers discuss
+  and their sentiment toward each aspect.
+- **Retrieval:** find and rank the feedback most relevant
+  to a query and its filters.
 
-Một lớp RAG tùy chọn có thể dùng evidence do Retrieval trả về
-để tạo câu trả lời có citation.
+An optional RAG layer can use evidence returned by Retrieval
+to generate answers with citations.
 
-## Bài toán cần giải quyết
+## Problem to solve
 
-Các đội Product, Customer Experience và Business Analysis
-thường phải xử lý lượng lớn review không cấu trúc.
+Product, Customer Experience, and Business Analysis teams
+regularly process large volumes of unstructured reviews.
 
-Những câu hỏi điển hình:
+Typical questions include:
 
-- Khách hàng đang không hài lòng về vấn đề nào?
-- Vấn đề giao hàng tăng hay giảm trong tháng này?
-- Những bằng chứng cụ thể nào hỗ trợ kết luận đó?
-- Các phản hồi nào tương tự câu hỏi/phàn nàn hiện tại?
+- Which issues are customers dissatisfied with?
+- Are delivery issues increasing or decreasing this month?
+- What specific evidence supports that conclusion?
+- Which feedback resembles the current question or complaint?
 
-Đọc và phân loại review hoàn toàn thủ công tốn thời gian,
-khó duy trì nhất quán và khó mở rộng.
+Reading and classifying every review manually is time-consuming,
+difficult to keep consistent, and difficult to scale.
 
-SenticRAG cung cấp pipeline có thể đo lường và truy nguyên
-để biến review thành aspect/sentiment và ranked evidence.
+SenticRAG provides a measurable, traceable pipeline
+that transforms reviews into aspects/sentiments and ranked evidence.
 
-## Phạm vi
+## Scope
 
-### Trong phạm vi
+### In scope
 
-- ingest và validate customer reviews;
-- masking dữ liệu cá nhân theo policy;
+- ingest and validate customer reviews;
+- mask personal data according to policy;
 - ABSA;
 - hybrid Retrieval;
-- filters theo metadata;
+- metadata filters;
 - versioned model/index;
 - evaluation;
 - API;
 - observability;
 - optional grounded RAG.
 
-### Ngoài phạm vi hiện tại
+### Currently out of scope
 
-- tự động thực hiện quyết định ảnh hưởng trực tiếp tới khách hàng;
-- coi sentiment output như kết luận tuyệt đối;
-- sử dụng dữ liệu không có quyền xử lý;
-- suy luận thuộc tính nhạy cảm từ sentiment.
+- automatically executing decisions that directly affect customers;
+- treating sentiment output as an absolute conclusion;
+- using data without processing rights;
+- inferring sensitive attributes from sentiment.
 
-## Người dùng và stakeholder
+## Users and stakeholders
 
-| Vai trò | Nhu cầu |
+| Role | Need |
 |---|---|
-| CX Manager | xem sentiment theo aspect và drill-down |
-| Product Manager | hiểu pain point của từng sản phẩm |
-| Business Analyst | tìm evidence và trend |
-| Customer Support | tìm feedback tương tự |
-| Data/ML | huấn luyện và đánh giá model |
-| Platform/SRE | vận hành ổn định |
-| Security/Privacy | kiểm soát dữ liệu và quyền truy cập |
+| CX Manager | View sentiment by aspect and drill down |
+| Product Manager | Understand each product's pain points |
+| Business Analyst | Find evidence and trends |
+| Customer Support | Find similar feedback |
+| Data/ML | Train and evaluate models |
+| Platform/SRE | Operate services reliably |
+| Security/Privacy | Control data and access |
 
-## Mục tiêu sản phẩm
+## Product goal
 
 **Product Goal:**
 
-Giúp đội nghiệp vụ trả lời:
+Help business teams answer:
 
-> "Khách hàng đang nói gì, cảm xúc ra sao,
-> và bằng chứng cụ thể nằm ở đâu?"
+> "What are customers saying, how do they feel,
+> and where is the supporting evidence?"
 
-với kết quả có thể đo lường, truy nguyên và quản trị.
+with measurable, traceable, and governable results.
 
-## Chỉ số thành công
+## Success metrics
 
-| Nhóm | Metric | Target |
+| Category | Metric | Target |
 |---|---|---|
 | Business | time-to-insight | TBD |
-| ABSA | Macro-F1 | TBD sau baseline |
+| ABSA | Macro-F1 | TBD after baseline measurement |
 | ABSA | per-aspect F1 | TBD |
 | Retrieval | Recall@10 | TBD |
 | Retrieval | nDCG@10 | TBD |
 | System | ABSA p95 latency | TBD |
 | System | Retrieval p95 latency | TBD |
 | Reliability | error rate | TBD |
-| Data | PII leakage in logs | 0 theo test suite |
+| Data | PII leakage in logs | 0 according to the test suite |
 
-Không công bố target chính thức trước khi benchmark trên
-dataset và hardware đại diện cho môi trường production.
+Do not publish official targets before benchmarking on datasets
+and hardware representative of the production environment.
 
-## Kiến trúc tổng quan
+## Architecture overview
 
 ```mermaid
 flowchart LR
@@ -882,12 +884,12 @@ flowchart LR
     F --> API
 ```
 
-## Module ABSA
+## ABSA module
 
-### Mục đích
+### Purpose
 
-Chuyển review thành một hoặc nhiều aspect và sentiment
-tương ứng.
+Transform reviews into one or more aspects and their
+corresponding sentiments.
 
 ### Input
 
@@ -926,7 +928,7 @@ tương ứng.
 }
 ```
 
-### Taxonomy ban đầu
+### Initial taxonomy
 
 ```yaml
 aspects:
@@ -941,26 +943,26 @@ sentiments:
   - negative
 ```
 
-Taxonomy này là giả định ban đầu và phải được xác nhận
-với domain owner.
+This taxonomy is an initial assumption and must be confirmed
+with the domain owner.
 
 ### User story
 
-**Là một Customer Experience Manager,**
-tôi muốn hệ thống tự động phân loại cảm xúc theo từng
-khía cạnh,
-**để tôi biết chính xác nguyên nhân nào tạo ra feedback
-tiêu cực mà không phải đọc tất cả review thủ công.**
+**As a Customer Experience Manager,**
+I want the system to classify sentiment automatically for each
+aspect,
+**so I can identify the sources of negative feedback
+without reading every review manually.**
 
 ### Acceptance criteria
 
-- response tuân thủ schema;
-- mọi output có model/taxonomy version;
-- review có nhiều aspect có thể trả nhiều labels;
-- không bắt buộc tạo aspect khi không có evidence;
-- Macro-F1 và per-aspect F1 phải vượt release threshold;
-- latency phải đạt target trên hardware được ghi nhận;
-- raw PII không xuất hiện trong logs.
+- responses conform to the schema;
+- every output includes model/taxonomy versions;
+- reviews with multiple aspects can return multiple labels;
+- no aspect is forced when evidence is absent;
+- Macro-F1 and per-aspect F1 exceed release thresholds;
+- latency meets its target on documented hardware;
+- raw PII does not appear in logs.
 
 ### API
 
@@ -973,7 +975,7 @@ GET  /v1/absa/models/current
 
 ### Monitoring
 
-Theo dõi:
+Track:
 
 - latency;
 - error rate;
@@ -996,14 +998,14 @@ Theo dõi:
 - load tests;
 - privacy/security tests.
 
-## Module Retrieval
+## Retrieval module
 
-### Mục đích
+### Purpose
 
-Nhận query và filters, sau đó trả về các source records
-liên quan nhất theo thứ tự relevance.
+Accept a query and filters, then return the most relevant
+source records in relevance order.
 
-Retrieval không phụ thuộc bắt buộc vào LLM generation.
+Retrieval does not require LLM generation.
 
 ### Input
 
@@ -1055,20 +1057,20 @@ flowchart LR
 
 ### User story
 
-**Là một Product Manager,**
-tôi muốn tìm những review liên quan nhất đến câu hỏi của mình
-và xem source gốc,
-**để tôi có thể kiểm chứng insight trước khi ra quyết định.**
+**As a Product Manager,**
+I want to find the reviews most relevant to my question
+and view their original sources,
+**so I can verify insights before making decisions.**
 
 ### Acceptance criteria
 
-- mọi hit có review/source ID;
-- filters hoạt động chính xác;
-- golden-query Recall@K đạt release threshold;
-- index version luôn được trả về;
-- không buộc trả kết quả nếu evidence không đủ;
-- latency đạt SLO;
-- index mới không được promote nếu regression test fail.
+- every hit includes a review/source ID;
+- filters work correctly;
+- golden-query Recall@K meets the release threshold;
+- the index version is always returned;
+- results are not forced when evidence is insufficient;
+- latency meets the SLO;
+- new indexes are not promoted when regression tests fail.
 
 ### API
 
@@ -1080,7 +1082,7 @@ GET  /v1/retrieval/indexes/current
 
 ### Monitoring
 
-Theo dõi:
+Track:
 
 - total retrieval latency;
 - embedding latency;
@@ -1090,7 +1092,7 @@ Theo dõi:
 - index freshness;
 - index version;
 - source-resolution failures;
-- Recall@K / nDCG offline.
+- offline Recall@K / nDCG.
 
 ### Testing
 
@@ -1104,7 +1106,7 @@ Theo dõi:
 
 ## Data Governance
 
-Mọi nguồn dữ liệu phải có:
+Every data source must have:
 
 - owner;
 - purpose;
@@ -1117,24 +1119,24 @@ Mọi nguồn dữ liệu phải có:
 - access policy;
 - deletion procedure.
 
-Model và index artifact phải truy ngược được tới
-dataset/config version đã tạo ra chúng.
+Model and index artifacts must be traceable to the
+dataset/config versions used to create them.
 
-## Security và Privacy
+## Security and Privacy
 
-Thiết kế theo nguyên tắc:
+Follow these design principles:
 
 - data minimization;
 - least privilege;
-- authentication và authorization;
+- authentication and authorization;
 - encryption in transit/at rest;
-- secrets không nằm trong source code;
-- không log raw PII;
+- no secrets in source code;
+- no raw PII in logs;
 - audit privileged access;
-- retention có thời hạn.
+- bounded retention periods.
 
-Các nghĩa vụ pháp lý cụ thể phải được privacy/legal owner
-xác nhận theo deployment context.
+Specific legal obligations must be confirmed by the privacy/legal
+owner for the deployment context.
 
 ## Deployment
 
@@ -1154,12 +1156,12 @@ Observability
 Rollback if required
 ```
 
-ABSA, Retrieval, worker và offline pipelines nên có
-release/scaling boundaries phù hợp với workload riêng.
+ABSA, Retrieval, workers, and offline pipelines should have
+release/scaling boundaries suited to their workloads.
 
 ## Release Criteria
 
-Một release chỉ được promote khi:
+Promote a release only when:
 
 1. unit/integration tests pass;
 2. data validation pass;
@@ -1167,22 +1169,22 @@ Một release chỉ được promote khi:
 4. security checks pass;
 5. API smoke tests pass;
 6. latency/load target pass;
-7. artifact versions được ghi nhận;
-8. rollback target tồn tại.
+7. artifact versions are recorded;
+8. a rollback target exists.
 
-## Giới hạn
+## Limitations
 
-SenticRAG hỗ trợ ra quyết định, không thay thế hoàn toàn
-đánh giá của con người.
+SenticRAG supports decision-making and does not fully replace
+human judgment.
 
-ABSA có thể phân loại sai, đặc biệt với sarcasm, slang,
-review quá ngắn hoặc domain chưa thấy trong training data.
+ABSA can misclassify sentiment, especially with sarcasm, slang,
+very short reviews, or domains absent from training data.
 
-Retrieval có thể bỏ sót evidence; vì vậy quality phải được
-đánh giá trên golden-query set và theo dõi liên tục.
+Retrieval can miss evidence; evaluate its quality on a
+golden-query set and monitor it continuously.
 
-Không sử dụng confidence score như xác suất tuyệt đối nếu
-model chưa được kiểm định/calibrate cho mục đích đó.
+Do not interpret confidence scores as absolute probabilities unless
+the model has been validated/calibrated for that purpose.
 
 ## Roadmap
 
@@ -1200,55 +1202,55 @@ model chưa được kiểm định/calibrate cho mục đích đó.
 
 ## References
 
-Xem danh sách authoritative sources của dự án trong
+See the project's authoritative source list in
 `docs/references.md`.
 
-```
+````
 
-Cấu trúc trên còn tạo một ranh giới tốt: **acceptance criteria trong product document là externally observable contract**, còn các implementation tasks như “viết class QdrantClient”, “cấu hình Helm chart” hay “fine-tune checkpoint X” nên ở issue/backlog.
+This structure also establishes a useful boundary: **acceptance criteria in the product document are externally observable contracts**; implementation tasks such as writing a QdrantClient class, configuring a Helm chart, or fine-tuning checkpoint X belong in issues/the backlog.
 
-## Lộ trình triển khai, nguồn tham khảo và bước tiếp theo
+## Implementation roadmap, references, and next steps
 
-Một lộ trình thực tế cho MVP nên xây baseline trước khi đưa vào các kỹ thuật phức tạp. Thời gian dưới đây là **planning assumption**, không phải cam kết estimate vì chưa biết quy mô đội ngũ, độ sạch dữ liệu và tình trạng repository.
+A practical MVP roadmap should establish baselines before introducing complex techniques. The timeline below is a **planning assumption**, not a committed estimate: team size, data cleanliness, and repository readiness are unknown.
 
-| Giai đoạn | Thời gian giả định | Hoạt động | Exit criteria |
+| Phase | Assumed duration | Activities | Exit criteria |
 |---|---:|---|---|
-| Discovery & product framing | Tuần 1 | stakeholder interviews, problem statement, taxonomy, success metrics, scope | Product Goal + taxonomy v0 + metric definitions |
-| Data audit & governance | Tuần 1–2 | inventory, PII, licensing, schemas, labeling policy | data card + validated sample |
-| Baselines | Tuần 2–3 | TF-IDF ABSA baseline, BM25 retrieval baseline | reproducible baseline reports |
-| ABSA candidates | Tuần 3–5 | PhoBERT/viBERT candidates, error/slice analysis | model candidate vượt agreed gate |
-| Retrieval candidates | Tuần 4–6 | dense, hybrid, RRF, optional reranking | golden-query benchmark |
-| API & integration | Tuần 5–7 | `/predict`, `/search`, storage/version contracts | E2E staging scenario |
-| Quality & operations | Tuần 7–8 | monitoring, privacy tests, latency/load, rollback | release gates green |
-| UAT & documentation | Tuần 8–9 | analyst/CX evaluation, docs, limitations | stakeholder sign-off |
-| Production hardening | +2–4 tuần nếu cần | HA, autoscaling, disaster recovery, security hardening | production readiness evidence |
+| Discovery & product framing | Week 1 | Stakeholder interviews, problem statement, taxonomy, success metrics, scope | Product Goal + taxonomy v0 + metric definitions |
+| Data audit & governance | Weeks 1–2 | Inventory, PII, licensing, schemas, labeling policy | Data card + validated sample |
+| Baselines | Weeks 2–3 | TF-IDF ABSA baseline, BM25 retrieval baseline | Reproducible baseline reports |
+| ABSA candidates | Weeks 3–5 | PhoBERT/viBERT candidates, error/slice analysis | Model candidate passes the agreed gate |
+| Retrieval candidates | Weeks 4–6 | Dense, hybrid, RRF, optional reranking | Golden-query benchmark |
+| API & integration | Weeks 5–7 | `/predict`, `/search`, storage/version contracts | E2E staging scenario |
+| Quality & operations | Weeks 7–8 | Monitoring, privacy tests, latency/load, rollback | Passing release gates |
+| UAT & documentation | Weeks 8–9 | Analyst/CX evaluation, documentation, limitations | Stakeholder sign-off |
+| Production hardening | +2–4 weeks if needed | HA, autoscaling, disaster recovery, security hardening | Production readiness evidence |
 
-Một nguyên tắc quan trọng là **baseline-first**. Với ABSA, giữ TF-IDF/Logistic Regression làm control. Với Retrieval, giữ BM25 làm control. Chỉ thêm Transformer, dense retrieval, hybrid fusion và reranker nếu chúng cho improvement đo được. Qdrant cũng khuyến nghị dùng evaluation results để quyết định tuning và chỉ thêm reranking khi improvement giữ được trên held-out queries. citeturn11search10
+**Establish baselines first.** Keep TF-IDF/Logistic Regression as the ABSA control and BM25 as the Retrieval control. Add Transformers, dense retrieval, hybrid fusion, and reranking only when they produce measurable improvements. Qdrant also recommends making tuning decisions from evaluation results and adding reranking only when improvements hold on held-out queries. citeturn11search10
 
-**Các bước tiếp theo nên diễn ra theo thứ tự sau:**
+**Recommended next steps, in order:**
 
-| Ưu tiên | Quyết định cần khóa | Artifact tạo ra |
+| Priority | Decision to finalize | Output artifact |
 |---|---|---|
-| Ngay | đổi `GIOI_THIEU_SAN_PHAM_VI.md` từ kiosk → SenticRAG product specification | document v0.1 |
-| Ngay | xác nhận domain và aspect taxonomy với business owner | `aspect_taxonomy_v1.yaml` |
-| Ngay | định nghĩa canonical review schema và PII policy | data contract + data card |
-| Tiếp theo | dựng ABSA baseline và test split khóa | `absa_baseline_report.json` |
-| Tiếp theo | tạo 100–300+ golden retrieval queries với relevance judgments tùy nguồn lực | retrieval eval dataset |
-| Sau baseline | benchmark BM25 vs Dense vs Hybrid RRF | retrieval benchmark report |
-| Sau benchmark | quyết định có cần reranker không | ADR |
-| Trước release | thay toàn bộ `[TBD]` SLO/metric bằng số đo thật | acceptance matrix |
-| Trước production | audit các claim “production-ready”, cost reduction, accuracy | evidence-backed product copy |
-| Vận hành | version model, taxonomy, embedding model, index và dataset | release manifest |
+| Immediate | Replace the kiosk content in `GIOI_THIEU_SAN_PHAM_VI.md` with a SenticRAG product specification | Document v0.1 |
+| Immediate | Confirm the domain and aspect taxonomy with the business owner | `aspect_taxonomy_v1.yaml` |
+| Immediate | Define the canonical review schema and PII policy | Data contract + data card |
+| Next | Build an ABSA baseline and freeze the test split | `absa_baseline_report.json` |
+| Next | Create 100–300+ golden retrieval queries with relevance judgments, subject to resources | Retrieval evaluation dataset |
+| After baseline | Benchmark BM25 vs Dense vs Hybrid RRF | Retrieval benchmark report |
+| After benchmarking | Decide whether a reranker is needed | ADR |
+| Before release | Replace all `[TBD]` SLOs/metrics with actual measurements | Acceptance matrix |
+| Before production | Audit production-readiness, cost-reduction, and accuracy claims | Evidence-backed product copy |
+| Operations | Version the model, taxonomy, embedding model, index, and dataset | Release manifest |
 
-Golden-query set đặc biệt quan trọng. Không có relevance labels thì lựa chọn retrieval architecture dễ trở thành đánh giá cảm tính. Qdrant hiện khuyến nghị tuning pipeline dựa trên evaluation data và cảnh báo nhiều setting có thể làm recall thay đổi mà không tạo lỗi kỹ thuật. citeturn11search5turn11search10
+The golden-query set is essential. Without relevance labels, retrieval architecture decisions can become subjective. Qdrant recommends tuning pipelines using evaluation data and warns that many settings can affect recall without triggering technical errors. citeturn11search5turn11search10
 
-**Nguồn chính thống/primary nên đưa vào `docs/references.md`:**
+**Primary/authoritative sources to include in `docs/references.md`:**
 
-| Chủ đề | Nguồn authoritative |
+| Topic | Authoritative source |
 |---|---|
 | ABSA canonical task | [SemEval-2014 Task 4 — ACL Anthology](https://aclanthology.org/S14-2004/) citeturn11search8 |
 | Vietnamese NLP | [PhoBERT — ACL Anthology](https://aclanthology.org/2020.findings-emnlp.92/) citeturn12search0 |
-| Vietnamese sentiment dataset | [UIT-ViSFD — repository của tác giả](https://github.com/LuongPhan/UIT-ViSFD) citeturn12search2 |
+| Vietnamese sentiment dataset | [UIT-ViSFD — authors' repository](https://github.com/LuongPhan/UIT-ViSFD) citeturn12search2 |
 | RAG foundation | [Retrieval-Augmented Generation — NeurIPS 2020](https://papers.nips.cc/paper/2020/hash/6b493230205f780e1bc26945df7481e5-Abstract.html) citeturn14search7 |
 | Hybrid retrieval | [Qdrant Hybrid Search](https://qdrant.tech/documentation/search/text-search/hybrid-search/) citeturn11search11 |
 | Hybrid/RRF query | [Qdrant Hybrid Queries](https://qdrant.tech/documentation/search/hybrid-queries/) citeturn11search6 |
@@ -1260,10 +1262,10 @@ Golden-query set đặc biệt quan trọng. Không có relevance labels thì l�
 | Observability | [OpenTelemetry Signals](https://opentelemetry.io/docs/concepts/signals/) citeturn14search1 |
 | Product/backlog framing | [Scrum Guide](https://scrumguides.org/scrum-guide.html) citeturn11search1 |
 | User-story quality | [Agile Alliance — INVEST](https://agilealliance.org/glossary/invest/) citeturn11search7 |
-| Bảo vệ dữ liệu tại Việt Nam | [Luật số 91/2025/QH15 — Công báo Chính phủ](https://congbao.chinhphu.vn/van-ban/luat-so-91-2025-qh15-45578.htm) citeturn13search0 |
-| AI tại Việt Nam | [Luật số 134/2025/QH15 — Cổng văn bản Chính phủ](https://vanban.chinhphu.vn/?docid=216334&orggroupid=1&pageid=27160) citeturn13search7 |
+| Data protection in Vietnam | [Law No. 91/2025/QH15 — Government Gazette](https://congbao.chinhphu.vn/van-ban/luat-so-91-2025-qh15-45578.htm) citeturn13search0 |
+| AI in Vietnam | [Law No. 134/2025/QH15 — Government legal documents portal](https://vanban.chinhphu.vn/?docid=216334&orggroupid=1&pageid=27160) citeturn13search7 |
 
-Từ góc độ kiến trúc tài liệu, bộ hồ sơ cuối cùng nên có quan hệ như sau:
+The final documentation set should have these relationships:
 
 ```text
 GIOI_THIEU_SAN_PHAM_VI.md
@@ -1292,4 +1294,4 @@ GIOI_THIEU_SAN_PHAM_VI.md
        HOW TO OPERATE / RECOVER
 ```
 
-Đây là điểm cân bằng phù hợp cho dự án: `GIOI_THIEU_SAN_PHAM_VI.md` **khởi đầu bằng problem description, được tổ chức như product specification, và dùng user stories + acceptance criteria như bằng chứng rằng từng capability thực sự giải quyết nhu cầu người dùng**. Nó không biến thành một sales brochure như file kiosk hiện tại, cũng không biến thành một engineering blueprint thứ hai. fileciteturn0file0 fileciteturn0file1 fileciteturn0file2
+This structure fits the project: `GIOI_THIEU_SAN_PHAM_VI.md` **starts with a problem description, is organized as a product specification, and uses user stories + acceptance criteria to demonstrate how each capability addresses user needs**. It provides more than the existing kiosk sales brochure while avoiding duplication of the engineering blueprint. fileciteturn0file0 fileciteturn0file1 fileciteturn0file2

@@ -1,0 +1,32 @@
+[
+  {
+    "source": "README.md",
+    "line": 186,
+    "target": "LICENSE",
+    "status": "MISSING_LOCAL_TARGET"
+  },
+  {
+    "source": "apps/agent_workspace/README.md",
+    "line": 3,
+    "target": "file:///home/intern-tdkhuong/Desktop/Intership /SenticRAG — Retrieval-Augmented Aspect Sentiment & Feedback Intelligence Engine/docs/product/user-stories.md",
+    "status": "MACHINE_SPECIFIC_LINK"
+  },
+  {
+    "source": "apps/analyst_dashboard/README.md",
+    "line": 3,
+    "target": "file:///home/intern-tdkhuong/Desktop/Intership /SenticRAG — Retrieval-Augmented Aspect Sentiment & Feedback Intelligence Engine/docs/product/user-stories.md",
+    "status": "MACHINE_SPECIFIC_LINK"
+  },
+  {
+    "source": "apps/analyst_dashboard/README.md",
+    "line": 3,
+    "target": "file:///home/intern-tdkhuong/Desktop/Intership /SenticRAG — Retrieval-Augmented Aspect Sentiment & Feedback Intelligence Engine/docs/product/user-stories.md",
+    "status": "MACHINE_SPECIFIC_LINK"
+  },
+  {
+    "source": "docs/product/user-stories.md",
+    "line": 3,
+    "target": "file:///home/intern-tdkhuong/Desktop/Intership /SenticRAG — Retrieval-Augmented Aspect Sentiment & Feedback Intelligence Engine/docs/architecture/ARCHITECTURE.md",
+    "status": "MACHINE_SPECIFIC_LINK"
+  }
+]

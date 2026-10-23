@@ -1,0 +1,71 @@
+Audit baseline: 256c0b47155f0e6876e3f3d6d050177c44c11b36
+Audit scope: M0.1, 2026-10-23
+AUDIT_PY=C:/Users/lanph/AppData/Local/Temp/senticrag-m0.1-20261023-256c0b4/venv/Scripts/python.exe
+Focused environment: Python 3.11.16; fastapi, pydantic, httpx, pytest, ruff, mypy installed with constraints extracted from poetry.lock. Full ML installation NOT_RUN.
+
+Commands in order:
+& $AUDIT_PY -m pytest tests -q -p no:cacheprovider
+& $AUDIT_PY -m ruff check . --output-format concise
+& $AUDIT_PY -m mypy packages apps pipelines --ignore-missing-imports --cache-dir <temporary audit cache>
+
+.......                                                                  [100%]
+============================== warnings summary ===============================
+..\..\..\AppData\Local\Temp\senticrag-m0.1-20261023-256c0b4\venv\Lib\site-packages\fastapi\testclient.py:1
+  C:\Users\lanph\AppData\Local\Temp\senticrag-m0.1-20261023-256c0b4\venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+pytest exit code: 0
+apps\api\app\main.py:1:1: I001 [*] Import block is un-sorted or un-formatted
+apps\api\app\main.py:2:1: UP035 `typing.Dict` is deprecated, use `dict` instead
+apps\api\app\main.py:2:1: UP035 `typing.List` is deprecated, use `list` instead
+apps\api\app\main.py:152:14: UP045 [*] Use `X | None` for type annotations
+apps\api\app\main.py:152:23: UP006 [*] Use `list` instead of `List` for type annotation
+apps\api\app\main.py:156:24: UP006 [*] Use `list` instead of `List` for type annotation
+apps\api\app\main.py:170:16: UP006 [*] Use `list` instead of `List` for type annotation
+apps\api\app\main.py:183:27: UP006 [*] Use `dict` instead of `Dict` for type annotation
+packages\data_contracts\__init__.py:1:1: I001 [*] Import block is un-sorted or un-formatted
+packages\data_contracts\__init__.py:2:1: UP035 `typing.List` is deprecated, use `list` instead
+packages\data_contracts\__init__.py:2:1: UP035 `typing.Dict` is deprecated, use `dict` instead
+packages\data_contracts\__init__.py:12:22: UP045 [*] Use `X | None` for type annotations
+packages\data_contracts\__init__.py:13:19: UP045 [*] Use `X | None` for type annotations
+packages\data_contracts\__init__.py:14:16: UP045 [*] Use `X | None` for type annotations
+packages\data_contracts\__init__.py:16:13: UP045 [*] Use `X | None` for type annotations
+packages\data_contracts\__init__.py:19:14: UP006 [*] Use `list` instead of `List` for type annotation
+packages\data_contracts\__init__.py:31:15: UP045 [*] Use `X | None` for type annotations
+packages\data_contracts\__init__.py:35:22: UP045 [*] Use `X | None` for type annotations
+packages\data_contracts\__init__.py:44:22: UP045 [*] Use `X | None` for type annotations
+packages\data_contracts\__init__.py:46:23: UP045 [*] Use `X | None` for type annotations
+packages\data_contracts\__init__.py:49:21: UP006 [*] Use `dict` instead of `Dict` for type annotation
+packages\data_contracts\__init__.py:50:30: UP006 [*] Use `list` instead of `List` for type annotation
+packages\data_contracts\__init__.py:51:37: UP006 [*] Use `list` instead of `List` for type annotation
+packages\data_contracts\__init__.py:51:42: UP006 [*] Use `dict` instead of `Dict` for type annotation
+packages\data_contracts\__init__.py:58:22: UP045 [*] Use `X | None` for type annotations
+packages\data_contracts\__init__.py:70:26: UP006 [*] Use `list` instead of `List` for type annotation
+packages\data_contracts\__init__.py:71:16: UP006 [*] Use `list` instead of `List` for type annotation
+packages\data_contracts\__init__.py:74:24: UP045 [*] Use `X | None` for type annotations
+packages\data_contracts\__init__.py:80:25: UP006 [*] Use `dict` instead of `Dict` for type annotation
+tests\contract\test_data_contracts.py:1:1: I001 [*] Import block is un-sorted or un-formatted
+tests\contract\test_data_contracts.py:1:8: F401 [*] `pytest` imported but unused
+tests\contract\test_data_contracts.py:4:5: F401 [*] `packages.data_contracts.InvestigationDrilldownRequest` imported but unused
+tests\contract\test_data_contracts.py:28:1: W293 [*] Blank line contains whitespace
+tests\unit\test_api.py:1:1: I001 [*] Import block is un-sorted or un-formatted
+Found 34 errors.
+[*] 30 fixable with `--fix`.
+ruff exit code: 1
+Success: no issues found in 56 source files
+mypy exit code: 0
+
+
+Separate isolated Poetry check:
+uv tool run --python 3.11 --from poetry==2.2.1 poetry check --lock --strict
+ Downloaded rapidfuzz
+ Downloaded virtualenv
+warning: Failed to hardlink files; falling back to full copy. This may lead to degraded performance.
+         If the cache and target directories are on different filesystems, hardlinking may not be supported.
+         If this is intentional, set `export UV_LINK_MODE=copy` or use `--link-mode=copy` to suppress this warning.
+Installed 46 packages in 3.39s
+All set!
+
+
+Interpretation: pytest PASS (7 scaffold tests); Ruff FAIL (34 existing findings); mypy PASS (56 source files); Poetry lock validation PASS. This is not end-to-end or model-quality acceptance.
